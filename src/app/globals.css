@@ -1,112 +1,90 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-cormorant: var(--font-cormorant), serif;
-  --font-inter: var(--font-inter), sans-serif;
-  
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-muted: var(--muted);
-  --color-surface: var(--surface);
-  --color-border: var(--border);
+:root {
+  --background: #fdfcfb;
+  --foreground: #121414;
+  --surface: #ffffff;
+  --border: #e2e2e2;
+  --accent: #C5A27D;
+  --muted: #666666;
+}
 
-  --color-premium-dark: #121414;
-  --color-premium-white: #F5F1EB;
+.dark {
+  --background: #121414;
+  --foreground: #e3e2e2;
+  --surface: #1a1c1c;
+  --border: #2a2c2c;
+  --accent: #C5A27D;
+  --muted: #888888;
 }
 
 @layer base {
-  :root {
-    --background: #FBF9F7;
-    --foreground: #1C1C1A;
-    --accent: #C5A27D;
-    --muted: #7D746C;
-    --surface: #F2EFE9;
-    --border: #E6DED7;
-  }
-
-  .dark {
-    --background: #121414;
-    --foreground: #F5F1EB;
-    --accent: #C5A27D;
-    --muted: #A79E96;
-    --surface: #1B1A18;
-    --border: #2B2A28;
-  }
-
-  * {
-    box-sizing: border-box;
+  body {
+    @apply bg-background text-foreground transition-colors duration-700 selection:bg-accent selection:text-background;
+    font-family: var(--font-inter), sans-serif;
   }
   
-  body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-inter);
-    font-feature-settings: "rlig" 1, "calt" 1;
-    -webkit-font-smoothing: antialiased;
-    @apply transition-colors duration-700 selection:bg-accent selection:text-background;
-  }
-
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-cormorant);
-    @apply font-medium;
-    letter-spacing: -0.03em;
-    line-height: 0.9;
-  }
-
-  button, a {
-    cursor: pointer;
+    font-family: var(--font-cormorant), serif;
   }
 }
 
 @layer utilities {
-  .glass-morphism {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  .tracking-tightest {
+    letter-spacing: -0.05em;
   }
+  .tracking-widest-extra {
+    letter-spacing: 0.8em;
+  }
+  .ease-expo {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass {
+    @apply bg-background/40 backdrop-blur-3xl border border-white/5;
+  }
+}
 
-  .premium-blur {
-    backdrop-filter: blur(40px) saturate(180%);
-    background: rgba(10, 10, 10, 0.7);
-  }
+/* GSAP Scroll Pattern Classes */
+.pinned-scrub-section {
+  position: relative;
+  overflow: hidden;
+}
 
-  .text-balance {
-    text-wrap: balance;
-  }
+.sticky-stack-card {
+  position: sticky;
+  top: 10vh;
+}
 
-  .reveal-text {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-  }
+.horizontal-scroll-container {
+  display: flex;
+  width: 400vw;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
-
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--background);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #00553B;
+  background: var(--accent);
   border-radius: 10px;
 }
 
-/* Lenis Smooth Scroll */
-html.lenis {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
+/* Immersive Typography */
+.text-reveal {
   overflow: hidden;
+  display: block;
+}
+
+.text-reveal span {
+  display: block;
+}
+
+/* Luxury Motion */
+.image-zoom-hover {
+  @apply overflow-hidden transition-transform duration-1000 ease-expo hover:scale-105;
 }

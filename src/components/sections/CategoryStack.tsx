@@ -1,34 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Link from 'next/link';
 
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 const categories = [
   {
-    id: '01',
     title: 'Les Salons',
-    tag: 'Art de Vivre',
-    description: 'Une fusion de confort et d’élégance pour vos espaces de vie.',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1200',
-    href: '/categories/salons'
+    subtitle: 'Sculptural Comfort',
+    image: '/salon.jpeg',
+    href: '/categories/salons',
+    desc: 'Bespoke modular systems and iconic seating designed for architectural living spaces.'
   },
   {
-    id: '02',
-    title: 'L\'Espace Nuit',
-    tag: 'Sanctuaire',
-    description: 'Créez un sanctuaire de repos avec nos designs de chambre premium.',
-    image: 'https://images.unsplash.com/photo-1505693419148-db306597aa38?auto=format&fit=crop&q=80&w=1200',
-    href: '/categories/chambre'
+    title: 'Tables Basses',
+    subtitle: 'Monolithic Objects',
+    image: '/tabledebasse.jpeg',
+    href: '/categories/tables-basses',
+    desc: 'Crafted from rare marbles and solid brass, our tables serve as the geometric anchor of the room.'
   },
   {
-    id: '03',
-    title: 'La Table',
-    tag: 'Convivialité',
-    description: 'Des tables et chaises conçues pour des moments inoubliables.',
-    image: 'https://images.unsplash.com/photo-1617806118233-18e1db20706a?auto=format&fit=crop&q=80&w=1200',
-    href: '/categories/salle-a-manger'
+    title: 'La Chambre',
+    subtitle: 'Private Sanctuary',
+    image: '/tablesdechevet.jpeg',
+    href: '/categories/tables-de-chevet',
+    desc: 'Serene sleeping environments where material honesty meets ergonomic tranquility.'
   }
 ];
 
@@ -36,83 +38,92 @@ export default function CategoryStack() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    
-    if (window.innerWidth < 768) return;
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray('.category-card');
+      cards.forEach((card: any, i) => {
+        if (i === cards.length - 1) return;
+        
+        ScrollTrigger.create({
+          trigger: card,
+          start: 'top top',
+          pin: true,
+          pinSpacing: false,
+          scrub: true,
+        });
 
-    const sections = gsap.utils.toArray('.category-section') as HTMLElement[];
-    
-    sections.forEach((section, index) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        pin: true,
-        pinSpacing: false,
-        scrub: true,
-        // Sticky-stack effect: the section stays pinned until the next one covers it
+        gsap.to(card, {
+          scale: 0.9,
+          opacity: 0.5,
+          filter: 'blur(10px)',
+          scrollTrigger: {
+            trigger: cards[i + 1] as any,
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+          }
+        });
       });
     });
 
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={containerRef} className="relative bg-background">
-      {categories.map((cat, i) => (
-        <section 
-          key={cat.id}
-          className="category-section relative h-screen w-full overflow-hidden flex items-center px-6 md:px-24 bg-background"
-          style={{ zIndex: i + 1 }}
-        >
-          {/* Section Border/Indicator */}
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-border" />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 w-full max-w-[1800px] mx-auto items-center">
-            <div className="lg:col-span-5 flex flex-col justify-center space-y-12">
-              <div className="space-y-4">
-                <span className="text-accent font-bold text-[10px] uppercase tracking-[0.6em]">{cat.id} / 03</span>
-                <span className="block text-foreground/30 text-[10px] font-bold uppercase tracking-[0.4em]">{cat.tag}</span>
-              </div>
-              
-              <h2 className="text-8xl md:text-[10vw] font-medium tracking-tightest lowercase leading-[0.7] text-foreground">
-                {cat.title}<span className="text-accent">.</span>
-              </h2>
-              
-              <p className="text-foreground/40 text-lg md:text-xl max-w-md leading-relaxed font-light">
-                {cat.description}
-              </p>
-              
-              <Link 
-                href={cat.href}
-                className="group inline-flex items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-foreground"
-              >
-                Découvrir
-                <div className="relative flex items-center justify-center">
-                  <div className="w-12 h-[1px] bg-border transition-all group-hover:w-20 group-hover:bg-accent" />
-                  <div className="absolute right-0 w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </Link>
-            </div>
-            
-            <div className="lg:col-span-7 relative aspect-[16/10] overflow-hidden rounded-[4rem] shadow-3xl bg-surface">
+    <section ref={containerRef} className="relative z-20 bg-background">
+      <div className="flex flex-col">
+        {categories.map((cat, idx) => (
+          <div 
+            key={cat.title} 
+            className="category-card relative h-screen w-full overflow-hidden flex items-center justify-center bg-background"
+          >
+            <div className="absolute inset-0 z-0 scale-110">
               <img 
                 src={cat.image} 
-                alt={cat.title}
-                className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                alt={cat.title} 
+                className="h-full w-full object-cover grayscale-[0.4] transition-all duration-1000"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+              <div className="absolute inset-0 bg-background/60" />
+            </div>
+
+            <div className="relative z-10 container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+              <div className="space-y-12">
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">
+                    Universe 0{idx + 1}
+                  </span>
+                  <h2 className="text-6xl md:text-9xl font-medium tracking-tightest lowercase leading-[0.8]">
+                    {cat.title}
+                  </h2>
+                </div>
+                
+                <p className="max-w-sm text-sm font-light leading-relaxed text-foreground/60 text-balance">
+                  {cat.desc}
+                </p>
+
+                <Link 
+                  href={cat.href}
+                  className="group flex items-center gap-8 text-[10px] font-bold uppercase tracking-[0.4em] transition-all hover:text-accent"
+                >
+                  <div className="h-[1px] w-12 bg-accent transition-all group-hover:w-20" />
+                  View Collection
+                </Link>
+              </div>
+
+              <div className="hidden lg:block relative aspect-[4/5] w-full max-w-md overflow-hidden rounded-[4rem] shadow-2xl border border-white/5">
+                <img 
+                  src={cat.image} 
+                  alt="" 
+                  className="h-full w-full object-cover transition-transform duration-1000 hover:scale-110"
+                />
+                <div className="absolute bottom-12 left-12 flex items-center gap-4 glass px-8 py-4 rounded-full">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.2em]">{cat.subtitle}</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Bottom info */}
-          <div className="absolute bottom-12 left-24 right-24 hidden md:flex justify-between items-center text-[8px] font-bold uppercase tracking-[0.6em] text-foreground/10">
-            <span>Collectif Design Studio</span>
-            <span>Est. 2024</span>
-          </div>
-        </section>
-      ))}
-    </div>
+        ))}
+      </div>
+    </section>
   );
 }

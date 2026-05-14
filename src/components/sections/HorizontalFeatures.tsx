@@ -1,29 +1,28 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 const features = [
   {
-    title: 'Artisanat d\'Exception',
-    description: 'Chaque pièce est façonnée par des mains expertes, préservant un savoir-faire millénaire.',
-    image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200'
+    title: 'Matières Nobles',
+    desc: 'We source the rarest stones and finest woods, ensuring each piece carries the weight of history and the touch of nature.',
+    image: '/decoration.jpeg'
   },
   {
-    title: 'Design Minimaliste',
-    description: 'Une esthétique pure qui laisse respirer vos espaces de vie.',
-    image: 'https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&q=80&w=1200'
+    title: 'Artisanat d’Excellence',
+    desc: 'Our master craftsmen combine centuries-old techniques with modern precision to create furniture that lasts generations.',
+    image: '/notrevision.jpeg'
   },
   {
-    title: 'Matériaux Nobles',
-    description: 'Sélection rigoureuse des bois, cuirs et tissus les plus précieux.',
-    image: 'https://images.unsplash.com/photo-1634713590134-7347900b9239?auto=format&fit=crop&q=80&w=1200'
-  },
-  {
-    title: 'Sur Mesure',
-    description: 'Votre vision, notre expertise. Des créations uniques pour des lieux uniques.',
-    image: 'https://images.unsplash.com/photo-1615873968403-89e068628265?auto=format&fit=crop&q=80&w=1200'
+    title: 'Design Sur Mesure',
+    desc: 'Collaborate with our studio to create bespoke architectural objects tailored to the unique geometry of your space.',
+    image: '/bibliotheque.jpeg'
   }
 ];
 
@@ -32,56 +31,61 @@ export default function HorizontalFeatures() {
   const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      const pin = gsap.fromTo(
+        sectionRef.current,
+        { x: 0 },
+        {
+          x: '-200vw',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: triggerRef.current,
+            start: 'top top',
+            end: '2000 top',
+            scrub: 0.6,
+            pin: true,
+          }
+        }
+      );
+      return () => pin.kill();
+    });
 
-    const pin = gsap.fromTo(
-      sectionRef.current,
-      { translateX: 0 },
-      {
-        translateX: "-300vw",
-        ease: "none",
-        duration: 1,
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: "top top",
-          end: "2000 top",
-          scrub: 0.6,
-          pin: true,
-        },
-      }
-    );
-
-    return () => {
-      pin.kill();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
     <section className="overflow-hidden bg-background">
       <div ref={triggerRef}>
-        <div ref={sectionRef} className="flex h-screen w-[400vw] relative items-center">
-          {features.map((feature, i) => (
-            <div key={i} className="h-screen w-screen flex flex-col justify-center px-24">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center max-w-[1800px] mx-auto">
-                <div className="space-y-12">
-                  <span className="text-accent font-bold text-[10px] uppercase tracking-[0.6em]">Perspective 0{i + 1}</span>
-                  <h2 className="text-7xl md:text-9xl font-medium tracking-tightest lowercase leading-[0.8] text-foreground">
-                    {feature.title.split(' ').map((word, idx) => (
-                      <span key={idx} className="block">{word}</span>
-                    ))}
-                  </h2>
-                  <p className="text-foreground/40 text-lg md:text-xl max-w-sm leading-relaxed font-light">
-                    {feature.description}
-                  </p>
-                </div>
-                
-                <div className="relative aspect-[16/11] overflow-hidden rounded-[4rem] shadow-3xl bg-surface">
+        <div ref={sectionRef} className="flex w-[300vw] h-screen items-center">
+          {features.map((feature, idx) => (
+            <div key={idx} className="w-screen h-full flex items-center justify-center px-12 md:px-24">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center max-w-[1400px]">
+                <div className="relative aspect-[16/10] overflow-hidden rounded-[3rem] shadow-3xl">
                   <img 
                     src={feature.image} 
-                    alt={feature.title}
-                    className="w-full h-full object-cover"
+                    alt={feature.title} 
+                    className="h-full w-full object-cover transition-transform duration-1000 hover:scale-105" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-br from-background/20 to-transparent" />
+                  <div className="absolute inset-0 bg-premium-dark/20" />
+                </div>
+                
+                <div className="space-y-10">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-accent">
+                    Philosophy 0{idx + 1}
+                  </span>
+                  <h3 className="text-5xl md:text-7xl font-medium tracking-tightest lowercase leading-[0.9]">
+                    {feature.title}
+                  </h3>
+                  <p className="max-w-md text-base font-light leading-relaxed text-foreground/60 text-balance">
+                    {feature.desc}
+                  </p>
+                  
+                  <div className="pt-8 flex items-center gap-6">
+                     <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center">
+                        <span className="text-[10px] font-bold">0{idx + 1}</span>
+                     </div>
+                     <div className="h-[1px] w-24 bg-border" />
+                  </div>
                 </div>
               </div>
             </div>
