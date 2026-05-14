@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Product } from '@/data/products';
+import { Product } from '@/lib/products';
 
 interface CartItem extends Product {
   quantity: number;
@@ -14,6 +14,7 @@ interface CartContextType {
   isCartOpen: boolean;
   setIsCartOpen: (isOpen: boolean) => void;
   cartTotal: number;
+  updateQuantity: (productId: string, quantity: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -35,14 +36,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId));
+  const updateQuantity = (productId: string, quantity: number) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === productId ? { ...item, quantity } : item
+      )
+    );
   };
 
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const cartTotal = cart.reduce((total, item) => {
+    const price = typeof item.price === 'string' 
+      ? parseFloat(item.price.replace(/[^\d.]/g, '')) 
+      : item.price;
+    return total + (price || 0) * item.quantity;
+  }, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, isCartOpen, setIsCartOpen, cartTotal }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, isCartOpen, setIsCartOpen, cartTotal, updateQuantity }}>
       {children}
     </CartContext.Provider>
   );

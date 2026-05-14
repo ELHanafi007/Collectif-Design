@@ -1,73 +1,105 @@
-import { products } from '@/data/products';
-import Navbar from '@/components/layout/Navbar';
-import Link from 'next/link';
-import { Filter, ChevronDown, ArrowRight } from 'lucide-react';
+'use client';
 
-export default function CategoryPage({ params, searchParams }: { params: { slug: string }, searchParams: { sub?: string } }) {
-  const categoryProducts = products.filter(p => p.category === params.slug);
-  const subcategory = searchParams.sub;
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import Navbar from '@/components/layout/Navbar';
+import ProductCard from '@/components/ui/ProductCard';
+import { supabase } from '@/lib/supabaseClient';
+import { Product } from '@/lib/products';
+import { motion } from 'framer-motion';
+
+export default function CategoryPage() {
+  const { slug } = useParams();
+  const searchParams = useSearchParams();
+  const subCategoryParam = searchParams.get('sub');
   
-  const filteredProducts = subcategory 
-    ? categoryProducts.filter(p => p.subcategory.toLowerCase() === subcategory.toLowerCase())
-    : categoryProducts;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('category', slug);
+        
+        if (error) throw error;
+        setProducts(data || []);
+      } catch (err) {
+        console.error("Error fetching category products:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) fetchProducts();
+  }, [slug]);
+
+  const filteredProducts = useMemo(() => {
+    if (!subCategoryParam) return products;
+    return products.filter(p => p.sub_category.toLowerCase() === subCategoryParam.toLowerCase());
+  }, [products, subCategoryParam]);
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Header */}
-      <div className="pt-48 pb-20 px-6 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent mb-4 block">Collection</span>
-            <h1 className="text-7xl font-bold tracking-tighter capitalize lowercase">
-              {params.slug}<span className="text-accent">.</span>
+      {/* Cinematic Header */}
+      <section className="relative pt-48 pb-24 px-6 md:px-12 border-b border-border/10">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent mb-6 block">
+              Collection Univers
+            </span>
+            <h1 className="text-[10vw] md:text-[8vw] font-medium leading-[0.8] tracking-tightest mb-16 lowercase">
+              {slug}<br />
+              <span className="italic font-light">de Collectif</span>
             </h1>
-          </div>
-          <div className="flex gap-4">
-            <button className="flex items-center gap-3 px-6 py-3 border border-gray-100 rounded-full text-xs font-bold uppercase tracking-widest hover:border-accent transition-colors">
-              <Filter size={14} />
-              Filtrer
-            </button>
-            <button className="flex items-center gap-3 px-6 py-3 border border-gray-100 rounded-full text-xs font-bold uppercase tracking-widest hover:border-accent transition-colors">
-              Trier par
-              <ChevronDown size={14} />
-            </button>
-          </div>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-          {filteredProducts.map((product) => (
-            <Link 
-              key={product.id} 
-              href={`/products/${product.id}`}
-              className="group"
-            >
-              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-50 mb-6 shadow-sm group-hover:shadow-2xl transition-all duration-700">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+      {/* Product Grid Section */}
+      <section className="py-24 px-6 md:px-12">
+        <div className="container mx-auto">
+          {loading ? (
+            <div className="py-48 flex flex-col items-center justify-center space-y-8">
+              <div className="h-16 w-[1px] bg-border relative overflow-hidden">
+                <motion.div
+                  animate={{ y: ["-100%", "100%"] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 bg-accent w-full"
                 />
-                <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                  <div className="w-full bg-white/90 backdrop-blur-md py-4 rounded-2xl flex items-center justify-center gap-2 font-bold text-[10px] uppercase tracking-widest">
-                    Voir le Produit
-                    <ArrowRight size={14} />
-                  </div>
-                </div>
               </div>
-              <div className="flex justify-between items-start px-2">
-                <div>
-                  <h3 className="text-lg font-bold tracking-tight mb-1">{product.name}</h3>
-                  <p className="text-xs text-muted uppercase tracking-widest">{product.subcategory}</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.8em] text-muted/40 animate-pulse">Exploration de l'Univers...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} {...product} />
+              ))}
+              
+              {filteredProducts.length === 0 && (
+                <div className="col-span-full py-48 text-center">
+                  <h3 className="text-3xl font-serif italic text-muted/40 mb-8">Cet univers est en cours de création.</h3>
+                  <Link 
+                    href="/shop"
+                    className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent border-b border-accent pb-2 hover:text-foreground hover:border-foreground transition-all"
+                  >
+                    Explorer le Catalogue Complet
+                  </Link>
                 </div>
-                <p className="font-bold text-accent">{product.price.toLocaleString()} MAD</p>
-              </div>
-            </Link>
-          ))}
+              )}
+            </div>
+          )}
         </div>
-      </div>
+      </section>
     </main>
   );
 }
