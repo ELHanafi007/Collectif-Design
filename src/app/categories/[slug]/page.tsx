@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
+import Link from 'next/link';
 import ProductCard from '@/components/ui/ProductCard';
 import { supabase } from '@/lib/supabaseClient';
 import { Product } from '@/lib/products';
