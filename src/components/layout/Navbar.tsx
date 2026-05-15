@@ -2,23 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Sun, Moon, User, Menu, X } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, User } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/components/providers/CartProvider';
-import { useTheme } from '@/components/providers/ThemeProvider';
 
 const navigation = {
-  categories: [
-    { name: 'Salons', href: '/categories/salons', image: '/salon.jpeg' },
-    { name: 'Tables', href: '/categories/tables-basses', image: '/tabledebasse.jpeg' },
-    { name: 'Chambre', href: '/categories/tables-de-chevet', image: '/tablesdechevet.jpeg' },
-    { name: 'Rangement', href: '/categories/bibliotheques', image: '/bibliotheque.jpeg' }
-  ],
-  featured: [
+  main: [
+    { name: 'Accueil', href: '/' },
     { name: 'Catalogue', href: '/shop' },
-    { name: 'Showroom', href: '/about' },
+    { name: 'Packs Promo', href: '/packs-promo' },
+    { name: 'L\'Atelier', href: '/about' },
     { name: 'Contact', href: '/contact' }
+  ],
+  categories: [
+    { name: 'Salon', href: '/categories/salons' },
+    { name: 'Chambre', href: '/categories/tables-de-chevet' },
+    { name: 'Salle à Manger', href: '/categories/tables-a-manger' },
+    { name: 'Tables Basses', href: '/categories/tables-basses' },
+    { name: 'Décoration', href: '/categories/decoration' },
+    { name: 'Rangement', href: '/categories/bibliotheques' }
   ]
 };
 
@@ -26,12 +29,11 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setIsCartOpen, cart } = useCart();
-  const { theme, toggleTheme } = useTheme();
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -40,90 +42,72 @@ export default function Navbar() {
     <>
       <nav
         className={cn(
-          'fixed left-0 top-0 z-[100] w-full transition-all duration-1000 px-6 py-8 md:px-12',
-          isScrolled ? 'py-4' : 'py-8'
+          'fixed left-0 top-0 z-[100] w-full transition-all duration-500',
+          isScrolled ? 'py-3' : 'py-5'
         )}
       >
-        <div
-          className={cn(
-            'mx-auto max-w-[1800px] rounded-full transition-all duration-700 px-10 py-5 flex items-center justify-between',
-            isScrolled || isMenuOpen ? 'glass shadow-2xl' : 'bg-transparent'
-          )}
-        >
-          <Link href="/" className="flex items-center gap-4" onClick={() => setIsMenuOpen(false)}>
-             <span className={cn(
-                "text-2xl font-serif tracking-tightest uppercase transition-colors duration-700",
-                isScrolled || isMenuOpen || theme === 'dark' ? "text-foreground" : "text-white"
-              )}>
-                Collectif<span className="text-accent">.</span>
+        <div className="container-wide px-6">
+          <div
+            className={cn(
+              'mx-auto flex items-center justify-between rounded-full transition-all duration-500 px-6 md:px-8 py-3',
+              isScrolled 
+                ? 'bg-background/80 backdrop-blur-xl shadow-lg shadow-black/5 border border-border/50' 
+                : 'bg-transparent'
+            )}
+          >
+            {/* Logo */}
+            <Link href="/" className="relative z-10" onClick={() => setIsMenuOpen(false)}>
+              <span className="text-lg md:text-xl font-serif tracking-tightest uppercase">
+                Collectif<span className="text-muted italic lowercase font-light">.design</span>
               </span>
-          </Link>
-
-          <div className="hidden items-center gap-12 lg:flex">
-            {navigation.featured.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={cn(
-                  "text-[9px] font-bold uppercase tracking-[0.6em] transition-all hover:text-accent",
-                  isScrolled || isMenuOpen || theme === 'dark' ? "text-foreground/40" : "text-white/40"
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-10">
-            <button 
-              onClick={toggleTheme}
-              className={cn(
-                "group relative flex h-7 w-14 items-center rounded-full transition-all duration-500 p-1",
-                theme === 'dark' ? "bg-accent/20" : "bg-foreground/5"
-              )}
-            >
-              <div 
-                className={cn(
-                  "flex h-5 w-5 items-center justify-center rounded-full transition-all duration-500 shadow-sm",
-                  theme === 'dark' ? "translate-x-7 bg-accent" : "translate-x-0 bg-foreground"
-                )}
-              >
-                {theme === 'light' ? (
-                  <Moon size={10} className="text-background" strokeWidth={3} />
-                ) : (
-                  <Sun size={10} className="text-background" strokeWidth={3} />
-                )}
-              </div>
-            </button>
-            <Link href="/admin" className={cn(
-              "transition-colors hover:text-accent",
-              isScrolled || isMenuOpen || theme === 'dark' ? "text-foreground" : "text-white"
-            )}>
-              <User size={18} strokeWidth={1.5} />
             </Link>
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className={cn(
-                "relative transition-colors hover:text-accent",
-                isScrolled || isMenuOpen || theme === 'dark' ? "text-foreground" : "text-white"
-              )}
-            >
-              <ShoppingBag size={18} strokeWidth={1.5} />
-              {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[8px] font-bold text-background shadow-lg">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-            <button
-              className={cn(
-                "group flex h-12 w-12 items-center justify-center rounded-full transition-all duration-700",
-                isScrolled || isMenuOpen || theme === 'dark' ? "bg-foreground text-background" : "bg-white/10 text-white backdrop-blur-3xl border border-white/10"
-              )}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+
+            {/* Desktop Navigation */}
+            <div className="hidden items-center gap-8 lg:flex">
+              {navigation.main.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="text-[10px] font-bold uppercase tracking-[0.15em] transition-colors hover:text-muted"
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-4 md:gap-5">
+              <button className="hidden md:block transition-colors hover:text-muted">
+                <Search size={17} strokeWidth={1.5} />
+              </button>
+              <Link href="/admin" className="hidden md:block transition-colors hover:text-muted">
+                <User size={17} strokeWidth={1.5} />
+              </Link>
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                className="relative transition-colors hover:text-muted"
+              >
+                <ShoppingBag size={17} strokeWidth={1.5} />
+                {cartCount > 0 && (
+                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[7px] font-bold text-background">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+              <button
+                className="flex items-center justify-center transition-colors hover:text-muted lg:hidden"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
+              </button>
+              {/* Desktop menu toggle */}
+              <button
+                className="hidden lg:flex items-center justify-center transition-colors hover:text-muted"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X size={18} strokeWidth={1.5} /> : <Menu size={18} strokeWidth={1.5} />}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -132,47 +116,61 @@ export default function Navbar() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[90] bg-background text-foreground pt-48"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[90] bg-background/98 backdrop-blur-3xl flex items-center"
           >
-            <div className="mx-auto max-w-[1800px] px-12 h-full grid grid-cols-1 lg:grid-cols-2 gap-24 pb-24">
-              <div className="flex flex-col justify-center space-y-8">
-                <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-accent mb-12 block">
-                  Studio Universes
+            <div className="container-wide px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
+              {/* Main Nav */}
+              <div className="space-y-3">
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block mb-8">
+                  Navigation
                 </span>
-                {navigation.categories.map((cat) => (
-                  <Link
-                    key={cat.name}
-                    href={cat.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="group block text-6xl md:text-8xl font-medium tracking-tightest lowercase leading-[0.8] hover:text-accent transition-all hover:translate-x-12"
+                {navigation.main.map((link, idx) => (
+                  <motion.div
+                    key={link.name}
+                    initial={{ opacity: 0, x: -15 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + idx * 0.05 }}
                   >
-                    {cat.name}<span className="text-accent">.</span>
-                  </Link>
-                ))}
-              </div>
-
-              <div className="hidden lg:flex flex-col justify-center gap-16 border-l border-border/50 pl-24">
-                <div className="space-y-12">
-                   {navigation.featured.map((link) => (
                     <Link
-                      key={link.name}
                       href={link.href}
                       onClick={() => setIsMenuOpen(false)}
-                      className="block text-4xl font-light hover:text-accent transition-all hover:translate-x-4 lowercase"
+                      className="block text-4xl md:text-6xl font-serif hover:text-muted transition-colors py-1"
                     >
                       {link.name}
                     </Link>
-                  ))}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Categories + Contact */}
+              <div className="hidden lg:flex flex-col justify-center border-l border-border pl-16 space-y-12">
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block">Catégories</span>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+                    {navigation.categories.map((cat) => (
+                      <Link
+                        key={cat.name}
+                        href={cat.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-base font-light hover:text-muted transition-colors"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
                 
-                <div className="pt-24 space-y-6">
-                   <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted/40">Atelier Rabat</p>
-                   <p className="text-sm font-light text-muted">Hay Riad, Avenue Annakhil, Villa 14</p>
-                   <p className="text-sm font-light text-muted">+212 6 61 22 33 44</p>
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block">Contact</span>
+                  <div className="space-y-2">
+                    <p className="text-sm font-light text-muted">Casablanca · Rabat · Marrakech · Tanger</p>
+                    <p className="text-sm font-light text-muted">contact@collectif.design</p>
+                    <p className="text-sm font-light text-muted">+212 5 22 00 00 00</p>
+                  </div>
                 </div>
               </div>
             </div>

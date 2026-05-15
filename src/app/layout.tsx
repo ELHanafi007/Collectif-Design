@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Jost, Bodoni_Moda } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const cormorant = Cormorant_Garamond({ 
+const jost = Jost({ subsets: ["latin"], variable: "--font-sans" });
+const bodoni = Bodoni_Moda({ 
   subsets: ["latin"], 
-  weight: ['300', '400', '500', '600', '700'],
-  variable: "--font-cormorant" 
+  variable: "--font-serif" 
 });
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
@@ -28,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+    <html lang="en" className={`${jost.variable} ${bodoni.variable}`}>
       <body className="antialiased">
         <ThemeProvider>
           <CartProvider>

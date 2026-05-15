@@ -1,119 +1,136 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import Navbar from '@/components/layout/Navbar';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Check, ArrowRight } from 'lucide-react';
 
 const packs = [
   {
-    title: 'Emerald Suite',
-    price: '25,000 MAD',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1000',
-    includes: ['Master Bed', '2 Nightstands', 'Velvet Ottoman']
+    title: 'Pack Chambre',
+    price: '25.000',
+    oldPrice: '32.000',
+    image: '/tablesdechevet.jpeg',
+    includes: ['Lit King Size', '2 Tables de Chevet', 'Commode 6 tiroirs', 'Miroir Mural'],
+    badge: 'Le Plus Populaire'
   },
   {
-    title: 'Nordic Living',
-    price: '18,500 MAD',
-    image: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=1000',
-    includes: ['3-Seater Sofa', 'Coffee Table', 'TV Unit']
+    title: 'Pack Salon',
+    price: '18.500',
+    oldPrice: '24.000',
+    image: '/salon.jpeg',
+    includes: ['Canapé 3 Places', 'Table Basse', 'Meuble TV', '2 Tables d\'Appoint'],
+    badge: null
   },
   {
-    title: 'Dining Royale',
-    price: '15,000 MAD',
-    image: 'https://images.unsplash.com/photo-1617806118233-18e1db20706a?auto=format&fit=crop&q=80&w=1000',
-    includes: ['Marble Table', '6 Leather Chairs', 'Sideboard']
+    title: 'Pack Salle à Manger',
+    price: '15.000',
+    oldPrice: '19.500',
+    image: '/table a manger.jpeg',
+    includes: ['Table à Manger 6 Places', '6 Chaises Design', 'Buffet de Rangement'],
+    badge: 'Offre Limitée'
   }
 ];
 
 export default function PacksPromo() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const sections = gsap.utils.toArray('.pack-section');
-    
-    gsap.to(sections, {
-      xPercent: -100 * (sections.length - 1),
-      ease: "none",
-      scrollTrigger: {
-        trigger: containerRef.current,
-        pin: true,
-        scrub: 1,
-        snap: 1 / (sections.length - 1),
-        end: () => "+=" + (containerRef.current?.offsetWidth || 0)
-      }
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, []);
-
   return (
-    <main className="bg-premium-dark text-white">
+    <main className="min-h-screen bg-background">
       <Navbar />
       
-      <div ref={containerRef} className="overflow-hidden">
-        <div ref={scrollRef} className="flex w-[300vw]">
-          {packs.map((pack, i) => (
-            <section 
-              key={i} 
-              className="pack-section h-screen w-screen flex flex-col md:flex-row items-center p-12 md:p-24 gap-12"
+      {/* Hero */}
+      <section className="relative h-[50vh] overflow-hidden">
+        <img src="/hero.jpeg" alt="Packs Promo" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex items-end">
+          <div className="container-wide px-6 md:px-12 pb-12 text-white">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-3"
             >
-              <div className="flex-1 space-y-8">
-                <span className="text-accent font-bold tracking-[0.4em] uppercase text-sm">
-                  Exclusive Bundle 0{i + 1}
-                </span>
-                <h1 className="text-6xl md:text-8xl font-bold tracking-tighter">
-                  {pack.title}
-                </h1>
-                <div className="space-y-4">
-                  <h4 className="text-muted uppercase text-xs tracking-widest">Included in pack:</h4>
-                  <ul className="grid grid-cols-2 gap-4">
-                    {pack.includes.map((item, j) => (
-                      <li key={j} className="flex items-center gap-2 text-premium-white/80">
-                        <div className="w-1 h-1 bg-accent rounded-full" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="pt-8">
-                  <p className="text-4xl font-bold mb-8 text-accent">{pack.price}</p>
-                  <button className="bg-white text-black px-12 py-5 rounded-full font-bold hover:bg-accent hover:text-white transition-all active:scale-95 shadow-2xl">
-                    Order Pack
-                  </button>
-                </div>
-              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60">Offres Exclusives</span>
+              <h1 className="text-5xl md:text-7xl tracking-tightest">Packs Promo</h1>
+              <p className="text-sm font-light text-white/50 max-w-md">
+                Équipez votre intérieur avec nos packs soigneusement composés à prix exceptionnel.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-              <div className="flex-1 h-full w-full relative">
-                <div className="absolute inset-0 bg-accent/20 rounded-[4rem] -rotate-3 scale-95" />
-                <div className="relative h-full w-full rounded-[4rem] overflow-hidden shadow-2xl">
+      {/* Packs Grid */}
+      <section className="section-padding">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {packs.map((pack, idx) => (
+              <motion.div
+                key={pack.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1, duration: 0.6 }}
+                className="group bg-surface rounded-2xl overflow-hidden border border-border hover:border-foreground transition-all"
+              >
+                {/* Image */}
+                <div className="relative aspect-[16/10] overflow-hidden">
                   <img 
                     src={pack.image} 
                     alt={pack.title}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
+                  {pack.badge && (
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-foreground text-background px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest">
+                        {pack.badge}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </section>
-          ))}
-        </div>
-      </div>
 
-      <section className="h-screen flex items-center justify-center text-center px-6">
-        <div className="max-w-3xl">
-          <h2 className="text-5xl md:text-7xl font-bold mb-8">Limited Time Offers.</h2>
-          <p className="text-xl text-premium-white/60 mb-12">
-            These bundles are available for a limited time as part of our 2024 Collection launch.
-          </p>
-          <Link href="/" className="text-accent text-lg font-bold border-b-2 border-accent pb-2">
-            Explore All Categories
-          </Link>
+                {/* Content */}
+                <div className="p-8 space-y-6">
+                  <div>
+                    <h3 className="text-2xl font-serif mb-2">{pack.title}</h3>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-3xl font-medium">{pack.price} <span className="text-sm font-light text-muted">MAD</span></span>
+                      <span className="text-sm text-muted line-through">{pack.oldPrice} MAD</span>
+                    </div>
+                  </div>
+
+                  <div className="h-[1px] bg-border" />
+
+                  <div className="space-y-3">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted">Inclus dans le pack</span>
+                    <ul className="space-y-2">
+                      {pack.includes.map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-sm font-light">
+                          <Check size={14} className="text-muted shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Link 
+                    href="/contact" 
+                    className="w-full flex items-center justify-center gap-3 bg-foreground text-background rounded-xl py-3.5 hover:opacity-90 transition-all active:scale-[0.98]"
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Commander ce Pack</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-20 text-center space-y-4">
+            <p className="text-muted text-sm font-light">Vous avez un projet spécifique ? Nous créons des packs sur mesure.</p>
+            <Link href="/contact" className="btn-premium inline-flex">
+              <span>Demander un Devis Personnalisé</span>
+              <ArrowRight size={14} className="relative z-10" />
+            </Link>
+          </div>
         </div>
       </section>
     </main>

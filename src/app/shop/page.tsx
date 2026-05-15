@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import ProductCard from "@/components/ui/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, ChevronDown, LayoutGrid, List, X } from "lucide-react";
+import { Filter, ChevronDown, X } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
 import { Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
@@ -67,191 +67,146 @@ export default function ShopPage() {
       <Navbar />
       
       {/* Cinematic Header */}
-      <section className="relative pt-48 pb-24 px-6 md:px-12 border-b border-border/50">
-        <div className="container mx-auto">
+      <section className="relative pt-48 pb-16 px-6 md:px-12">
+        <div className="container-wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent mb-6 block">
-              Curated Collections
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block">
+              La Collection
             </span>
-            <h1 className="text-[10vw] md:text-[8vw] font-medium leading-[0.8] tracking-tightest mb-16 lowercase">
-              L'Atelier <br />
-              <span className="italic font-light">de Design</span>
+            <h1 className="text-6xl md:text-8xl tracking-tightest">
+              L'Atelier <span className="text-muted italic">Collectif</span>
             </h1>
           </motion.div>
 
-          {/* Filtering System */}
-          <div className="mt-20 space-y-12">
-             {/* Main Categories Navigation */}
-             <div className="flex flex-wrap gap-x-12 gap-y-6">
-                {categoryNames.map((cat, idx) => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat);
-                      setSelectedSubCategory("Tous");
-                    }}
-                    className={cn(
-                      "group relative text-[10px] font-bold uppercase tracking-[0.4em] transition-colors duration-500",
-                      selectedCategory === cat ? "text-foreground" : "text-muted/40 hover:text-foreground"
-                    )}
-                  >
-                    {cat}
-                    {selectedCategory === cat && (
-                      <motion.div 
-                        layoutId="activeCategory"
-                        className="absolute -bottom-4 left-0 h-[2px] w-full bg-accent"
-                      />
-                    )}
-                  </button>
-                ))}
-             </div>
+          {/* Filtering Toolbar */}
+          <div className="mt-16 flex flex-col md:flex-row md:items-center justify-between py-6 border-y border-border gap-6">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+              {categoryNames.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setSelectedSubCategory("Tous");
+                  }}
+                  className={cn(
+                    "text-[10px] font-bold uppercase tracking-widest transition-colors",
+                    selectedCategory === cat ? "text-foreground" : "text-muted hover:text-foreground"
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-             {/* Toolbar */}
-             <div className="flex flex-col md:flex-row md:items-center justify-between py-8 border-y border-border/30 gap-8">
-                <div className="flex items-center gap-12">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-muted/60">
-                    {filteredProducts.length} PIÈCES TROUVÉES
-                  </p>
-                  <button 
-                    onClick={() => setShowFilters(!showFilters)}
-                    className={cn(
-                      "flex items-center gap-4 text-[9px] font-bold uppercase tracking-[0.4em] transition-all",
-                      showFilters ? "text-accent" : "text-foreground hover:text-accent"
-                    )}
-                  >
-                    <Filter size={14} className={showFilters ? "rotate-180" : ""} /> 
-                    {showFilters ? "Fermer les filtres" : "Affiner la recherche"}
-                  </button>
-                </div>
-                
-                <div className="flex items-center gap-12">
-                  <div className="hidden lg:flex items-center gap-6 border-r border-border pr-12">
-                    <button className="text-foreground transition-colors"><LayoutGrid size={16} /></button>
-                    <button className="text-muted/40 hover:text-foreground transition-colors"><List size={16} /></button>
-                  </div>
-                  <button className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-[0.4em] hover:text-accent transition-colors">
-                    Trier <ChevronDown size={14} />
-                  </button>
-                </div>
-             </div>
-
-             {/* Advanced Filters Panel */}
-             <AnimatePresence>
-                {showFilters && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 py-12">
-                      {/* Sub-categories */}
-                      <div className="space-y-8">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent">Sous-Catégories</p>
-                        <div className="flex flex-wrap gap-3">
-                          {subCategories.length > 0 ? subCategories.map((sub) => (
-                            <button
-                              key={sub}
-                              onClick={() => setSelectedSubCategory(sub)}
-                              className={cn(
-                                "text-[9px] font-bold uppercase tracking-[0.3em] px-6 py-3 border transition-all duration-500",
-                                selectedSubCategory === sub 
-                                  ? "bg-foreground text-background border-foreground" 
-                                  : "bg-transparent border-border text-muted/60 hover:border-accent hover:text-accent"
-                              )}
-                            >
-                              {sub}
-                            </button>
-                          )) : (
-                            <p className="text-[10px] italic text-muted/40">Choisissez une catégorie pour voir les détails</p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Price Range */}
-                      <div className="space-y-8">
-                        <div className="flex justify-between items-center">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-accent">Budget Maximum</p>
-                          <span className="text-sm font-medium">{maxPrice.toLocaleString()} MAD</span>
-                        </div>
-                        <div className="space-y-4">
-                          <input 
-                            type="range" 
-                            min="1000" 
-                            max="100000" 
-                            step="1000"
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-                            className="w-full h-[1px] bg-border appearance-none cursor-pointer accent-accent"
-                          />
-                          <div className="flex justify-between text-[8px] font-bold uppercase tracking-[0.4em] text-muted/40">
-                            <span>1.000 MAD</span>
-                            <span>100.000 MAD</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Reset */}
-                      <div className="flex items-end justify-end">
-                        <button 
-                          onClick={() => {
-                            setSelectedCategory("Tous");
-                            setSelectedSubCategory("Tous");
-                            setMaxPrice(100000);
-                          }}
-                          className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-[0.4em] text-muted/40 hover:text-accent transition-colors"
-                        >
-                          <X size={12} /> Réinitialiser Tout
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-             </AnimatePresence>
+            <div className="flex items-center gap-8">
+              <button 
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
+              >
+                <Filter size={14} /> 
+                Filtres
+              </button>
+              <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+                Trier <ChevronDown size={14} />
+              </button>
+            </div>
           </div>
+
+          {/* Advanced Filters */}
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 py-10 border-b border-border">
+                  <div className="space-y-4">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted">Sous-Catégories</span>
+                    <div className="flex flex-wrap gap-2">
+                      {subCategories.map((sub) => (
+                        <button
+                          key={sub}
+                          onClick={() => setSelectedSubCategory(sub)}
+                          className={cn(
+                            "text-[9px] px-4 py-2 rounded-full border transition-all",
+                            selectedSubCategory === sub ? "bg-foreground text-background border-foreground" : "border-border text-muted hover:border-foreground hover:text-foreground"
+                          )}
+                        >
+                          {sub}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-muted">Prix Max</span>
+                      <span className="text-xs">{maxPrice.toLocaleString()} MAD</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min="1000" 
+                      max="100000" 
+                      step="1000"
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+                      className="w-full h-[1px] bg-border appearance-none cursor-pointer accent-foreground"
+                    />
+                  </div>
+
+                  <div className="flex items-end justify-end">
+                    <button 
+                      onClick={() => {
+                        setSelectedCategory("Tous");
+                        setSelectedSubCategory("Tous");
+                        setMaxPrice(100000);
+                      }}
+                      className="text-[9px] font-bold uppercase tracking-widest text-muted hover:text-foreground transition-colors flex items-center gap-2"
+                    >
+                      <X size={12} /> Réinitialiser
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
-      {/* Product Grid Section */}
-      <section className="py-24 px-6 md:px-12">
-        <div className="container mx-auto">
+      {/* Grid */}
+      <section className="section-padding pt-10">
+        <div className="container-wide">
           {loading ? (
-            <div className="py-48 flex flex-col items-center justify-center space-y-8">
-              <div className="h-20 w-[1px] bg-border relative overflow-hidden">
-                <motion.div
-                  animate={{ y: ["-100%", "100%"] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 bg-accent w-full"
-                />
-              </div>
-              <p className="text-[9px] font-bold uppercase tracking-[0.8em] text-muted/40 animate-pulse">Chargement de la collection...</p>
+            <div className="py-32 flex justify-center">
+              <div className="h-10 w-10 border-t-2 border-foreground rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} {...product} />
-              ))}
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} {...product} />
+                ))}
+              </div>
               
               {filteredProducts.length === 0 && (
-                <div className="col-span-full py-48 text-center">
-                  <h3 className="text-3xl font-serif italic text-muted/40 mb-8">Aucune pièce ne correspond à votre sélection.</h3>
+                <div className="py-32 text-center space-y-4">
+                  <h3 className="text-2xl font-serif italic text-muted">Aucune pièce trouvée.</h3>
                   <button 
-                    onClick={() => { 
-                      setSelectedCategory("Tous"); 
-                      setSelectedSubCategory("Tous"); 
-                      setMaxPrice(100000);
-                    }}
-                    className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent border-b border-accent pb-2 hover:text-foreground hover:border-foreground transition-all"
+                    onClick={() => { setSelectedCategory("Tous"); setSelectedSubCategory("Tous"); setMaxPrice(100000); }}
+                    className="text-[10px] font-bold uppercase tracking-widest border-b border-foreground pb-1"
                   >
-                    Voir toute la collection
+                    Voir tout
                   </button>
                 </div>
               )}
-            </div>
+            </>
           )}
         </div>
       </section>

@@ -2,55 +2,76 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function ClosingCTA() {
   return (
-    <section className="py-48 px-6 md:px-12 bg-background border-t border-border/10">
-      <div className="container mx-auto text-center space-y-16">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="space-y-8"
-        >
-          <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-accent">
-            Prêt pour l'Exceptionnel ?
-          </span>
-          <h2 className="text-7xl md:text-[10vw] font-medium tracking-tightest lowercase leading-[0.8]">
-            Élevez votre <br />
-            <span className="italic font-light">Espace de Vie</span>
-          </h2>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row items-center justify-center gap-12 pt-12"
-        >
-          <Link 
-            href="/shop"
-            className="group relative flex items-center justify-center gap-8 overflow-hidden rounded-full border border-foreground bg-foreground px-12 py-7 transition-all hover:bg-accent hover:border-accent"
+    <section className="relative overflow-hidden bg-foreground text-background py-32 px-6 md:px-12">
+      <div className="container-wide relative z-10">
+        <div className="max-w-3xl mx-auto text-center space-y-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+            className="space-y-6"
           >
-            <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.6em] text-background group-hover:text-foreground">
-              Découvrir le Catalogue
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-background/40">
+              Prêt à Transformer Votre Intérieur ?
             </span>
-            <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-expo" />
-          </Link>
-          
-          <Link 
-            href="/contact"
-            className="text-[10px] font-bold uppercase tracking-[0.6em] hover:text-accent transition-colors"
-          >
-            Prendre Rendez-vous au Showroom
-          </Link>
-        </motion.div>
+            <h2 className="text-5xl md:text-7xl tracking-tightest leading-tight">
+              Visitez Notre <span className="italic text-background/60">Showroom</span>
+            </h2>
+            <p className="max-w-xl mx-auto text-base font-light text-background/40 leading-relaxed">
+              Venez toucher, sentir et vivre nos créations. Nos conseillers vous accompagnent 
+              dans la conception de votre espace idéal.
+            </p>
+          </motion.div>
 
-        <div className="pt-32 opacity-10">
-           <span className="text-[14vw] font-serif tracking-tighter uppercase select-none pointer-events-none">Collectif</span>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4"
+          >
+            <Link 
+              href="/shop"
+              className="group inline-flex items-center gap-4 border border-background/20 rounded-full px-8 py-4 hover:bg-background hover:text-foreground transition-all duration-500"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                Voir le Catalogue
+              </span>
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </Link>
+            
+            <Link 
+              href="/contact"
+              className="group inline-flex items-center gap-4 border border-background/20 rounded-full px-8 py-4 hover:bg-background hover:text-foreground transition-all duration-500"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em]">
+                Prendre Rendez-vous
+              </span>
+              <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
+
+          {/* Cities */}
+          <div className="pt-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
+            {['Casablanca', 'Rabat', 'Marrakech', 'Tanger'].map((city) => (
+              <span key={city} className="text-[9px] font-bold uppercase tracking-[0.4em] text-background/20">
+                {city}
+              </span>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Decorative oversized text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span className="text-[20vw] font-serif tracking-tightest text-background/[0.02] whitespace-nowrap">
+          COLLECTIF
+        </span>
       </div>
     </section>
   );

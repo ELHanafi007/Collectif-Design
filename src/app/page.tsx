@@ -3,6 +3,7 @@ import Hero from '@/components/sections/Hero';
 import CategoryStack from '@/components/sections/CategoryStack';
 import HorizontalFeatures from '@/components/sections/HorizontalFeatures';
 import FeaturedCollection from '@/components/sections/FeaturedCollection';
+import PromoBanner from '@/components/sections/PromoBanner';
 import ClosingCTA from '@/components/sections/ClosingCTA';
 
 export default function Home() {
@@ -10,9 +11,10 @@ export default function Home() {
     <main className="relative bg-background overflow-hidden">
       <Navbar />
       <Hero />
-      <CategoryStack />
       <HorizontalFeatures />
+      <CategoryStack />
       <FeaturedCollection />
+      <PromoBanner />
       <ClosingCTA />
     </main>
   );

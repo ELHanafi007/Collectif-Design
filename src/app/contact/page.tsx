@@ -2,112 +2,118 @@
 
 import Navbar from '@/components/layout/Navbar';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Hash } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 export default function ContactPage() {
   return (
-    <main className="bg-white min-h-screen">
+    <main className="bg-background min-h-screen">
       <Navbar />
 
-      <div className="pt-48 pb-32 px-6 max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row gap-32">
-          {/* Left: Info */}
-          <div className="lg:w-1/3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-accent mb-8 block">
-              Contactez-nous
-            </span>
-            <h1 className="text-6xl font-bold tracking-tighter mb-12 lowercase">
-              Visitez notre <br /> Studio<span className="text-accent">.</span>
-            </h1>
-            
-            <div className="space-y-12">
-              <div className="flex gap-6">
-                <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
-                  <MapPin size={20} className="text-accent" />
-                </div>
-                <div>
-                  <h4 className="font-bold mb-2">Localisation</h4>
-                  <p className="text-muted leading-relaxed">
-                    123 Rue de l'Artisanat,<br />
-                    Quartier Gauthier, Casablanca
-                  </p>
-                </div>
-              </div>
+      {/* Hero */}
+      <section className="relative h-[40vh] overflow-hidden">
+        <img src="/decoration.jpeg" alt="Contact" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-0 flex items-end">
+          <div className="container-wide px-6 md:px-12 pb-12 text-white">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-3"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/60">Contact</span>
+              <h1 className="text-5xl md:text-6xl tracking-tightest">Parlons de Votre Projet</h1>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-              <div className="flex gap-6">
-                <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
-                  <Clock size={20} className="text-accent" />
-                </div>
-                <div>
-                  <h4 className="font-bold mb-2">Horaires</h4>
-                  <p className="text-muted leading-relaxed">
-                    Lun — Ven: 09:00 - 19:00<br />
-                    Sam: 10:00 - 15:00
-                  </p>
-                </div>
+      <div className="section-padding">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            {/* Info */}
+            <div className="lg:col-span-4 space-y-10">
+              <div className="space-y-4">
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">Nos Coordonnées</span>
+                <h2 className="text-3xl tracking-tightest">Visitez Notre Showroom</h2>
               </div>
-
-              <div className="flex gap-6">
-                <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center shrink-0">
-                  <Hash size={20} className="text-accent" />
-                </div>
-                <div>
-                  <h4 className="font-bold mb-2">Suivez-nous</h4>
-                  <p className="text-muted leading-relaxed">
-                    @collectif_design_
-                  </p>
-                </div>
+              
+              <div className="space-y-8">
+                {[
+                  { icon: MapPin, label: 'Adresse', value: '123 Rue de l\'Artisanat,\nQuartier Gauthier, Casablanca' },
+                  { icon: Phone, label: 'Téléphone', value: '+212 5 22 00 00 00' },
+                  { icon: Mail, label: 'Email', value: 'contact@collectif.design' },
+                  { icon: Clock, label: 'Horaires', value: 'Lun — Ven: 09:00 - 19:00\nSam: 10:00 - 15:00' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4">
+                    <div className="h-10 w-10 rounded-full border border-border flex items-center justify-center shrink-0">
+                      <item.icon size={16} className="text-muted" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-widest text-muted mb-1">{item.label}</p>
+                      <p className="text-sm font-light whitespace-pre-line">{item.value}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
 
-          {/* Right: Form */}
-          <div className="lg:w-2/3 bg-gray-50 rounded-[4rem] p-12 md:p-20">
-            <h2 className="text-3xl font-bold mb-12 tracking-tight">Demander un Rendez-vous</h2>
-            
-            <form className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Form */}
+            <div className="lg:col-span-8 bg-surface rounded-2xl p-8 md:p-12">
+              <h3 className="text-xl font-serif mb-8">Demander un Rendez-vous</h3>
+              
+              <form className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Nom Complet</label>
+                    <input 
+                      type="text" 
+                      placeholder="Votre nom"
+                      className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Email</label>
+                    <input 
+                      type="email" 
+                      placeholder="votre@email.com"
+                      className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted ml-4">Nom Complet</label>
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Téléphone</label>
                   <input 
-                    type="text" 
-                    placeholder="Jean Dupont"
-                    className="w-full bg-white rounded-full px-8 py-5 border-none shadow-sm focus:ring-2 focus:ring-accent outline-none transition-all"
+                    type="tel" 
+                    placeholder="+212 6 00 00 00 00"
+                    className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted ml-4">Adresse Email</label>
-                  <input 
-                    type="email" 
-                    placeholder="jean@example.com"
-                    className="w-full bg-white rounded-full px-8 py-5 border-none shadow-sm focus:ring-2 focus:ring-accent outline-none transition-all"
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Objet</label>
+                  <select className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light appearance-none">
+                    <option>Consultation Design d'Intérieur</option>
+                    <option>Demande de Mobilier Sur Mesure</option>
+                    <option>Visite du Showroom</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Message</label>
+                  <textarea 
+                    rows={5}
+                    placeholder="Parlez-nous de votre projet..."
+                    className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light resize-none"
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-muted ml-4">Objet</label>
-                <select className="w-full bg-white rounded-full px-8 py-5 border-none shadow-sm focus:ring-2 focus:ring-accent outline-none transition-all appearance-none">
-                  <option>Consultation Design d'Intérieur</option>
-                  <option>Demande de Mobilier Sur Mesure</option>
-                  <option>Visite du Showroom</option>
-                  <option>Autre</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-muted ml-4">Message</label>
-                <textarea 
-                  rows={6}
-                  placeholder="Parlez-nous de votre projet..."
-                  className="w-full bg-white rounded-[2rem] px-8 py-6 border-none shadow-sm focus:ring-2 focus:ring-accent outline-none transition-all resize-none"
-                />
-              </div>
-
-              <button className="w-full bg-accent text-white py-6 rounded-full font-bold hover:bg-black transition-all active:scale-[0.98] shadow-xl">
-                Envoyer la Demande
-              </button>
-            </form>
+                <button className="w-full bg-foreground text-background py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.99]">
+                  Envoyer la Demande
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

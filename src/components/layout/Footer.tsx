@@ -1,19 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowUpRight, Globe } from 'lucide-react';
+import { ArrowUpRight, Globe, Mail, Share2 } from 'lucide-react';
 
 const footerLinks = {
   shop: [
     { name: 'Packs Promo', href: '/packs-promo' },
     { name: 'Salons', href: '/categories/salons' },
-    { name: 'Canapés', href: '/categories/canapes' },
+    { name: 'Espaces Repas', href: '/categories/tables-a-manger' },
     { name: 'Chambre', href: '/categories/chambre' },
   ],
   studio: [
     { name: 'Notre Histoire', href: '/about' },
     { name: 'Showroom', href: '/about#showroom' },
-    { name: 'Artisanat', href: '/about' },
+    { name: 'Collaborations', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ],
   legal: [
@@ -29,52 +29,53 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-surface text-foreground pt-48 pb-16 px-6 md:px-12 lg:px-24 rounded-t-[5rem] transition-colors duration-700">
-      <div className="max-w-[1800px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-24 mb-48">
+    <footer className="bg-background text-foreground pt-32 pb-16 px-6 md:px-12 lg:px-24 border-t border-border mt-20">
+      <div className="container-wide">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 lg:gap-24 mb-32">
           {/* Brand Col */}
-          <div className="space-y-10">
+          <div className="lg:col-span-4 space-y-8">
             <Link href="/" className="inline-block">
-              <img 
-                src="/logo.jpg" 
-                alt="Collectif Design Logo" 
-                className="h-14 w-auto object-contain dark:brightness-0 dark:invert brightness-0" 
-              />
+              <span className="text-3xl font-serif tracking-tightest uppercase">
+                Collectif<span className="text-muted italic lowercase font-light">.design</span>
+              </span>
             </Link>
             <p className="text-muted text-sm leading-relaxed max-w-xs font-light">
-              Redéfinir l'art de vivre marocain à travers le design contemporain et l'artisanat d'exception.
+              L'excellence du mobilier sur mesure. Chaque pièce est une narration, chaque espace une expérience.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:bg-accent hover:border-accent transition-all duration-700">
-                <Globe size={18} strokeWidth={1.5} />
+              <Link href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
+                <Share2 size={16} strokeWidth={1.5} />
+              </Link>
+              <Link href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
+                <Mail size={16} strokeWidth={1.5} />
+              </Link>
+              <Link href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
+                <Globe size={16} strokeWidth={1.5} />
               </Link>
             </div>
           </div>
 
-          {/* Links Col 1 */}
-          <div className="space-y-10">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">Boutique</h4>
-            <ul className="space-y-5">
+          {/* Links Cols */}
+          <div className="lg:col-span-2 space-y-8">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">Boutique</h4>
+            <ul className="space-y-4">
               {footerLinks.shop.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-muted hover:text-foreground transition-all text-sm flex items-center gap-3 group font-light">
+                  <Link href={link.href} className="text-muted hover:text-foreground transition-all text-sm font-light">
                     {link.name}
-                    <ArrowUpRight size={14} className="opacity-0 -translate-y-2 translate-x-2 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-500" />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Links Col 2 */}
-          <div className="space-y-10">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">Studio</h4>
-            <ul className="space-y-5">
+          <div className="lg:col-span-2 space-y-8">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">L'Atelier</h4>
+            <ul className="space-y-4">
               {footerLinks.studio.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-muted hover:text-foreground transition-all text-sm flex items-center gap-3 group font-light">
+                  <Link href={link.href} className="text-muted hover:text-foreground transition-all text-sm font-light">
                     {link.name}
-                    <ArrowUpRight size={14} className="opacity-0 -translate-y-2 translate-x-2 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-500" />
                   </Link>
                 </li>
               ))}
@@ -82,37 +83,48 @@ export default function Footer() {
           </div>
 
           {/* Newsletter */}
-          <div className="space-y-10">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.6em] text-accent">Newsletter</h4>
-            <p className="text-sm text-muted font-light leading-relaxed">Inscrivez-vous pour recevoir nos actualités et invitations exclusives.</p>
-            <div className="relative">
+          <div className="lg:col-span-4 space-y-8">
+            <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">Le Journal</h4>
+            <p className="text-sm text-muted font-light leading-relaxed">
+              Inscrivez-vous pour recevoir des inspirations exclusives et être informé de nos nouvelles collections.
+            </p>
+            <div className="flex gap-2">
               <input 
                 type="email" 
-                placeholder="Votre email"
-                className="w-full bg-background border border-border rounded-full px-8 py-5 text-sm focus:outline-none focus:border-accent/50 transition-all font-light"
+                placeholder="Votre adresse email"
+                className="flex-1 bg-surface border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-foreground transition-all font-light"
               />
-              <button className="absolute right-2 top-2 bottom-2 bg-accent text-white px-6 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-foreground hover:text-background transition-all">
-                S'inscrire
+              <button className="bg-foreground text-background px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all">
+                Ok
               </button>
             </div>
           </div>
         </div>
 
-        <div className="pt-16 border-t border-border flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="flex gap-10 text-[9px] font-bold uppercase tracking-[0.4em] text-muted">
+        {/* Huge Text */}
+        <div className="relative overflow-hidden mb-20 pointer-events-none select-none">
+           <h2 className="text-[15vw] font-serif tracking-tightest leading-none text-muted/5 whitespace-nowrap">
+             COLLECTIF DESIGN STUDIO
+           </h2>
+        </div>
+
+        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex gap-8 text-[9px] font-bold uppercase tracking-[0.4em] text-muted">
             {footerLinks.legal.map(link => (
               <Link key={link.name} href={link.href} className="hover:text-foreground transition-colors">{link.name}</Link>
             ))}
           </div>
           
+          <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-muted">
+            © 2026 Collectif Design. Tous droits réservés.
+          </p>
+
           <button 
             onClick={scrollToTop}
-            className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-[0.5em] text-muted hover:text-foreground transition-all group"
+            className="flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.4em] text-muted hover:text-foreground transition-all"
           >
-            Back to top
-            <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center group-hover:border-accent transition-all duration-700">
-              <ArrowUpRight size={16} className="-rotate-45" />
-            </div>
+            Retour en haut
+            <ArrowUpRight size={14} />
           </button>
         </div>
       </div>
