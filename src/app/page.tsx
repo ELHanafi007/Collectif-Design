@@ -1,21 +1,17 @@
 import Navbar from '@/components/layout/Navbar';
 import Hero from '@/components/sections/Hero';
-import CategoryStack from '@/components/sections/CategoryStack';
-import HorizontalFeatures from '@/components/sections/HorizontalFeatures';
-import FeaturedCollection from '@/components/sections/FeaturedCollection';
-import PromoBanner from '@/components/sections/PromoBanner';
-import ClosingCTA from '@/components/sections/ClosingCTA';
+import TrendingSection from '@/components/sections/TrendingSection';
+import OffersSection from '@/components/sections/OffersSection';
 
 export default function Home() {
   return (
-    <main className="relative bg-background overflow-hidden">
+    <main className="relative bg-white overflow-hidden font-sans">
       <Navbar />
+      {/* Spacer for fixed Navbar (height ~ 130px depending on top/bottom bars) */}
+      <div className="pt-[128px]"></div> 
       <Hero />
-      <HorizontalFeatures />
-      <CategoryStack />
-      <FeaturedCollection />
-      <PromoBanner />
-      <ClosingCTA />
+      <TrendingSection />
+      <OffersSection />
     </main>
   );
 }

@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingBag, Search, User, Heart, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import { Search, User, Heart, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 
 const navigation = [
+  { name: 'PACKS PROMO', href: '/packs-promo', highlight: true },
   { name: 'SALONS', href: '/categories/salons' },
   { name: 'CANAPÉS', href: '/categories/canapes' },
   { name: 'CHAMBRE', href: '/categories/chambre' },
@@ -18,88 +19,83 @@ const navigation = [
 
 export default function Navbar() {
   const { setIsCartOpen, cart } = useCart();
+  const [searchQuery, setSearchQuery] = useState('');
+  
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className="w-full flex flex-col bg-white border-b border-gray-200">
-      {/* Top Bar - White */}
-      <div className="container-wide px-4 h-[90px] flex items-center justify-between">
+    <header className="fixed top-0 left-0 w-full z-[100] bg-white border-b border-gray-200">
+      {/* Top Bar */}
+      <div className="container-wide mx-auto px-4 md:px-8 flex items-center justify-between h-20">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0 flex flex-col justify-center">
-          <div className="flex items-center">
-            <span className="text-4xl font-light tracking-tight text-black">
-              <span className="font-bold border border-black rounded-full px-2 py-0.5 mr-0.5">S</span>
-              KETCH
+        <Link href="/" className="flex-shrink-0 flex items-center gap-2">
+          <div className="flex flex-col items-start leading-none">
+            <span className="text-3xl font-light tracking-widest text-black flex items-center">
+              <span className="font-bold mr-[2px]">S</span>KETCH
             </span>
+            <span className="text-[10px] tracking-[0.3em] text-gray-500 ml-6 uppercase">Design</span>
           </div>
-          <span className="text-[10px] tracking-[0.3em] ml-12 text-gray-500 uppercase">Design</span>
         </Link>
 
-        {/* Search */}
-        <div className="flex-1 max-w-3xl mx-8 px-4 hidden md:block">
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search for products" 
-              className="w-full border border-gray-300 py-2.5 px-4 text-sm focus:outline-none focus:border-gray-400"
-            />
-            <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
-              <Search size={18} strokeWidth={1.5} />
-            </button>
-          </div>
+        {/* Search Bar */}
+        <div className="hidden md:flex flex-1 max-w-2xl mx-8 relative">
+          <input 
+            type="text"
+            placeholder="Search for products"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full border border-gray-300 rounded-sm py-2 px-4 text-sm focus:outline-none focus:border-gray-400 font-sans"
+          />
+          <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
+            <Search size={18} strokeWidth={1.5} />
+          </button>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-6 text-gray-700 flex-shrink-0">
-          <button className="hover:text-black transition-colors">
-            <User size={22} strokeWidth={1.5} />
-          </button>
-          <button className="hover:text-black transition-colors">
-            <Heart size={22} strokeWidth={1.5} />
-          </button>
+        <div className="flex items-center gap-6 text-gray-600">
+          <Link href="/account" className="hover:text-black transition-colors">
+            <User size={20} strokeWidth={1.5} />
+          </Link>
+          <Link href="/wishlist" className="hover:text-black transition-colors">
+            <Heart size={20} strokeWidth={1.5} />
+          </Link>
           <button 
             onClick={() => setIsCartOpen(true)}
             className="flex items-center gap-2 hover:text-black transition-colors"
           >
             <div className="relative">
-              <ShoppingBag size={22} strokeWidth={1.5} />
-              <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
+              <ShoppingBag size={20} strokeWidth={1.5} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
             </div>
-            <span className="text-sm font-medium hidden sm:block">0 DH</span>
+            <span className="text-sm font-semibold text-black hidden sm:block">0 DH</span>
           </button>
         </div>
       </div>
 
-      {/* Bottom Bar - Black */}
-      <div className="bg-[#2a2a2a] w-full border-t-[3px] border-[#2a2a2a]">
-        <div className="container-wide flex items-center justify-center relative">
-          <div className="flex items-center h-[46px]">
-            {/* Promo Button */}
-            <Link 
-              href="/packs-promo" 
-              className="bg-[#0b6f3b] text-white text-xs font-bold uppercase tracking-wider h-full flex items-center px-6 hover:bg-[#09592f] transition-colors"
-            >
-              Packs Promo
-            </Link>
-            
-            {/* Navigation Links */}
-            <div className="flex items-center h-full">
-              {navigation.map((item) => (
+      {/* Bottom Navigation */}
+      <nav className="w-full bg-[#2a2a2a] text-white">
+        <div className="container-wide mx-auto px-4 md:px-8">
+          <ul className="flex items-center justify-center text-xs font-bold tracking-widest uppercase flex-wrap">
+            {navigation.map((item) => (
+              <li key={item.name}>
                 <Link
-                  key={item.name}
                   href={item.href}
-                  className="text-white/90 hover:text-white text-[11px] font-medium uppercase tracking-wider h-full flex items-center px-5 gap-1 group transition-colors"
+                  className={`block py-3 px-6 hover:bg-black/20 transition-colors ${
+                    item.highlight ? 'bg-[#0f8742] hover:bg-[#0d7338]' : ''
+                  }`}
                 >
                   {item.name}
-                  <ChevronDown size={12} className="opacity-50 group-hover:opacity-100" />
                 </Link>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }
+

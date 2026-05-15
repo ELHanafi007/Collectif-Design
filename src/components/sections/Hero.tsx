@@ -1,57 +1,38 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-const slides = [
-  { image: '/salon.jpeg' },
-  { image: '/table a manger.jpeg' },
-  { image: '/tablesdechevet.jpeg' }
-];
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Hero() {
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
-    <section className="relative h-[600px] md:h-[700px] w-full overflow-hidden bg-gray-100">
-      {/* Background Images */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={current}
-          initial={{ opacity: 0.8 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0.8 }}
-          transition={{ duration: 1 }}
-          className="absolute inset-0"
-        >
-          <img 
-            src={slides[current].image} 
-            alt="Hero background"
-            className="h-full w-full object-cover"
+    <section className="w-full">
+      <div className="w-full flex flex-col md:flex-row">
+        {/* Left Side - Blue Sofa */}
+        <div className="relative w-full md:w-1/3 aspect-[4/3] md:aspect-auto">
+          <Image
+            src="/salon.jpeg" // Reusing available images, ideally the blue sofa one
+            alt="Salon"
+            fill
+            className="object-cover"
           />
-        </motion.div>
-      </AnimatePresence>
+        </div>
+        
+        {/* Middle - Blue Banner */}
+        <div className="w-full md:w-1/3 bg-[#2458a6] flex flex-col items-center justify-center text-center p-8 md:p-12 text-white">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight mb-2">
+            <span className="bg-[#b45d2f] px-4 py-2 inline-block shadow-sm">PACK PROMO</span>
+          </h2>
+          <h3 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight mt-4">
+            JUSQU'À -60%
+          </h3>
+        </div>
 
-      {/* Promo Box Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[90%] max-w-[850px] bg-[#1d4a77]">
-          <div className="bg-[#c05a2e] w-full py-6 md:py-12 flex items-center justify-center px-4">
-            <span className="text-white text-5xl md:text-[90px] font-black uppercase tracking-tighter" style={{ fontFamily: 'Arial, sans-serif' }}>
-              PACK PROMO
-            </span>
-          </div>
-          <div className="w-full py-6 md:py-12 flex items-center justify-center px-4">
-            <span className="text-white text-5xl md:text-[90px] font-black uppercase tracking-tighter" style={{ fontFamily: 'Arial, sans-serif' }}>
-              JUSQU'À -60%
-            </span>
-          </div>
+        {/* Right Side - Bedroom */}
+        <div className="relative w-full md:w-1/3 aspect-[4/3] md:aspect-auto">
+          <Image
+            src="/tablesdechevet.jpeg" // Bedroom image
+            alt="Chambre"
+            fill
+            className="object-cover"
+          />
         </div>
       </div>
     </section>
