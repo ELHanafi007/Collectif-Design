@@ -1,182 +1,105 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Search, Menu, X, User } from 'lucide-react';
+import { useState } from 'react';
+import { ShoppingBag, Search, User, Heart, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { useCart } from '@/components/providers/CartProvider';
 
-const navigation = {
-  main: [
-    { name: 'Accueil', href: '/' },
-    { name: 'Catalogue', href: '/shop' },
-    { name: 'Packs Promo', href: '/packs-promo' },
-    { name: 'L\'Atelier', href: '/about' },
-    { name: 'Contact', href: '/contact' }
-  ],
-  categories: [
-    { name: 'Salon', href: '/categories/salons' },
-    { name: 'Chambre', href: '/categories/tables-de-chevet' },
-    { name: 'Salle à Manger', href: '/categories/tables-a-manger' },
-    { name: 'Tables Basses', href: '/categories/tables-basses' },
-    { name: 'Décoration', href: '/categories/decoration' },
-    { name: 'Rangement', href: '/categories/bibliotheques' }
-  ]
-};
+const navigation = [
+  { name: 'SALONS', href: '/categories/salons' },
+  { name: 'CANAPÉS', href: '/categories/canapes' },
+  { name: 'CHAMBRE', href: '/categories/chambre' },
+  { name: 'TABLES', href: '/categories/tables' },
+  { name: 'CHAISES', href: '/categories/chaises' },
+  { name: 'JARDIN', href: '/categories/jardin' },
+  { name: 'MEUBLES', href: '/categories/meubles' },
+  { name: 'DÉCO', href: '/categories/deco' }
+];
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setIsCartOpen, cart } = useCart();
-
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <>
-      <nav
-        className={cn(
-          'fixed left-0 top-0 z-[100] w-full transition-all duration-500',
-          isScrolled ? 'py-3' : 'py-5'
-        )}
-      >
-        <div className="container-wide px-6">
-          <div
-            className={cn(
-              'mx-auto flex items-center justify-between rounded-full transition-all duration-500 px-6 md:px-8 py-3',
-              isScrolled 
-                ? 'bg-background/80 backdrop-blur-xl shadow-lg shadow-black/5 border border-border/50' 
-                : 'bg-transparent'
-            )}
-          >
-            {/* Logo */}
-            <Link href="/" className="relative z-10" onClick={() => setIsMenuOpen(false)}>
-              <span className="text-lg md:text-xl font-serif tracking-tightest uppercase">
-                Collectif<span className="text-muted italic lowercase font-light">.design</span>
-              </span>
-            </Link>
+    <nav className="w-full flex flex-col bg-white border-b border-gray-200">
+      {/* Top Bar - White */}
+      <div className="container-wide px-4 h-[90px] flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex-shrink-0 flex flex-col justify-center">
+          <div className="flex items-center">
+            <span className="text-4xl font-light tracking-tight text-black">
+              <span className="font-bold border border-black rounded-full px-2 py-0.5 mr-0.5">S</span>
+              KETCH
+            </span>
+          </div>
+          <span className="text-[10px] tracking-[0.3em] ml-12 text-gray-500 uppercase">Design</span>
+        </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden items-center gap-8 lg:flex">
-              {navigation.main.map((link) => (
+        {/* Search */}
+        <div className="flex-1 max-w-3xl mx-8 px-4 hidden md:block">
+          <div className="relative">
+            <input 
+              type="text" 
+              placeholder="Search for products" 
+              className="w-full border border-gray-300 py-2.5 px-4 text-sm focus:outline-none focus:border-gray-400"
+            />
+            <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+              <Search size={18} strokeWidth={1.5} />
+            </button>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-6 text-gray-700 flex-shrink-0">
+          <button className="hover:text-black transition-colors">
+            <User size={22} strokeWidth={1.5} />
+          </button>
+          <button className="hover:text-black transition-colors">
+            <Heart size={22} strokeWidth={1.5} />
+          </button>
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="flex items-center gap-2 hover:text-black transition-colors"
+          >
+            <div className="relative">
+              <ShoppingBag size={22} strokeWidth={1.5} />
+              <span className="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            </div>
+            <span className="text-sm font-medium hidden sm:block">0 DH</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom Bar - Black */}
+      <div className="bg-[#2a2a2a] w-full border-t-[3px] border-[#2a2a2a]">
+        <div className="container-wide flex items-center justify-center relative">
+          <div className="flex items-center h-[46px]">
+            {/* Promo Button */}
+            <Link 
+              href="/packs-promo" 
+              className="bg-[#0b6f3b] text-white text-xs font-bold uppercase tracking-wider h-full flex items-center px-6 hover:bg-[#09592f] transition-colors"
+            >
+              Packs Promo
+            </Link>
+            
+            {/* Navigation Links */}
+            <div className="flex items-center h-full">
+              {navigation.map((item) => (
                 <Link
-                  key={link.name}
-                  href={link.href}
-                  className="text-[10px] font-bold uppercase tracking-[0.15em] transition-colors hover:text-muted"
+                  key={item.name}
+                  href={item.href}
+                  className="text-white/90 hover:text-white text-[11px] font-medium uppercase tracking-wider h-full flex items-center px-5 gap-1 group transition-colors"
                 >
-                  {link.name}
+                  {item.name}
+                  <ChevronDown size={12} className="opacity-50 group-hover:opacity-100" />
                 </Link>
               ))}
             </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-4 md:gap-5">
-              <button className="hidden md:block transition-colors hover:text-muted">
-                <Search size={17} strokeWidth={1.5} />
-              </button>
-              <Link href="/admin" className="hidden md:block transition-colors hover:text-muted">
-                <User size={17} strokeWidth={1.5} />
-              </Link>
-              <button 
-                onClick={() => setIsCartOpen(true)}
-                className="relative transition-colors hover:text-muted"
-              >
-                <ShoppingBag size={17} strokeWidth={1.5} />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-foreground text-[7px] font-bold text-background">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              <button
-                className="flex items-center justify-center transition-colors hover:text-muted lg:hidden"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
-              </button>
-              {/* Desktop menu toggle */}
-              <button
-                className="hidden lg:flex items-center justify-center transition-colors hover:text-muted"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X size={18} strokeWidth={1.5} /> : <Menu size={18} strokeWidth={1.5} />}
-              </button>
-            </div>
           </div>
         </div>
-      </nav>
-
-      {/* Full Screen Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-[90] bg-background/98 backdrop-blur-3xl flex items-center"
-          >
-            <div className="container-wide px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
-              {/* Main Nav */}
-              <div className="space-y-3">
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block mb-8">
-                  Navigation
-                </span>
-                {navigation.main.map((link, idx) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, x: -15 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 + idx * 0.05 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-4xl md:text-6xl font-serif hover:text-muted transition-colors py-1"
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Categories + Contact */}
-              <div className="hidden lg:flex flex-col justify-center border-l border-border pl-16 space-y-12">
-                <div className="space-y-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block">Catégories</span>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-                    {navigation.categories.map((cat) => (
-                      <Link
-                        key={cat.name}
-                        href={cat.href}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="text-base font-light hover:text-muted transition-colors"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted block">Contact</span>
-                  <div className="space-y-2">
-                    <p className="text-sm font-light text-muted">Casablanca · Rabat · Marrakech · Tanger</p>
-                    <p className="text-sm font-light text-muted">contact@collectif.design</p>
-                    <p className="text-sm font-light text-muted">+212 5 22 00 00 00</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      </div>
+    </nav>
   );
 }

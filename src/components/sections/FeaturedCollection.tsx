@@ -1,138 +1,89 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ShoppingBag, ArrowRight } from 'lucide-react';
 
 const featured = [
   {
-    name: 'Canapé Obsidian',
-    category: 'Salon',
+    name: 'Hugo, Salon en L',
+    category: "Salons d'angle",
     image: '/salon.jpeg',
-    price: '35.000',
-    badge: 'Best-Seller'
+    oldPrice: '25 700',
+    price: '19 500',
+    badge: '-24%'
   },
   {
-    name: 'Table Monolithe',
-    category: 'Tables Basses',
-    image: '/tabledebasse.jpeg',
-    price: '18.500',
-    badge: null
+    name: 'Tempio, Table basse',
+    category: 'Tables basses',
+    image: '/table a manger.jpeg',
+    oldPrice: '9 460',
+    price: '6 990',
+    badge: '-26%'
   },
   {
-    name: 'Console Sculptée',
-    category: 'Décoration',
-    image: '/Console.jpeg',
-    price: '12.800',
-    badge: 'Nouveau'
+    name: 'Florenza, Table de salle à manger',
+    category: 'Tables de salle à manger',
+    image: '/table a manger.jpeg',
+    oldPrice: '20 300',
+    price: '15 200',
+    badge: '-35%'
   },
   {
-    name: 'Bibliothèque Modulaire',
-    category: 'Rangement',
-    image: '/bibliotheque.jpeg',
-    price: '22.000',
-    badge: null
-  },
-  {
-    name: 'Meuble TV Épuré',
-    category: 'Salon',
-    image: '/meubletv.jpeg',
-    price: '15.500',
-    badge: null
-  },
-  {
-    name: 'Tables d\'Appoint',
-    category: 'Décoration',
-    image: '/Tables d\'appoint.jpeg',
-    price: '8.200',
-    badge: '-20%'
-  },
-  {
-    name: 'Buffet Artisanal',
-    category: 'Rangement',
-    image: '/buffet.jpeg',
-    price: '19.000',
-    badge: null
-  },
-  {
-    name: 'Miroir Doré',
-    category: 'Décoration',
-    image: '/miroires.jpeg',
-    price: '6.500',
-    badge: 'Exclusif'
+    name: 'Bering, Salon en U',
+    category: 'Salons en U',
+    image: '/salon.jpeg',
+    oldPrice: '63 050',
+    price: '41 800',
+    badge: '-34%'
   }
 ];
 
 export default function FeaturedCollection() {
   return (
-    <section className="section-padding bg-background">
-      <div className="container-wide">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gap-6">
-          <div className="space-y-4">
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">
-              Sélection du Moment
-            </span>
-            <h2 className="text-5xl md:text-6xl tracking-tightest">
-              Nos Best-Sellers
-            </h2>
-          </div>
-          <Link href="/shop" className="group flex items-center gap-3 shrink-0 pb-1">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] border-b border-border group-hover:border-foreground transition-all pb-1">
-              Voir tout le catalogue
-            </span>
-            <ArrowRight size={12} />
-          </Link>
+    <section className="bg-white">
+      <div className="flex flex-col lg:flex-row w-full h-auto lg:h-[900px]">
+        {/* Left Side: Image */}
+        <div className="w-full lg:w-1/2 relative min-h-[400px] lg:min-h-full">
+          <img 
+            src="/salon.jpeg" 
+            alt="Suivez la tendance" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </div>
 
-        {/* Product Grid — 4 cols like sketch-design */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-10 md:gap-y-14">
-          {featured.map((item, idx) => (
-            <motion.div 
-              key={item.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: idx * 0.05 }}
-              viewport={{ once: true }}
-              className="group cursor-pointer"
-            >
-              <Link href="/shop" className="block">
-                {/* Image */}
-                <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-surface mb-4">
-                  <img 
-                    src={item.image} 
-                    alt={item.name} 
-                    className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
-                  />
-                  
-                  {/* Badge */}
-                  {item.badge && (
-                    <div className="absolute top-3 left-3 z-10">
-                      <span className="bg-foreground text-background px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest">
-                        {item.badge}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="h-12 w-12 rounded-full bg-white/90 text-foreground shadow-lg flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-500 backdrop-blur-sm">
-                      <ShoppingBag size={16} />
-                    </div>
+        {/* Right Side: Content & Products */}
+        <div className="w-full lg:w-1/2 p-4 md:p-12 lg:p-16 flex flex-col justify-center">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-[28px] text-gray-500 font-light tracking-[0.1em] uppercase">
+              Suivez la tendance
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl mx-auto">
+            {featured.map((item, idx) => (
+              <div key={idx} className="border border-gray-100 p-4 hover:shadow-lg transition-shadow group flex flex-col">
+                <div className="relative aspect-[4/3] mb-4 bg-white">
+                  <div className="absolute top-0 left-0 z-10 bg-red-600 text-white text-[11px] font-bold px-1.5 py-0.5">
+                    {item.badge}
+                  </div>
+                  <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                </div>
+                <div className="text-center space-y-1 mt-auto">
+                  <h3 className="text-[13px] text-gray-800 font-medium">{item.name}</h3>
+                  <p className="text-[11px] text-gray-400">{item.category}</p>
+                  <div className="flex items-center justify-center gap-2 mt-2">
+                    <span className="text-[11px] text-gray-400 line-through">{item.oldPrice} DH</span>
+                    <span className="text-sm font-bold text-red-600">{item.price} DH</span>
                   </div>
                 </div>
-                
-                {/* Info */}
-                <div className="space-y-1 px-1">
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-muted">{item.category}</p>
-                  <h3 className="text-sm font-medium truncate">{item.name}</h3>
-                  <p className="text-sm text-muted font-light">
-                    {item.price} <span className="text-[10px]">MAD</span>
-                  </p>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-6 flex justify-center w-full max-w-2xl mx-auto">
+             <Link href="/shop" className="bg-[#2a2a2a] text-white uppercase text-xs tracking-widest py-3.5 px-8 w-full text-center hover:bg-black transition-colors">
+               VOIR PLUS
+             </Link>
+          </div>
         </div>
       </div>
     </section>
