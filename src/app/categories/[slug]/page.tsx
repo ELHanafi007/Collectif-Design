@@ -86,7 +86,7 @@ export default function CategoryPage() {
         setProducts(fetchedProducts);
         
         if (fetchedProducts.length > 0) {
-          const max = Math.max(...fetchedProducts.map(p => p.price));
+          const max = Math.max(...fetchedProducts.map(p => Number(p.price.toString().replace(/[^0-9.-]+/g, ""))));
           setMaxPriceInDb(max);
           setPriceRange([0, max]);
         }
@@ -101,7 +101,10 @@ export default function CategoryPage() {
   }, [slug]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
+    return products.filter(p => {
+      const priceVal = Number(p.price.toString().replace(/[^0-9.-]+/g, ""));
+      return priceVal >= priceRange[0] && priceVal <= priceRange[1];
+    });
   }, [products, priceRange]);
 
   return (

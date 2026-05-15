@@ -49,9 +49,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const cartTotal = cart.reduce((total, item) => {
-    const price = typeof item.price === 'string' 
-      ? parseFloat(item.price.replace(/[^\d.]/g, '')) 
-      : item.price;
+    const priceStr = String(item.price || '0').replace(/\s/g, '');
+    const price = Number(priceStr.replace(/[^0-9.-]+/g, ""));
     return total + (price || 0) * item.quantity;
   }, 0);
 
