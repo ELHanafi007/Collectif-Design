@@ -42,11 +42,11 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex-shrink-0 flex items-center justify-center md:justify-start flex-1 md:flex-none">
           <Image 
-            src="/logo.jpg" 
+            src="/logo-removebg-preview.png" 
             alt="Collectif Design" 
-            width={400} 
-            height={120} 
-            className="object-contain h-20 md:h-24 w-auto transform scale-[1.7] md:scale-125 origin-center md:origin-left" 
+            width={500} 
+            height={150} 
+            className="object-contain h-24 md:h-28 w-auto transform scale-[1.8] md:scale-150 origin-center md:origin-left" 
             priority
           />
         </Link>
@@ -130,7 +130,7 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
                 <div className="pl-4">
-                  <Image src="/logo.jpg" alt="Collectif Design" width={250} height={80} className="object-contain h-14 w-auto transform scale-125 origin-left" />
+                  <Image src="/logo-removebg-preview.png" alt="Collectif Design" width={300} height={100} className="object-contain h-16 w-auto transform scale-[1.6] origin-left" />
                 </div>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-500 hover:text-black">
                   <X size={28} />
