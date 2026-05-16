@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -9,7 +12,7 @@ const products = [
     oldPrice: '25 740 DH',
     newPrice: '19 500 DH',
     discount: '-24%',
-    image: '/salon.jpeg' // Need isolated image
+    image: '/salon.jpeg'
   },
   {
     id: 2,
@@ -37,10 +40,39 @@ const products = [
     newPrice: '41 800 DH',
     discount: '-34%',
     image: '/salon.jpeg'
+  },
+  {
+    id: 5,
+    name: 'Kaya, Fauteuil',
+    category: 'Fauteuils',
+    oldPrice: '11 000 DH',
+    newPrice: '5 500 DH',
+    discount: '-50%',
+    image: '/salon.jpeg'
+  },
+  {
+    id: 6,
+    name: 'Alba, Fauteuil',
+    category: 'Fauteuils',
+    oldPrice: '6 350 DH',
+    newPrice: '3 850 DH',
+    discount: '-39%',
+    image: '/table a manger.jpeg'
   }
 ];
 
 export default function TrendingSection() {
+  const [currentPage, setCurrentPage] = useState(0);
+  
+  // 2 products per page on this layout
+  const itemsPerPage = 2;
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  const visibleProducts = products.slice(
+    currentPage * itemsPerPage, 
+    (currentPage + 1) * itemsPerPage
+  );
+
   return (
     <section className="w-full bg-white border-b border-gray-100">
       <div className="flex flex-col lg:flex-row w-full">
@@ -55,35 +87,52 @@ export default function TrendingSection() {
         </div>
 
         {/* Right Content */}
-        <div className="w-full lg:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-white">
+        <div className="w-full lg:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-white overflow-hidden">
           <h2 className="text-xl md:text-2xl tracking-widest uppercase font-light text-gray-500 mb-12">
             SUIVEZ LA TENDANCE
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl mb-8">
-            {products.map((product) => (
-              <div key={product.id} className="border border-gray-100 p-4 flex flex-col group hover:shadow-lg transition-shadow bg-white">
-                <div className="relative w-full aspect-[4/3] mb-4">
-                  {/* Discount Tag */}
-                  <div className="absolute top-0 left-0 bg-[#d11124] text-white text-[10px] font-bold px-2 py-1 z-10">
-                    {product.discount}
+          {/* Slider Container */}
+          <div className="w-full max-w-3xl mb-6 relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+              {visibleProducts.map((product) => (
+                <div key={product.id} className="border border-gray-100 p-4 flex flex-col group hover:shadow-lg transition-shadow bg-white animate-in fade-in duration-500">
+                  <div className="relative w-full aspect-[4/3] mb-4">
+                    {/* Discount Tag */}
+                    <div className="absolute top-0 left-0 bg-[#d11124] text-white text-[10px] font-bold px-2 py-1 z-10">
+                      {product.discount}
+                    </div>
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover" // Or object-contain if isolated images
-                  />
-                </div>
-                <div className="text-center mt-auto">
-                  <h3 className="text-sm font-semibold text-black">{product.name}</h3>
-                  <p className="text-xs text-gray-400 mt-1 mb-2">{product.category}</p>
-                  <div className="flex items-center justify-center gap-2 text-xs">
-                    <span className="line-through text-gray-400">{product.oldPrice}</span>
-                    <span className="font-bold text-[#d11124] text-sm">{product.newPrice}</span>
+                  <div className="text-center mt-auto">
+                    <h3 className="text-sm font-semibold text-black">{product.name}</h3>
+                    <p className="text-xs text-gray-400 mt-1 mb-2">{product.category}</p>
+                    <div className="flex items-center justify-center gap-2 text-xs">
+                      <span className="line-through text-gray-400">{product.oldPrice}</span>
+                      <span className="font-bold text-[#d11124] text-sm">{product.newPrice}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pagination Dots */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            {Array.from({ length: totalPages }).map((_, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setCurrentPage(idx)}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  currentPage === idx ? 'bg-black' : 'border border-gray-400'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
             ))}
           </div>
 

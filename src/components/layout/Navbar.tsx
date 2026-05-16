@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, User, Heart, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 
@@ -28,13 +29,8 @@ export default function Navbar() {
       {/* Top Bar */}
       <div className="container-wide mx-auto px-4 md:px-8 flex items-center justify-between h-20">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0 flex items-center gap-2">
-          <div className="flex flex-col items-start leading-none">
-            <span className="text-3xl font-light tracking-widest text-black flex items-center">
-              <span className="font-bold mr-[2px]">S</span>KETCH
-            </span>
-            <span className="text-[10px] tracking-[0.3em] text-gray-500 ml-6 uppercase">Design</span>
-          </div>
+        <Link href="/" className="flex-shrink-0 flex items-center">
+          <Image src="/logo.jpg" alt="Collectif Design" width={180} height={40} className="object-contain h-10 w-auto" />
         </Link>
 
         {/* Search Bar */}

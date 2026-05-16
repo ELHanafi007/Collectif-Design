@@ -135,7 +135,7 @@ export default function ProductPage() {
               <button className="w-full bg-[#1bc53e] hover:bg-[#16a333] transition-colors text-white p-3 flex items-center gap-3 rounded-sm">
                 <MessageCircle size={28} />
                 <div className="flex flex-col items-start leading-tight">
-                  <span className="text-[10px] font-medium">Sketch Design Online</span>
+                  <span className="text-[10px] font-medium">Collectif Design Online</span>
                   <span className="text-sm font-bold">Commander via WhatsApp</span>
                 </div>
               </button>
