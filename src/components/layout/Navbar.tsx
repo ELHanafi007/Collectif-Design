@@ -29,25 +29,24 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 w-full z-[100] bg-white border-b border-gray-200">
       {/* Top Bar */}
-      <div className="container-wide mx-auto px-4 md:px-8 flex items-center justify-between h-20 md:h-24">
+      <div className="container-wide mx-auto px-4 md:px-8 flex items-center justify-between h-24 md:h-28">
         
         {/* Mobile Hamburger Icon */}
         <button 
           className="md:hidden text-black p-2 -ml-2"
           onClick={() => setIsMobileMenuOpen(true)}
         >
-          <Menu size={28} strokeWidth={1.5} />
+          <Menu size={32} strokeWidth={1.5} />
         </button>
 
         {/* Logo */}
         <Link href="/" className="flex-shrink-0 flex items-center justify-center md:justify-start flex-1 md:flex-none">
-          {/* Logo is super big on mobile (h-20 scale-125), and large on desktop (h-14) */}
           <Image 
             src="/logo.jpg" 
             alt="Collectif Design" 
-            width={300} 
-            height={80} 
-            className="object-contain h-16 sm:h-20 md:h-14 w-auto transform scale-125 md:scale-100 origin-center md:origin-left" 
+            width={400} 
+            height={120} 
+            className="object-contain h-20 md:h-24 w-auto transform scale-[1.7] md:scale-125 origin-center md:origin-left" 
             priority
           />
         </Link>
@@ -130,9 +129,11 @@ export default function Navbar() {
               className="fixed inset-y-0 left-0 w-[80%] max-w-sm bg-white z-[120] flex flex-col md:hidden overflow-y-auto"
             >
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <Image src="/logo.jpg" alt="Collectif Design" width={150} height={40} className="object-contain h-10 w-auto" />
+                <div className="pl-4">
+                  <Image src="/logo.jpg" alt="Collectif Design" width={250} height={80} className="object-contain h-14 w-auto transform scale-125 origin-left" />
+                </div>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-500 hover:text-black">
-                  <X size={24} />
+                  <X size={28} />
                 </button>
               </div>
 
