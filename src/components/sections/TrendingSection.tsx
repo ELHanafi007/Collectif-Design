@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 
 const products = [
   {
@@ -64,10 +65,34 @@ const products = [
 
 export default function TrendingSection() {
   const [currentPage, setCurrentPage] = useState(0);
-  
-  // 2 products per page on this layout
-  const itemsPerPage = 2;
+  const [itemsPerPage, setItemsPerPage] = useState(1);
+
+  // Responsive items per page
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setItemsPerPage(2);
+      } else {
+        setItemsPerPage(1);
+      }
+    };
+    
+    // Set initial
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  const nextSlide = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const prevSlide = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
 
   const visibleProducts = products.slice(
     currentPage * itemsPerPage, 
@@ -77,13 +102,13 @@ export default function TrendingSection() {
   return (
     <section className="w-full bg-white border-b border-gray-100 overflow-hidden">
       <div className="flex flex-col lg:flex-row w-full">
-        {/* Left Image */}
+        {/* Left Image / Top Image on Mobile */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="w-full lg:w-1/2 relative min-h-[500px] lg:min-h-screen overflow-hidden group"
+          className="w-full lg:w-1/2 relative min-h-[60vh] md:min-h-[500px] lg:min-h-screen overflow-hidden group"
         >
           <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.8 }} className="w-full h-full relative">
             <Image
@@ -95,57 +120,90 @@ export default function TrendingSection() {
           </motion.div>
         </motion.div>
 
-        {/* Right Content */}
+        {/* Right Content / Bottom Content on Mobile */}
         <motion.div 
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full lg:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-white"
+          className="w-full lg:w-1/2 p-4 py-12 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-white"
         >
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl md:text-2xl tracking-widest uppercase font-light text-gray-500 mb-12"
-          >
-            SUIVEZ LA TENDANCE
-          </motion.h2>
+          <div className="text-center mb-10">
+            <motion.h3 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-sm md:text-sm tracking-[0.2em] uppercase font-light text-gray-400 mb-3"
+            >
+              VIE INSPIRÉE
+            </motion.h3>
+            <motion.h2 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-2xl md:text-3xl tracking-wide uppercase font-medium text-black"
+            >
+              SUIVEZ LA TENDANCE
+            </motion.h2>
+          </div>
 
           {/* Slider Container */}
-          <div className="w-full max-w-3xl mb-6 relative">
+          <div className="w-full max-w-3xl mb-8 relative px-8 md:px-0">
+            {/* Mobile Arrows */}
+            <button 
+              onClick={prevSlide}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-gray-400 hover:text-black transition-colors md:hidden"
+            >
+              <ChevronLeft size={32} strokeWidth={1} />
+            </button>
+            <button 
+              onClick={nextSlide}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-gray-400 hover:text-black transition-colors md:hidden"
+            >
+              <ChevronRight size={32} strokeWidth={1} />
+            </button>
+
             <AnimatePresence mode="wait">
               <motion.div 
                 key={currentPage}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
+                exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full"
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
               >
                 {visibleProducts.map((product) => (
-                  <div key={product.id} className="border border-gray-100 p-4 flex flex-col group hover:shadow-lg transition-all bg-white">
-                    <div className="relative w-full aspect-[4/3] mb-4 overflow-hidden">
+                  <div key={product.id} className="flex flex-col group transition-all bg-white">
+                    <div className="relative w-full aspect-[4/3] mb-6 overflow-hidden bg-[#f9f9f9]">
                       {/* Discount Tag */}
-                      <div className="absolute top-0 left-0 bg-[#d11124] text-white text-[10px] font-bold px-2 py-1 z-10">
+                      <div className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 z-10">
                         {product.discount}
                       </div>
-                      <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.5 }} className="w-full h-full relative">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </motion.div>
+                      
+                      {/* Cart Icon on Hover */}
+                      <button className="absolute bottom-4 left-4 bg-[#555] hover:bg-black text-white p-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-sm">
+                        <ShoppingCart size={18} />
+                      </button>
+
+                      <Link href={`/products/hugo-salon`}>
+                        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.5 }} className="w-full h-full relative cursor-pointer">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-cover mix-blend-multiply"
+                          />
+                        </motion.div>
+                      </Link>
                     </div>
-                    <div className="text-center mt-auto">
-                      <h3 className="text-sm font-semibold text-black">{product.name}</h3>
-                      <p className="text-xs text-gray-400 mt-1 mb-2">{product.category}</p>
-                      <div className="flex items-center justify-center gap-2 text-xs">
+                    <div className="text-center mt-auto px-2">
+                      <h3 className="text-[15px] font-semibold text-black mb-1">{product.name}</h3>
+                      <p className="text-[13px] text-gray-400 mb-3">{product.category}</p>
+                      <div className="flex items-center justify-center gap-2 text-sm">
                         <span className="line-through text-gray-400">{product.oldPrice}</span>
-                        <span className="font-bold text-[#d11124] text-sm">{product.newPrice}</span>
+                        <span className="font-bold text-[#d11124]">{product.newPrice}</span>
                       </div>
                     </div>
                   </div>
@@ -160,13 +218,13 @@ export default function TrendingSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="flex items-center justify-center gap-2 mb-8"
+            className="flex items-center justify-center gap-3 mb-10"
           >
             {Array.from({ length: totalPages }).map((_, idx) => (
               <button 
                 key={idx}
                 onClick={() => setCurrentPage(idx)}
-                className={`w-2 h-2 rounded-full transition-colors ${
+                className={`w-[6px] h-[6px] rounded-full transition-colors ${
                   currentPage === idx ? 'bg-black' : 'border border-gray-400'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
@@ -179,11 +237,11 @@ export default function TrendingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="w-full max-w-3xl"
+            className="w-full max-w-3xl px-8 md:px-0"
           >
             <Link 
               href="/shop"
-              className="block w-full bg-[#2a2a2a] text-white text-xs font-bold tracking-widest uppercase py-4 text-center hover:bg-black transition-colors"
+              className="block w-full bg-[#2a2a2a] text-white text-[13px] font-bold tracking-widest uppercase py-4 text-center hover:bg-black transition-colors"
             >
               VOIR PLUS
             </Link>
