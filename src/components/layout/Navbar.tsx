@@ -8,7 +8,7 @@ import { useCart } from '@/components/providers/CartProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const navigation = [
-  { name: 'PACKS PROMO', href: '/packs-promo', highlight: true, image: '/hero.jpeg' },
+  { name: 'PACKS PROMO', href: '/categories/packs-promo', highlight: true, image: '/hero.jpeg' },
   { name: 'SALONS', href: '/categories/salons', image: '/salon.jpeg' },
   { name: 'CANAPÉS', href: '/categories/canapes', image: '/salon.jpeg' },
   { name: 'CHAMBRE', href: '/categories/chambre', image: '/tablesdechevet.jpeg' },
