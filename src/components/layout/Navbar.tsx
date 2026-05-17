@@ -44,6 +44,20 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
+  // Escape key handler to close active overlays
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        setIsSearchOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Digital luxury clock inside menu
   useEffect(() => {
     const updateTime = () => {
