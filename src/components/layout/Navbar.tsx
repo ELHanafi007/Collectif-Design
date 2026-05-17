@@ -71,15 +71,15 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* CENTER: Grand Logo */}
-          <div className="flex-shrink-0 absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-            <Link href="/" className="relative block py-2">
+          {/* CENTER: Grand Logo (Overlapping Masterpiece) */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[101]">
+            <Link href="/" className="relative block">
               <Image 
                 src="/logo-removebg-preview.png" 
                 alt="Collectif Design" 
-                width={360} 
-                height={110} 
-                className="h-[64px] md:h-[96px] w-auto object-contain transform scale-110 md:scale-125 transition-transform duration-500 hover:scale-115 md:hover:scale-130" 
+                width={450} 
+                height={150} 
+                className="h-[120px] md:h-[210px] w-auto object-contain transition-transform duration-500 hover:scale-105" 
                 priority
               />
             </Link>
