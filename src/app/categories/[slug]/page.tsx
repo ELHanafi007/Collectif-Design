@@ -55,7 +55,7 @@ export default function CategoryPage() {
       <div className="pt-[84px] md:pt-[166px]"></div>
       
       {/* Category Banner */}
-      <section className="relative w-full h-[250px] md:h-[300px] overflow-hidden flex items-center justify-center bg-gray-900">
+      <section className="relative w-full h-[168px] md:h-[232px] overflow-hidden flex items-center justify-center bg-gray-900">
         <div className="absolute inset-0 opacity-40">
           <img 
             src={meta.image} 
@@ -64,7 +64,7 @@ export default function CategoryPage() {
           />
         </div>
         <div className="relative z-10">
-          <h1 className="text-6xl md:text-8xl lg:text-[140px] font-black tracking-tighter" style={{
+          <h1 className="text-4xl md:text-5xl lg:text-[64px] font-black tracking-widest text-center" style={{
             background: 'linear-gradient(to bottom, #fceca5 0%, #d4af37 50%, #aa8627 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
