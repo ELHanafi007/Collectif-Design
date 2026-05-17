@@ -157,7 +157,7 @@ export default function CartDrawer() {
                       message += `Pouvez-vous me confirmer les délais de fabrication artisanale et les modalités de livraison ?\n\n`;
                       message += `Merci de votre accompagnement d'exception.`;
                       
-                      const whatsappUrl = `https://wa.me/212600000000?text=${encodeURIComponent(message)}`;
+                      const whatsappUrl = `https://wa.me/212661085736?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                     className="group relative w-full flex items-center justify-center gap-8 overflow-hidden rounded-full border border-border bg-foreground px-12 py-7 transition-all active:scale-95 cursor-pointer"

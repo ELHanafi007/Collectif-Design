@@ -387,7 +387,7 @@ export default function Navbar() {
                   <div className="flex items-center gap-6 text-[10px] font-bold tracking-widest text-[#CA8A04]">
                     <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
                     <span className="text-white/20">|</span>
-                    <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WHATSAPP</a>
+                    <a href="https://wa.me/212661085736" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WHATSAPP</a>
                   </div>
                 </div>
               </div>
