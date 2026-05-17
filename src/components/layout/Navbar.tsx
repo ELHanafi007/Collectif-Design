@@ -7,7 +7,7 @@ import { Search, User, Heart, ShoppingBag, X } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/lib/supabaseClient';
-import { Product } from '@/lib/products';
+import { Product, PRODUCTS } from '@/lib/products';
 
 const navigation = [
   { name: 'PACKS PROMO', href: '/categories/packs-promo', highlight: true, image: '/hero.jpeg' },
@@ -44,6 +44,20 @@ export default function Navbar() {
     const delayDebounce = setTimeout(async () => {
       try {
         setIsSearching(true);
+        
+        // Search local static products first
+        const localMatches = PRODUCTS.filter(p => 
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.sub_category.toLowerCase().includes(searchQuery.toLowerCase())
+        ).slice(0, 4);
+
+        if (localMatches.length > 0) {
+          setSearchResults(localMatches);
+          setIsSearching(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('products')
           .select('*')

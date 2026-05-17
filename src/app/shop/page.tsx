@@ -5,7 +5,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter, ChevronDown, X } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
-import { Product } from "@/lib/products";
+import { Product, PRODUCTS } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
 import Navbar from "@/components/layout/Navbar";
@@ -22,6 +22,13 @@ export default function ShopPage() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
+        
+        // Try local PRODUCTS static array first
+        if (PRODUCTS.length > 0) {
+          setProducts(PRODUCTS);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('products')
           .select('*')

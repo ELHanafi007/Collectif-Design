@@ -6,7 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 import Link from 'next/link';
 import ProductCard from '@/components/ui/ProductCard';
 import { supabase } from '@/lib/supabaseClient';
-import { Product } from '@/lib/products';
+import { Product, PRODUCTS } from '@/lib/products';
 import { ChevronDown, Grid, List } from 'lucide-react';
 
 const categoryMeta: Record<string, { title: string; image: string }> = {
@@ -98,6 +98,20 @@ export default function CategoryPage() {
         }
 
         const mappedCategories = slugToDbCategory[slugStr] || [slugStr];
+
+        // Check local static products first
+        const localMatched = PRODUCTS.filter(p => 
+          mappedCategories.some(c => 
+            c.toLowerCase() === p.category.toLowerCase() || 
+            c.toLowerCase() === p.sub_category.toLowerCase()
+          )
+        );
+
+        if (localMatched.length > 0) {
+          setProducts(localMatched);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('products')
           .select('*')

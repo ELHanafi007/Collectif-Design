@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { Product } from '@/lib/products';
+import { Product, PRODUCTS } from '@/lib/products';
 import { ChevronRight, ChevronDown, MessageCircle, Truck, ShieldCheck, Package, Heart, Share2, Minus, Plus } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import Image from 'next/image';
@@ -144,6 +144,13 @@ export default function ProductPage() {
         setLoading(true);
         const slugStr = slug as string;
         
+        // Intercept local static products
+        const localProd = PRODUCTS.find(p => p.id === slugStr);
+        if (localProd) {
+          setProduct(localProd);
+          return;
+        }
+
         // Intercept mock promo packs
         if (mockPromoPacks[slugStr]) {
           setProduct(mockPromoPacks[slugStr]);
