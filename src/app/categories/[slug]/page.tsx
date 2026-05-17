@@ -52,7 +52,7 @@ export default function CategoryPage() {
   return (
     <main className="min-h-screen bg-white font-sans">
       <Navbar />
-      <div className="pt-[128px]"></div>
+      <div className="pt-[72px] md:pt-[128px]"></div>
       
       {/* Category Banner */}
       <section className="relative w-full h-[250px] md:h-[300px] overflow-hidden flex items-center justify-center bg-gray-900">
