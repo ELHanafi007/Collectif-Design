@@ -289,18 +289,18 @@ export default function ProductPage() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-                className="absolute top-5 right-5 md:top-8 md:right-8 flex flex-col gap-3"
+                className="absolute top-4 right-4 md:top-8 md:right-8 flex flex-col gap-4 z-10"
               >
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
-                  className={`w-10 h-10 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 cursor-pointer ${
-                    isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white/70 text-gray-500 hover:bg-white hover:text-gray-900'
+                  className={`w-12 h-12 rounded-full backdrop-blur-lg border border-white/20 flex items-center justify-center shadow-lg transition-all duration-300 cursor-pointer active:scale-90 ${
+                    isWishlisted ? 'bg-red-50 text-red-500 border-red-100' : 'bg-white/80 text-gray-700 hover:bg-white hover:text-black'
                   }`}
                 >
-                  <Heart size={16} fill={isWishlisted ? "currentColor" : "none"} />
+                  <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
                 </button>
-                <button className="w-10 h-10 rounded-full bg-white/70 backdrop-blur-md flex items-center justify-center text-gray-500 hover:bg-white hover:text-gray-900 transition-all duration-300 cursor-pointer">
-                  <Share2 size={16} />
+                <button className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-lg border border-white/20 flex items-center justify-center text-gray-700 hover:bg-white hover:text-black shadow-lg transition-all duration-300 cursor-pointer active:scale-90">
+                  <Share2 size={18} />
                 </button>
               </motion.div>
 
@@ -387,32 +387,32 @@ export default function ProductPage() {
             <motion.div variants={stagger.child} className="w-full h-px bg-gray-200/80 mb-8" />
 
             {/* Quantity + Add to Cart */}
-            <motion.div variants={stagger.child} className="space-y-4 mb-6">
-              <div className="flex flex-col sm:flex-row gap-3">
+            <motion.div variants={stagger.child} className="space-y-4 mb-8">
+              <div className="flex flex-col sm:flex-row gap-4">
                 {/* Quantity */}
-                <div className="flex items-center h-[52px] border border-gray-200 bg-white">
+                <div className="flex items-center justify-between h-14 min-h-[56px] border border-gray-200/80 bg-white rounded-full px-2 sm:w-36 shrink-0 shadow-sm">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-[52px] h-full flex items-center justify-center hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-500 hover:text-black transition-colors duration-200 cursor-pointer active:scale-90 shrink-0"
                   >
-                    <Minus size={14} className="text-gray-500" />
+                    <Minus size={12} />
                   </button>
-                  <div className="w-[52px] h-full flex items-center justify-center text-[14px] font-medium border-x border-gray-200">
+                  <span className="text-sm font-medium w-8 text-center text-gray-900">
                     {quantity}
-                  </div>
+                  </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-[52px] h-full flex items-center justify-center hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-500 hover:text-black transition-colors duration-200 cursor-pointer active:scale-90 shrink-0"
                   >
-                    <Plus size={14} className="text-gray-500" />
+                    <Plus size={12} />
                   </button>
                 </div>
 
                 {/* Add to Cart Button */}
                 <motion.button
                   onClick={handleAddToCart}
-                  whileTap={{ scale: 0.98 }}
-                  className={`flex-1 h-[52px] font-semibold text-[11px] uppercase tracking-[0.3em] transition-all duration-500 cursor-pointer ${
+                  whileTap={{ scale: 0.97 }}
+                  className={`flex-1 h-14 min-h-[56px] rounded-full font-bold text-[10px] uppercase tracking-[0.4em] transition-all duration-500 cursor-pointer shrink-0 shadow-lg shadow-black/5 hover:shadow-black/10 flex items-center justify-center ${
                     addedToCart
                       ? 'bg-[#CA8A04] text-white'
                       : 'bg-[#1C1917] text-white hover:bg-[#44403C]'
@@ -433,10 +433,18 @@ export default function ProductPage() {
                 </motion.button>
               </div>
 
-              {/* WhatsApp */}
-              <button className="w-full h-[48px] bg-[#25d366] hover:bg-[#1ebe5d] text-white flex items-center justify-center gap-3 transition-all duration-300 cursor-pointer group">
-                <MessageCircle size={18} className="transition-transform duration-300 group-hover:scale-110" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em]">
+              {/* WhatsApp Inquiry */}
+              <button 
+                onClick={() => {
+                  if (!product) return;
+                  const message = `*Bonjour Collectif Design,*\n\nJe souhaite commander la pièce de prestige suivante :\n\n• *Nom* : ${product.name}\n• *Prix* : ${Number(product.price).toLocaleString('fr-FR')} MAD\n• *Catégorie* : ${product.category}\n• *Lien* : ${window.location.href}\n\nMerci de m'accompagner pour finaliser ma commande d'exception.`;
+                  const whatsappUrl = `https://wa.me/212600000000?text=${encodeURIComponent(message)}`;
+                  window.open(whatsappUrl, '_blank');
+                }}
+                className="w-full h-14 min-h-[56px] rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-3 transition-all duration-500 shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20 active:scale-97 cursor-pointer shrink-0 font-bold text-[10px] uppercase tracking-[0.25em] group"
+              >
+                <MessageCircle size={16} className="transition-transform duration-300 group-hover:scale-110" />
+                <span>
                   Commander via WhatsApp
                 </span>
               </button>
