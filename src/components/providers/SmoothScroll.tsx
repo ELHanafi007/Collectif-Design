@@ -11,15 +11,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    function update(time: number) {
-      lenisRef.current?.lenis?.raf(time * 1000);
+    const lenis = lenisRef.current?.lenis;
+    if (lenis) {
+      // Synchronize GSAP ScrollTrigger updates with Lenis scroll events
+      lenis.on('scroll', ScrollTrigger.update);
     }
-
-    gsap.ticker.add(update);
-
-    return () => {
-      gsap.ticker.remove(update);
-    };
   }, []);
 
   return (
@@ -27,9 +23,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       root
       ref={lenisRef}
       options={{
-        lerp: 0.1,
-        duration: 1.5,
-        smoothWheel: true,
+        lerp: 0.12,          // Snappier, responsive deceleration curve
+        duration: 0.8,       // Elegant, crisp slide transition duration (under 1s)
+        smoothWheel: true,   // Ensure buttery smooth desktop scrolling
+        wheelMultiplier: 1.1, // Premium, high-end scrolling speed multiplier
+        touchMultiplier: 1.2,
       }}
     >
       {children}
