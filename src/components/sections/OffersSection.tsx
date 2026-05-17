@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart, Heart, Plus } from 'lucide-react';
 
 const products = [
   {
@@ -83,14 +83,90 @@ export default function OffersSection() {
 
   return (
     <section className="w-full bg-background overflow-hidden">
-      <div className="flex flex-col-reverse lg:flex-row w-full">
-        {/* Left Content / Bottom Content on Mobile */}
+      
+      {/* 📱 MOBILE VERSION (Based on User Design) */}
+      <div className="block md:hidden w-full pt-12 pb-16 px-5 bg-background">
+        <div className="flex flex-col gap-1 mb-6">
+          <h2 className="text-[28px] font-serif font-bold text-foreground uppercase tracking-tight">
+            NOS OFFRES
+          </h2>
+          <Link href="/shop" className="text-[10px] font-bold text-[#CAA871] uppercase tracking-[0.15em] hover:opacity-80 transition-opacity mt-1">
+            VOIR TOUTE LA COLLECTION
+          </Link>
+        </div>
+
+        {/* Categories / Tags */}
+        <div className="flex items-center gap-3 overflow-x-auto no-scrollbar mb-8 pb-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {["PROMOTIONS", "EXCLUSIVITÉS", "NOUVEAUTÉS"].map((cat) => (
+            <button key={cat} className="px-5 py-2 border border-border bg-transparent text-[10px] font-medium tracking-widest uppercase shrink-0 text-muted hover:text-foreground hover:border-foreground transition-all">
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Navigation Arrows */}
+        <div className="flex items-center gap-3 mb-8">
+          <button onClick={prevSlide} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-surface active:scale-95 transition-all">
+            <ChevronLeft size={18} strokeWidth={1.5} />
+          </button>
+          <button onClick={nextSlide} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-surface active:scale-95 transition-all">
+            <ChevronRight size={18} strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {/* Slider */}
+        <div className="w-full relative">
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={currentPage}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="w-full"
+            >
+               {visibleProducts.map((product) => (
+                 <div key={product.id} className="w-full flex flex-col group">
+                   <div className="relative w-full aspect-[4/5] bg-surface mb-4">
+                     <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover mix-blend-multiply dark:mix-blend-normal"
+                     />
+                     {/* Overlay Actions (Heart & Plus) */}
+                     <div className="absolute top-4 right-4 flex flex-col gap-3">
+                       <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-transform">
+                         <Heart size={18} strokeWidth={1.5} />
+                       </button>
+                       <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-transform">
+                         <Plus size={20} strokeWidth={1.5} />
+                       </button>
+                     </div>
+                   </div>
+                   <div className="text-center">
+                     <h3 className="text-[13px] font-bold font-serif uppercase tracking-widest text-foreground">{product.name}</h3>
+                     <div className="flex items-center justify-center gap-3 mt-2">
+                       <p className="text-[11px] font-bold text-muted line-through">{product.oldPrice}</p>
+                       <p className="text-[13px] font-bold text-[#d11124]">{product.newPrice}</p>
+                     </div>
+                   </div>
+                 </div>
+               ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* 💻 DESKTOP VERSION (Untouched Original) */}
+      <div className="hidden md:flex flex-col-reverse lg:flex-row w-full">
+        {/* Left Content */}
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full lg:w-1/2 p-4 py-12 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-background"
+          className="w-1/2 p-12 lg:p-16 flex flex-col items-center justify-center bg-background"
         >
           <div className="text-center mb-10">
             <motion.h3 
@@ -98,7 +174,7 @@ export default function OffersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-sm md:text-sm tracking-[0.2em] uppercase font-light text-muted mb-3"
+              className="text-sm tracking-[0.2em] uppercase font-light text-muted mb-3"
             >
               VIE INSPIRÉE
             </motion.h3>
@@ -107,28 +183,14 @@ export default function OffersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-2xl md:text-3xl tracking-wide uppercase font-medium text-foreground"
+              className="text-3xl tracking-wide uppercase font-medium text-foreground"
             >
               DÉCOUVRIR NOS OFFRES
             </motion.h2>
           </div>
 
           {/* Slider Container */}
-          <div className="w-full max-w-3xl mb-8 relative px-8 md:px-0">
-            {/* Mobile Arrows */}
-            <button 
-              onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-muted hover:text-foreground transition-colors md:hidden"
-            >
-              <ChevronLeft size={32} strokeWidth={1} />
-            </button>
-            <button 
-              onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-muted hover:text-foreground transition-colors md:hidden"
-            >
-              <ChevronRight size={32} strokeWidth={1} />
-            </button>
-
+          <div className="w-full max-w-3xl mb-8 relative">
             <AnimatePresence mode="wait">
               <motion.div 
                 key={currentPage}
@@ -136,7 +198,7 @@ export default function OffersSection() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
+                className="grid grid-cols-2 gap-6 w-full"
               >
                 {visibleProducts.map((product) => (
                   <div key={product.id} className="flex flex-col group transition-all bg-background">
@@ -201,7 +263,7 @@ export default function OffersSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="w-full max-w-3xl px-8 md:px-0"
+            className="w-full max-w-3xl"
           >
             <Link 
               href="/categories/salons"
@@ -212,13 +274,13 @@ export default function OffersSection() {
           </motion.div>
         </motion.div>
 
-        {/* Right Image / Top Image on Mobile */}
+        {/* Right Image */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, ease: "easeOut" }}
-          className="w-full lg:w-1/2 relative min-h-[60vh] md:min-h-[500px] lg:min-h-screen overflow-hidden group"
+          className="w-1/2 relative min-h-[500px] lg:min-h-screen overflow-hidden group"
         >
           <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.8 }} className="w-full h-full relative">
             <Image
