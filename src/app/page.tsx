@@ -8,7 +8,7 @@ export default function Home() {
     <main className="relative bg-white overflow-hidden font-sans">
       <Navbar />
       {/* Spacer for fixed Navbar */}
-      <div className="pt-[72px] md:pt-[128px]"></div> 
+      <div className="pt-[84px] md:pt-[166px]"></div> 
       <Hero />
       <TrendingSection />
       <OffersSection />
