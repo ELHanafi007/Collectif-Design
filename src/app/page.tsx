@@ -5,7 +5,7 @@ import OffersSection from '@/components/sections/OffersSection';
 
 export default function Home() {
   return (
-    <main className="relative bg-white overflow-hidden font-sans">
+    <main className="relative bg-background overflow-hidden font-sans">
       <Navbar />
       {/* Spacer for fixed Navbar */}
       <div className="pt-[84px] md:pt-[166px]"></div> 

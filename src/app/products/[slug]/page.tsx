@@ -183,13 +183,13 @@ export default function ProductPage() {
   /* ─── Loading State ─── */
   if (loading) {
     return (
-      <div className="h-screen bg-[#fafaf8] flex flex-col items-center justify-center gap-6">
+      <div className="h-screen bg-background flex flex-col items-center justify-center gap-6">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
-          className="w-8 h-8 border border-gray-300 border-t-gray-900 rounded-full"
+          className="w-8 h-8 border border-border border-t-foreground rounded-full"
         />
-        <span className="text-[10px] uppercase tracking-[0.5em] text-gray-400 font-medium">
+        <span className="text-[10px] uppercase tracking-[0.5em] text-muted font-medium">
           Chargement
         </span>
       </div>
@@ -199,12 +199,12 @@ export default function ProductPage() {
   /* ─── Not Found State ─── */
   if (!product) {
     return (
-      <div className="h-screen bg-[#fafaf8] flex flex-col items-center justify-center gap-8">
+      <div className="h-screen bg-background flex flex-col items-center justify-center gap-8">
         <div className="text-center space-y-3">
-          <h2 className="text-4xl font-serif italic text-gray-300">Introuvable</h2>
-          <p className="text-sm text-gray-400 tracking-wide">Ce produit n&apos;existe plus ou a été déplacé.</p>
+          <h2 className="text-4xl font-serif italic text-muted/40">Introuvable</h2>
+          <p className="text-sm text-muted tracking-wide">Ce produit n&apos;existe plus ou a été déplacé.</p>
         </div>
-        <Link href="/shop" className="text-[10px] font-semibold uppercase tracking-[0.4em] border-b border-black pb-1.5 hover:text-gray-500 hover:border-gray-400 transition-colors duration-300">
+        <Link href="/shop" className="text-[10px] font-semibold uppercase tracking-[0.4em] border-b border-foreground pb-1.5 hover:text-muted hover:border-muted transition-colors duration-300">
           Retour au Catalogue
         </Link>
       </div>
@@ -216,7 +216,7 @@ export default function ProductPage() {
   const oldPrice = product.oldPrice || (Number(product.price) * 1.25).toFixed(0);
 
   return (
-    <main className="min-h-screen bg-[#fafaf8] text-[#1C1917]">
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
 
       {/* ─── Spacer for fixed navbar ─── */}
@@ -230,15 +230,15 @@ export default function ProductPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex items-center gap-2 py-6 md:py-8"
         >
-          <Link href="/" className="text-[10px] uppercase tracking-[0.3em] text-gray-400 hover:text-gray-900 transition-colors duration-300 cursor-pointer">
+          <Link href="/" className="text-[10px] uppercase tracking-[0.3em] text-muted hover:text-foreground transition-colors duration-300 cursor-pointer">
             Accueil
           </Link>
-          <ChevronRight size={9} className="text-gray-300" />
-          <Link href={`/categories/${product.category?.toLowerCase()}`} className="text-[10px] uppercase tracking-[0.3em] text-gray-400 hover:text-gray-900 transition-colors duration-300 cursor-pointer">
+          <ChevronRight size={9} className="text-muted/40" />
+          <Link href={`/categories/${product.category?.toLowerCase()}`} className="text-[10px] uppercase tracking-[0.3em] text-muted hover:text-foreground transition-colors duration-300 cursor-pointer">
             {product.category}
           </Link>
-          <ChevronRight size={9} className="text-gray-300" />
-          <span className="text-[10px] uppercase tracking-[0.3em] text-gray-900 truncate max-w-[140px] md:max-w-none">
+          <ChevronRight size={9} className="text-muted/40" />
+          <span className="text-[10px] uppercase tracking-[0.3em] text-foreground truncate max-w-[140px] md:max-w-none">
             {product.name}
           </span>
         </motion.nav>

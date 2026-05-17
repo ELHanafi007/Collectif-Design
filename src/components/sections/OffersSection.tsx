@@ -82,7 +82,7 @@ export default function OffersSection() {
   );
 
   return (
-    <section className="w-full bg-white overflow-hidden">
+    <section className="w-full bg-background overflow-hidden">
       <div className="flex flex-col-reverse lg:flex-row w-full">
         {/* Left Content / Bottom Content on Mobile */}
         <motion.div 
@@ -90,7 +90,7 @@ export default function OffersSection() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full lg:w-1/2 p-4 py-12 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-white"
+          className="w-full lg:w-1/2 p-4 py-12 md:p-12 lg:p-16 flex flex-col items-center justify-center bg-background"
         >
           <div className="text-center mb-10">
             <motion.h3 
@@ -98,7 +98,7 @@ export default function OffersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-sm md:text-sm tracking-[0.2em] uppercase font-light text-gray-400 mb-3"
+              className="text-sm md:text-sm tracking-[0.2em] uppercase font-light text-muted mb-3"
             >
               VIE INSPIRÉE
             </motion.h3>
@@ -107,7 +107,7 @@ export default function OffersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-2xl md:text-3xl tracking-wide uppercase font-medium text-black"
+              className="text-2xl md:text-3xl tracking-wide uppercase font-medium text-foreground"
             >
               DÉCOUVRIR NOS OFFRES
             </motion.h2>
@@ -118,13 +118,13 @@ export default function OffersSection() {
             {/* Mobile Arrows */}
             <button 
               onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-gray-400 hover:text-black transition-colors md:hidden"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 text-muted hover:text-foreground transition-colors md:hidden"
             >
               <ChevronLeft size={32} strokeWidth={1} />
             </button>
             <button 
               onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-gray-400 hover:text-black transition-colors md:hidden"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 text-muted hover:text-foreground transition-colors md:hidden"
             >
               <ChevronRight size={32} strokeWidth={1} />
             </button>
@@ -139,10 +139,10 @@ export default function OffersSection() {
                 className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full"
               >
                 {visibleProducts.map((product) => (
-                  <div key={product.id} className="flex flex-col group transition-all bg-white">
-                    <div className="relative w-full aspect-[4/3] mb-6 overflow-hidden bg-[#f9f9f9]">
+                  <div key={product.id} className="flex flex-col group transition-all bg-background">
+                    <div className="relative w-full aspect-[4/3] mb-6 overflow-hidden bg-surface">
                       {/* Discount Tag */}
-                      <div className="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 z-10">
+                      <div className="absolute top-4 left-4 bg-foreground text-background text-[10px] font-bold px-2 py-1 z-10">
                         {product.discount}
                       </div>
 
@@ -157,16 +157,16 @@ export default function OffersSection() {
                             src={product.image}
                             alt={product.name}
                             fill
-                            className="object-cover mix-blend-multiply"
+                            className="object-cover mix-blend-multiply dark:mix-blend-normal"
                           />
                         </motion.div>
                       </Link>
                     </div>
                     <div className="text-center mt-auto px-2">
-                      <h3 className="text-[15px] font-semibold text-black mb-1">{product.name}</h3>
-                      <p className="text-[13px] text-gray-400 mb-3">{product.category}</p>
+                      <h3 className="text-[15px] font-semibold text-foreground mb-1">{product.name}</h3>
+                      <p className="text-[13px] text-muted mb-3">{product.category}</p>
                       <div className="flex items-center justify-center gap-2 text-sm">
-                        <span className="line-through text-gray-400">{product.oldPrice}</span>
+                        <span className="line-through text-muted">{product.oldPrice}</span>
                         <span className="font-bold text-[#d11124]">{product.newPrice}</span>
                       </div>
                     </div>
@@ -189,7 +189,7 @@ export default function OffersSection() {
                 key={idx}
                 onClick={() => setCurrentPage(idx)}
                 className={`w-[6px] h-[6px] rounded-full transition-colors ${
-                  currentPage === idx ? 'bg-black' : 'border border-gray-400'
+                  currentPage === idx ? 'bg-foreground' : 'border border-border'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
@@ -205,7 +205,7 @@ export default function OffersSection() {
           >
             <Link 
               href="/categories/salons"
-              className="block w-full bg-[#2a2a2a] text-white text-[13px] font-bold tracking-widest uppercase py-4 text-center hover:bg-black transition-colors"
+              className="block w-full bg-foreground text-background text-[13px] font-bold tracking-widest uppercase py-4 text-center hover:bg-foreground/90 transition-colors"
             >
               VOIR PLUS
             </Link>

@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, User, Heart, ShoppingBag, X } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, X, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
+import { useTheme } from '@/components/providers/ThemeProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/lib/supabaseClient';
 import { Product, PRODUCTS } from '@/lib/products';
@@ -25,6 +26,7 @@ const navigation = [
 const easeExpo = [0.16, 1, 0.3, 1] as const;
 
 export default function Navbar() {
+  const { theme, toggleTheme } = useTheme();
   const { setIsCartOpen, cart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -128,11 +130,12 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 w-full z-[100]">
       {/* ─── Main Premium Bar ─── */}
+      {/* ─── Main Premium Bar ─── */}
       <div 
         className={`relative transition-all duration-500 ${
           isMobileMenuOpen 
             ? 'bg-transparent border-transparent z-[125]' 
-            : 'bg-white/95 backdrop-blur-md border-b border-gray-100 z-[105]'
+            : 'bg-background/95 backdrop-blur-md border-b border-border z-[105]'
         }`}
       >
         <div className="container-wide mx-auto px-5 md:px-12 flex items-center justify-between h-[84px] md:h-[116px]">
@@ -145,23 +148,24 @@ export default function Navbar() {
               aria-label="Toggle Menu"
             >
               {/* Animated Outer Circle */}
-              <span className={`absolute inset-0 rounded-full border transition-all duration-500 ease-out ${isMobileMenuOpen ? 'border-white/20 group-hover:border-white' : 'border-gray-200 group-hover:border-black group-hover:scale-105'}`} />
-              <span className={`absolute inset-0 rounded-full scale-0 group-hover:scale-100 opacity-[0.03] transition-transform duration-500 ease-out ${isMobileMenuOpen ? 'bg-white' : 'bg-black'}`} />
+              <span className={`absolute inset-0 rounded-full border transition-all duration-500 ease-out ${isMobileMenuOpen ? 'border-white/20 group-hover:border-white' : 'border-border group-hover:border-foreground group-hover:scale-105'}`} />
+              <span className={`absolute inset-0 rounded-full scale-0 group-hover:scale-100 opacity-[0.03] transition-transform duration-500 ease-out ${isMobileMenuOpen ? 'bg-white' : 'bg-foreground'}`} />
               
               {/* Asymmetric Morphing Lines */}
               <div className="relative w-5 h-3 flex flex-col justify-between items-center">
                 <motion.span
-                  animate={isMobileMenuOpen ? { rotate: 45, y: 5.5, backgroundColor: '#ffffff' } : { rotate: 0, y: 0, backgroundColor: '#000000' }}
+                  animate={isMobileMenuOpen ? { rotate: 45, y: 5.5, backgroundColor: '#ffffff' } : { rotate: 0, y: 0, backgroundColor: theme === 'dark' ? '#fafaf9' : '#0c0a09' }}
                   transition={{ duration: 0.4, ease: easeExpo }}
                   className="w-5 h-[1.5px] block origin-center"
                 />
                 <motion.span
                   animate={isMobileMenuOpen ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3, ease: easeExpo }}
-                  className="w-5 h-[1.5px] bg-black block"
+                  className="w-5 h-[1.5px] block"
+                  style={{ backgroundColor: theme === 'dark' ? '#fafaf9' : '#0c0a09' }}
                 />
                 <motion.span
-                  animate={isMobileMenuOpen ? { rotate: -45, y: -5.5, width: "20px", backgroundColor: '#ffffff' } : { rotate: 0, y: 0, width: "13px", backgroundColor: '#000000' }}
+                  animate={isMobileMenuOpen ? { rotate: -45, y: -5.5, width: "20px", backgroundColor: '#ffffff' } : { rotate: 0, y: 0, width: "13px", backgroundColor: theme === 'dark' ? '#fafaf9' : '#0c0a09' }}
                   transition={{ duration: 0.4, ease: easeExpo }}
                   className="h-[1.5px] block origin-center self-end group-hover:w-5 transition-[width] duration-300"
                 />
@@ -170,7 +174,7 @@ export default function Navbar() {
             <span 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`hidden lg:inline-block text-[10px] font-bold uppercase tracking-[0.25em] cursor-pointer select-none transition-colors duration-500 ${
-                isMobileMenuOpen ? 'text-white/60 hover:text-white' : 'text-gray-500 hover:text-black'
+                isMobileMenuOpen ? 'text-white/60 hover:text-white' : 'text-muted hover:text-foreground'
               }`}
             >
               {isMobileMenuOpen ? 'Fermer' : 'Menu'}
@@ -186,7 +190,7 @@ export default function Navbar() {
                 width={500} 
                 height={160} 
                 className={`h-[160px] md:h-[280px] w-auto object-contain transition-all duration-500 hover:scale-105 ${
-                  isMobileMenuOpen ? 'invert brightness-200' : ''
+                  isMobileMenuOpen ? 'invert brightness-200' : 'dark:invert dark:brightness-200'
                 }`} 
                 priority
               />
@@ -195,13 +199,37 @@ export default function Navbar() {
 
           {/* RIGHT: Actions */}
           <div className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none justify-end relative z-[130]">
+            
+            {/* Surgical Dynamic Theme Switcher Toggle */}
+            <button
+              onClick={toggleTheme}
+              className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer active:scale-95 ${
+                isMobileMenuOpen 
+                  ? 'text-white/60 hover:text-white hover:bg-white/10' 
+                  : 'text-foreground/75 hover:text-foreground hover:bg-foreground/5'
+              }`}
+              aria-label="Changer le thème"
+            >
+              <motion.div
+                initial={false}
+                animate={{ rotate: theme === 'dark' ? 180 : 0 }}
+                transition={{ duration: 0.5, ease: easeExpo }}
+              >
+                {theme === 'dark' ? (
+                  <Moon size={18} strokeWidth={1.5} className="text-[#CA8A04]" />
+                ) : (
+                  <Sun size={18} strokeWidth={1.5} className="text-amber-500" />
+                )}
+              </motion.div>
+            </button>
+
             {/* Elegant Search Trigger */}
             <button 
               onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }}
               className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer active:scale-95 ${
                 isMobileMenuOpen 
                   ? 'text-white/60 hover:text-white hover:bg-white/10' 
-                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+                  : 'text-foreground/75 hover:text-foreground hover:bg-foreground/5'
               }`}
               aria-label="Rechercher"
             >
@@ -210,12 +238,12 @@ export default function Navbar() {
 
             {/* Account */}
             <Link 
-              href="/account" 
+              href="/admin" 
               onClick={() => setIsMobileMenuOpen(false)}
               className={`hidden md:flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer ${
                 isMobileMenuOpen 
                   ? 'text-white/60 hover:text-white hover:bg-white/10' 
-                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+                  : 'text-foreground/75 hover:text-foreground hover:bg-foreground/5'
               }`}
             >
               <User size={20} strokeWidth={1.5} />
@@ -223,12 +251,12 @@ export default function Navbar() {
 
             {/* Wishlist */}
             <Link 
-              href="/wishlist" 
+              href="/shop" 
               onClick={() => setIsMobileMenuOpen(false)}
               className={`hidden md:flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer ${
                 isMobileMenuOpen 
                   ? 'text-white/60 hover:text-white hover:bg-white/10' 
-                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+                  : 'text-foreground/75 hover:text-foreground hover:bg-foreground/5'
               }`}
             >
               <Heart size={20} strokeWidth={1.5} />
@@ -240,7 +268,7 @@ export default function Navbar() {
               className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer active:scale-95 ${
                 isMobileMenuOpen 
                   ? 'text-white/60 hover:text-white hover:bg-white/10' 
-                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+                  : 'text-foreground/75 hover:text-foreground hover:bg-foreground/5'
               }`}
               aria-label="Panier"
             >
@@ -249,7 +277,7 @@ export default function Navbar() {
                 <motion.span 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute top-1.5 right-1.5 bg-black text-white text-[8px] font-bold min-w-[16px] h-[16px] rounded-full flex items-center justify-center px-1"
+                  className="absolute top-1.5 right-1.5 bg-foreground text-background text-[8px] font-bold min-w-[16px] h-[16px] rounded-full flex items-center justify-center px-1"
                 >
                   {cartCount}
                 </motion.span>

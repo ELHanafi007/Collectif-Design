@@ -130,7 +130,7 @@ export default function CategoryPage() {
   }, [slug, slugStr]);
 
   return (
-    <main className="min-h-screen bg-white font-sans">
+    <main className="min-h-screen bg-background font-sans">
       <Navbar />
       <div className="pt-[84px] md:pt-[166px]"></div>
       
@@ -157,17 +157,17 @@ export default function CategoryPage() {
 
       {/* Breadcrumb & Tools */}
       <div className="container-wide mx-auto px-4 md:px-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between py-6 border-b border-gray-100">
-          <div className="text-[10px] font-bold tracking-widest text-gray-400 uppercase flex items-center gap-2">
-            <Link href="/" className="hover:text-black">ACCUEIL</Link>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between py-6 border-b border-border">
+          <div className="text-[10px] font-bold tracking-widest text-muted uppercase flex items-center gap-2">
+            <Link href="/" className="hover:text-foreground">ACCUEIL</Link>
             <span>/</span>
-            <span className="text-black">{meta.title}</span>
+            <span className="text-foreground">{meta.title}</span>
           </div>
           
-          <div className="hidden md:flex items-center gap-4 text-gray-400 mt-4 md:mt-0">
-            <button className="hover:text-black"><List size={18} /></button>
-            <button className="text-black"><Grid size={18} /></button>
-            <button className="hover:text-black"><Grid size={18} strokeWidth={3} /></button>
+          <div className="hidden md:flex items-center gap-4 text-muted mt-4 md:mt-0">
+            <button className="hover:text-foreground"><List size={18} /></button>
+            <button className="text-foreground"><Grid size={18} /></button>
+            <button className="hover:text-foreground"><Grid size={18} strokeWidth={3} /></button>
           </div>
         </div>
 
