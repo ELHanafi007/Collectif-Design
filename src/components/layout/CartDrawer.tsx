@@ -1,11 +1,24 @@
 'use client';
 
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, Plus, Minus, Trash2 } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, cart, removeFromCart, updateQuantity, cartTotal } = useCart();
+
+  // Disable page scroll when cart drawer is active to prevent scroll leak
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartOpen]);
 
   return (
     <AnimatePresence>
@@ -22,6 +35,7 @@ export default function CartDrawer() {
 
           {/* Drawer */}
           <motion.div
+            data-lenis-prevent
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}

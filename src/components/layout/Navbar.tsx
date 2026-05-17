@@ -281,6 +281,7 @@ export default function Navbar() {
 
             {/* Curtain Panel 2 (Dark Charcoal Main Panel) */}
             <motion.div
+              data-lenis-prevent
               initial={{ y: '-100%' }}
               animate={{ y: 0 }}
               exit={{ y: '-100%' }}
@@ -400,6 +401,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
+            data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
