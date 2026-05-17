@@ -32,6 +32,18 @@ export default function Navbar() {
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
+  // Scroll Lock when full-screen overlay is active
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
   // Digital luxury clock inside menu
   useEffect(() => {
     const updateTime = () => {
@@ -53,19 +65,25 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 w-full z-[100]">
       {/* ─── Main Premium Bar ─── */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-gray-100 relative z-[105]">
+      <div 
+        className={`relative transition-all duration-500 ${
+          isMobileMenuOpen 
+            ? 'bg-transparent border-transparent z-[125]' 
+            : 'bg-white/95 backdrop-blur-md border-b border-gray-100 z-[105]'
+        }`}
+      >
         <div className="container-wide mx-auto px-5 md:px-12 flex items-center justify-between h-[84px] md:h-[116px]">
           
           {/* LEFT: Masterpiece Menu Trigger */}
-          <div className="flex items-center gap-4 flex-1 md:flex-none">
+          <div className="flex items-center gap-4 flex-1 md:flex-none relative z-[130]">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="group relative flex items-center justify-center w-12 h-12 rounded-full cursor-pointer focus:outline-none z-[130]"
+              className="group relative flex items-center justify-center w-12 h-12 rounded-full cursor-pointer focus:outline-none"
               aria-label="Toggle Menu"
             >
               {/* Animated Outer Circle */}
-              <span className="absolute inset-0 rounded-full border border-gray-200 group-hover:border-black group-hover:scale-105 transition-all duration-500 ease-out" />
-              <span className="absolute inset-0 rounded-full bg-black scale-0 group-hover:scale-100 opacity-[0.03] transition-transform duration-500 ease-out" />
+              <span className={`absolute inset-0 rounded-full border transition-all duration-500 ease-out ${isMobileMenuOpen ? 'border-white/20 group-hover:border-white' : 'border-gray-200 group-hover:border-black group-hover:scale-105'}`} />
+              <span className={`absolute inset-0 rounded-full scale-0 group-hover:scale-100 opacity-[0.03] transition-transform duration-500 ease-out ${isMobileMenuOpen ? 'bg-white' : 'bg-black'}`} />
               
               {/* Asymmetric Morphing Lines */}
               <div className="relative w-5 h-3 flex flex-col justify-between items-center">
@@ -88,32 +106,40 @@ export default function Navbar() {
             </button>
             <span 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`hidden lg:inline-block text-[10px] font-bold uppercase tracking-[0.25em] cursor-pointer select-none transition-colors duration-500 ${isMobileMenuOpen ? 'text-white/60 hover:text-white z-[130]' : 'text-gray-500 hover:text-black'}`}
+              className={`hidden lg:inline-block text-[10px] font-bold uppercase tracking-[0.25em] cursor-pointer select-none transition-colors duration-500 ${
+                isMobileMenuOpen ? 'text-white/60 hover:text-white' : 'text-gray-500 hover:text-black'
+              }`}
             >
               {isMobileMenuOpen ? 'Fermer' : 'Menu'}
             </span>
           </div>
 
           {/* CENTER: Grand Logo (Overlapping Masterpiece) */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[106]">
-            <Link href="/" className="relative block">
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[126]">
+            <Link href="/" className="relative block" onClick={() => setIsMobileMenuOpen(false)}>
               <Image 
                 src="/logo-removebg-preview.png" 
                 alt="Collectif Design" 
                 width={500} 
                 height={160} 
-                className="h-[160px] md:h-[280px] w-auto object-contain transition-transform duration-500 hover:scale-105" 
+                className={`h-[160px] md:h-[280px] w-auto object-contain transition-all duration-500 hover:scale-105 ${
+                  isMobileMenuOpen ? 'invert brightness-200' : ''
+                }`} 
                 priority
               />
             </Link>
           </div>
 
           {/* RIGHT: Actions */}
-          <div className="flex items-center gap-2 md:gap-4 text-gray-700 flex-1 md:flex-none justify-end relative z-[105]">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 md:flex-none justify-end relative z-[130]">
             {/* Elegant Search Trigger */}
             <button 
-              onClick={() => setIsSearchOpen(true)}
-              className="flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-50 transition-colors cursor-pointer active:scale-95"
+              onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }}
+              className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer active:scale-95 ${
+                isMobileMenuOpen 
+                  ? 'text-white/60 hover:text-white hover:bg-white/10' 
+                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+              }`}
               aria-label="Rechercher"
             >
               <Search size={20} strokeWidth={1.5} />
@@ -122,7 +148,12 @@ export default function Navbar() {
             {/* Account */}
             <Link 
               href="/account" 
-              className="hidden md:flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`hidden md:flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer ${
+                isMobileMenuOpen 
+                  ? 'text-white/60 hover:text-white hover:bg-white/10' 
+                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+              }`}
             >
               <User size={20} strokeWidth={1.5} />
             </Link>
@@ -130,15 +161,24 @@ export default function Navbar() {
             {/* Wishlist */}
             <Link 
               href="/wishlist" 
-              className="hidden md:flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-50 transition-colors cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`hidden md:flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer ${
+                isMobileMenuOpen 
+                  ? 'text-white/60 hover:text-white hover:bg-white/10' 
+                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+              }`}
             >
               <Heart size={20} strokeWidth={1.5} />
             </Link>
 
             {/* Cart */}
             <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center justify-center w-11 h-11 rounded-full hover:bg-gray-50 transition-colors cursor-pointer active:scale-95"
+              onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(true); }}
+              className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer active:scale-95 ${
+                isMobileMenuOpen 
+                  ? 'text-white/60 hover:text-white hover:bg-white/10' 
+                  : 'text-gray-700 hover:text-black hover:bg-gray-50'
+              }`}
               aria-label="Panier"
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
@@ -210,9 +250,9 @@ export default function Navbar() {
               <div className="h-[84px] md:h-[116px] flex-shrink-0" />
 
               {/* Main Menu Grid */}
-              <div className="flex-1 container-wide mx-auto px-6 md:px-12 py-10 flex items-center justify-between relative z-10">
+              <div className="flex-1 container-wide mx-auto px-6 md:px-12 py-10 flex items-center justify-between relative z-10 overflow-y-auto">
                 {/* Editorial Link List (Left Side) */}
-                <div className="flex flex-col space-y-4 md:space-y-6 max-w-2xl">
+                <div className="flex flex-col space-y-4 md:space-y-6 max-w-2xl w-full py-8">
                   {navigation.map((item, idx) => (
                     <motion.div
                       key={item.name}
@@ -246,7 +286,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Dynamic Cinematic Preview Frame (Right Side - Desktop Only) */}
-                <div className="hidden lg:block w-[400px] xl:w-[500px] h-[55vh] relative rounded-lg overflow-hidden border border-white/10 group shadow-2xl mr-12">
+                <div className="hidden lg:block w-[400px] xl:w-[500px] h-[55vh] relative rounded-lg overflow-hidden border border-white/10 group shadow-2xl mr-12 flex-shrink-0">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeMenuImage}
