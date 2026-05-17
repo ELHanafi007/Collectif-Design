@@ -19,6 +19,18 @@ const categoryMeta: Record<string, { title: string; image: string }> = {
   'canapes': { title: 'CANAPÉS', image: '/salon.jpeg' } // Using a placeholder as the grid background
 };
 
+const slugToDbCategory: Record<string, string[]> = {
+  'salons': ['Salons'],
+  'canapes': ['Salons'],
+  'chambre': ['Tables de chevet'],
+  'tables': ['Tables à manger', 'Tables basses', 'Tables d’appoint'],
+  'tables-basses': ['Tables basses'],
+  'tables-a-manger': ['Tables à manger', 'Salle à manger'],
+  'jardin': ['Jardin'],
+  'deco': ['DÉCORATION', 'Décoration', 'decoration'],
+  'decoration': ['DÉCORATION', 'Décoration', 'decoration']
+};
+
 export default function CategoryPage() {
   const { slug } = useParams();
   const searchParams = useSearchParams();
@@ -32,10 +44,11 @@ export default function CategoryPage() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
+        const mappedCategories = slugToDbCategory[slugStr] || [slugStr];
         const { data, error } = await supabase
           .from('products')
           .select('*')
-          .eq('category', slug);
+          .in('category', mappedCategories);
         
         if (error) throw error;
         setProducts(data || []);
@@ -47,7 +60,7 @@ export default function CategoryPage() {
     };
 
     if (slug) fetchProducts();
-  }, [slug]);
+  }, [slug, slugStr]);
 
   return (
     <main className="min-h-screen bg-white font-sans">
