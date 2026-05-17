@@ -172,21 +172,21 @@ export default function CategoryPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col md:flex-row items-center gap-6 py-6">
-          <div className="w-full md:w-64 border border-gray-200 px-4 py-2 flex items-center justify-between cursor-pointer">
+        <div className="flex flex-col md:flex-row items-center gap-6 py-6 select-none">
+          <div className="w-full md:w-64 border border-border bg-surface px-6 py-3 rounded-full flex items-center justify-between cursor-pointer hover:border-foreground transition-all duration-300">
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Catégories</span>
-              <span className="text-xs font-semibold">{meta.title}</span>
+              <span className="text-[10px] font-bold text-muted uppercase tracking-widest">Catégories</span>
+              <span className="text-xs font-semibold text-foreground">{meta.title}</span>
             </div>
-            <ChevronDown size={14} className="text-gray-400" />
+            <ChevronDown size={14} className="text-muted" />
           </div>
 
-          <div className="w-full md:w-64 border border-gray-200 px-4 py-2 flex items-center justify-between cursor-pointer">
+          <div className="w-full md:w-64 border border-border bg-surface px-6 py-3 rounded-full flex items-center justify-between cursor-pointer hover:border-foreground transition-all duration-300">
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Trier par prix</span>
-              <span className="text-xs font-semibold text-gray-400">Sélectionner</span>
+              <span className="text-[10px] font-bold text-muted uppercase tracking-widest">Trier par prix</span>
+              <span className="text-xs font-semibold text-muted">Sélectionner</span>
             </div>
-            <ChevronDown size={14} className="text-gray-400" />
+            <ChevronDown size={14} className="text-muted" />
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@ export default function CategoryPage() {
       <section className="container-wide mx-auto px-4 md:px-8 pb-24">
         {loading ? (
           <div className="py-20 flex justify-center">
-            <div className="h-8 w-8 border-2 border-gray-200 border-t-black rounded-full animate-spin" />
+            <div className="h-8 w-8 border border-border border-t-foreground rounded-full animate-spin" />
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-6 md:gap-8">

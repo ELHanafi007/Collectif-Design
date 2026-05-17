@@ -3,12 +3,13 @@
 import { useState, useMemo, useEffect } from "react";
 import ProductCard from "@/components/ui/ProductCard";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, ChevronDown, X } from "lucide-react";
+import { Filter, ChevronDown, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { CATEGORIES } from "@/lib/categories";
 import { Product, PRODUCTS } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
 import Navbar from "@/components/layout/Navbar";
+import { useRef } from "react";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -17,6 +18,24 @@ export default function ShopPage() {
   const [selectedSubCategory, setSelectedSubCategory] = useState("Tous");
   const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [showFilters, setShowFilters] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -240, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 240, behavior: 'smooth' });
+    }
+  };
+
+  const getCategoryCount = (catName: string) => {
+    if (catName === "Tous") return products.length;
+    return products.filter(p => p.category === catName).length;
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -91,37 +110,92 @@ export default function ShopPage() {
           </motion.div>
 
           {/* Filtering Toolbar */}
-          <div className="mt-16 flex flex-col md:flex-row md:items-center justify-between py-6 border-y border-border gap-6">
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-              {categoryNames.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setSelectedCategory(cat);
-                    setSelectedSubCategory("Tous");
-                  }}
-                  className={cn(
-                    "text-[10px] font-bold uppercase tracking-widest transition-colors",
-                    selectedCategory === cat ? "text-foreground" : "text-muted hover:text-foreground"
-                  )}
+          <div className="mt-16 border-y border-border py-4 md:py-6 flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-6">
+            
+            {/* Left Section: Scrollable Category Bar with Fade Masks */}
+            <div className="relative flex-1 flex items-center overflow-hidden pr-2 xl:pr-6">
+              
+              {/* Left Arrow Button */}
+              <button 
+                onClick={scrollLeft}
+                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full border border-border bg-background/80 hover:bg-foreground hover:text-background transition-all mr-2 shrink-0 cursor-pointer active:scale-90"
+                aria-label="Faire défiler à gauche"
+              >
+                <ChevronLeft size={14} />
+              </button>
+
+              {/* Slider Viewport with Left/Right CSS Gradients masks */}
+              <div className="relative flex-1 overflow-hidden">
+                {/* Left Fade Overlay */}
+                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+                
+                {/* Scrollable Container */}
+                <div 
+                  ref={scrollContainerRef}
+                  className="flex items-center gap-3 overflow-x-auto scroll-smooth no-scrollbar py-2 px-1"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                  {cat}
-                </button>
-              ))}
+                  {categoryNames.map((cat) => {
+                    const isSelected = selectedCategory === cat;
+                    const count = getCategoryCount(cat);
+                    
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => {
+                          setSelectedCategory(cat);
+                          setSelectedSubCategory("Tous");
+                        }}
+                        className={cn(
+                          "relative text-[10px] font-bold uppercase tracking-widest px-5 py-3 rounded-full border transition-all duration-300 shrink-0 cursor-pointer flex items-center gap-2 select-none",
+                          isSelected 
+                            ? "bg-foreground text-background border-foreground shadow-md scale-102" 
+                            : "bg-surface border-border text-muted hover:border-foreground hover:text-foreground"
+                        )}
+                      >
+                        <span>{cat}</span>
+                        <span className={cn(
+                          "text-[8px] font-mono px-1.5 py-0.5 rounded-full",
+                          isSelected ? "bg-background/25 text-background" : "bg-border text-muted"
+                        )}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Right Fade Overlay */}
+                <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
+              </div>
+
+              {/* Right Arrow Button */}
+              <button 
+                onClick={scrollRight}
+                className="hidden md:flex items-center justify-center w-8 h-8 rounded-full border border-border bg-background/80 hover:bg-foreground hover:text-background transition-all ml-2 shrink-0 cursor-pointer active:scale-90"
+                aria-label="Faire défiler à droite"
+              >
+                <ChevronRight size={14} />
+              </button>
             </div>
 
-            <div className="flex items-center gap-8">
+            {/* Right Section: Filter and Sort Actions */}
+            <div className="flex items-center justify-end gap-4 shrink-0 border-t xl:border-t-0 pt-4 xl:pt-0 border-border xl:pl-6">
               <button 
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
+                className={cn(
+                  "flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest border border-border px-5 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300 cursor-pointer select-none",
+                  showFilters && "bg-foreground text-background border-foreground"
+                )}
               >
-                <Filter size={14} /> 
-                Filtres
+                <Filter size={12} /> 
+                Filtres {showFilters && "Actifs"}
               </button>
-              <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
-                Trier <ChevronDown size={14} />
+              <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest border border-border px-5 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300 cursor-pointer select-none">
+                Trier <ChevronDown size={12} />
               </button>
             </div>
+
           </div>
 
           {/* Advanced Filters */}
