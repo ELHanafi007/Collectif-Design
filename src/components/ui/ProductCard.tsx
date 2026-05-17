@@ -10,7 +10,7 @@ export default function ProductCard(product: Product) {
   const oldPrice = product.oldPrice || (Number(product.price) * 1.25).toFixed(0);
 
   return (
-    <div className="group relative border border-gray-100 p-4 bg-white flex flex-col hover:shadow-lg transition-shadow h-full">
+    <div className="group relative border border-border p-4 bg-surface flex flex-col hover:shadow-lg transition-shadow h-full">
       <Link href={`/products/${product.id}`} className="flex flex-col h-full">
         {/* Image & Discount */}
         <div className="relative w-full aspect-[4/3] mb-4">
@@ -21,20 +21,20 @@ export default function ProductCard(product: Product) {
             src={product.image}
             alt={product.name}
             fill
-            className="object-cover"
+            className="object-cover mix-blend-multiply dark:mix-blend-normal"
           />
         </div>
 
         {/* Info */}
         <div className="text-center mt-auto flex flex-col">
-          <h3 className="text-sm font-semibold text-black transition-colors group-hover:text-gray-600">
+          <h3 className="text-sm font-semibold text-foreground transition-colors group-hover:text-foreground/75">
             {product.name}
           </h3>
-          <p className="text-[10px] text-gray-400 mt-1 mb-2">
+          <p className="text-[10px] text-muted mt-1 mb-2">
             {product.category || 'Meubles'}
           </p>
           <div className="flex items-center justify-center gap-2 text-xs">
-            <span className="line-through text-gray-400">
+            <span className="line-through text-muted">
               {Number(oldPrice).toLocaleString('fr-FR')} DH
             </span>
             <span className="font-bold text-[#d11124] text-sm">

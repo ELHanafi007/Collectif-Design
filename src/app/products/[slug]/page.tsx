@@ -301,12 +301,12 @@ export default function ProductPage() {
                 <button
                   onClick={() => setIsWishlisted(!isWishlisted)}
                   className={`w-12 h-12 rounded-full backdrop-blur-lg border border-white/20 flex items-center justify-center shadow-lg transition-all duration-300 cursor-pointer active:scale-90 ${
-                    isWishlisted ? 'bg-red-50 text-red-500 border-red-100' : 'bg-white/80 text-gray-700 hover:bg-white hover:text-black'
+                    isWishlisted ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-surface/80 text-foreground/80 hover:bg-surface hover:text-foreground'
                   }`}
                 >
                   <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} />
                 </button>
-                <button className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-lg border border-white/20 flex items-center justify-center text-gray-700 hover:bg-white hover:text-black shadow-lg transition-all duration-300 cursor-pointer active:scale-90">
+                <button className="w-12 h-12 rounded-full bg-surface/80 backdrop-blur-lg border border-white/20 flex items-center justify-center text-foreground/80 hover:bg-surface hover:text-foreground shadow-lg transition-all duration-300 cursor-pointer active:scale-90">
                   <Share2 size={18} />
                 </button>
               </motion.div>
@@ -391,25 +391,25 @@ export default function ProductPage() {
             </motion.div>
 
             {/* Divider */}
-            <motion.div variants={stagger.child} className="w-full h-px bg-gray-200/80 mb-8" />
+            <motion.div variants={stagger.child} className="w-full h-px bg-border mb-8" />
 
             {/* Quantity + Add to Cart */}
             <motion.div variants={stagger.child} className="space-y-4 mb-8">
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Quantity */}
-                <div className="flex items-center justify-between h-14 min-h-[56px] border border-gray-200/80 bg-white rounded-full px-2 sm:w-36 shrink-0 shadow-sm">
+                <div className="flex items-center justify-between h-14 min-h-[56px] border border-border bg-surface rounded-full px-2 sm:w-36 shrink-0 shadow-sm">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-500 hover:text-black transition-colors duration-200 cursor-pointer active:scale-90 shrink-0"
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-background text-muted hover:text-foreground transition-colors duration-200 cursor-pointer active:scale-90 shrink-0"
                   >
                     <Minus size={12} />
                   </button>
-                  <span className="text-sm font-medium w-8 text-center text-gray-900">
+                  <span className="text-sm font-medium w-8 text-center text-foreground">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-500 hover:text-black transition-colors duration-200 cursor-pointer active:scale-90 shrink-0"
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-background text-muted hover:text-foreground transition-colors duration-200 cursor-pointer active:scale-90 shrink-0"
                   >
                     <Plus size={12} />
                   </button>
