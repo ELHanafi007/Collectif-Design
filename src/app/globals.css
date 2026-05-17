@@ -72,6 +72,12 @@
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
   }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .snap-x-mandatory { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .snap-center { scroll-snap-align: center; }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .touch-pan { touch-action: pan-x pan-y; }
 }
 
 /* Premium Layout Patterns */
@@ -130,4 +136,30 @@
 
 .btn-premium:hover span {
   @apply text-background;
+}
+
+/* ─── Mobile-First Refinements ─── */
+@media (max-width: 767px) {
+  /* Tighter mobile spacing for luxury feel */
+  .section-padding {
+    @apply py-16 px-5;
+  }
+  
+  /* Better mobile typography rhythm */
+  h1 { font-size: clamp(1.75rem, 6vw, 2.5rem); }
+  h2 { font-size: clamp(1.5rem, 5vw, 2rem); }
+  
+  /* Mobile sticky CTA bar safe area */
+  .mobile-sticky-cta {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

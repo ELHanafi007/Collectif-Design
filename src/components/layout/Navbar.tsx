@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, User, Heart, ShoppingBag, Menu, X } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, Menu, X, ChevronRight } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -27,16 +27,16 @@ export default function Navbar() {
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-[100] bg-white border-b border-gray-200">
+    <header className="fixed top-0 left-0 w-full z-[100] bg-white/95 backdrop-blur-md border-b border-gray-100">
       {/* Top Bar */}
-      <div className="container-wide mx-auto px-4 md:px-8 flex items-center justify-between h-24 md:h-28">
+      <div className="container-wide mx-auto px-4 md:px-8 flex items-center justify-between h-16 md:h-28">
         
         {/* Mobile Hamburger Icon */}
         <button 
-          className="md:hidden text-black p-2 -ml-2"
+          className="md:hidden text-black p-3 -ml-3 active:scale-95 transition-transform cursor-pointer"
           onClick={() => setIsMobileMenuOpen(true)}
         >
-          <Menu size={32} strokeWidth={1.5} />
+          <Menu size={24} strokeWidth={1.5} />
         </button>
 
         {/* Logo */}
@@ -46,7 +46,7 @@ export default function Navbar() {
             alt="Collectif Design" 
             width={500} 
             height={150} 
-            className="object-contain h-24 md:h-28 w-auto transform scale-[1.8] md:scale-150 origin-center md:origin-left" 
+            className="object-contain h-14 md:h-28 w-auto transform scale-[1.4] md:scale-150 origin-center md:origin-left" 
             priority
           />
         </Link>
@@ -66,23 +66,27 @@ export default function Navbar() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4 md:gap-6 text-gray-600">
-          <Link href="/account" className="hidden sm:block hover:text-black transition-colors">
+        <div className="flex items-center gap-3 md:gap-6 text-gray-600">
+          <Link href="/account" className="hidden sm:block hover:text-black transition-colors cursor-pointer">
             <User size={22} strokeWidth={1.5} />
           </Link>
-          <Link href="/wishlist" className="hidden sm:block hover:text-black transition-colors">
+          <Link href="/wishlist" className="hidden sm:block hover:text-black transition-colors cursor-pointer">
             <Heart size={22} strokeWidth={1.5} />
           </Link>
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="flex items-center gap-2 hover:text-black transition-colors"
+            className="flex items-center gap-2 hover:text-black transition-colors p-2 -mr-2 md:mr-0 md:p-0 active:scale-95 md:active:scale-100 cursor-pointer"
           >
             <div className="relative">
-              <ShoppingBag size={24} strokeWidth={1.5} />
+              <ShoppingBag size={22} strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1.5 -right-1.5 bg-black text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center"
+                >
                   {cartCount}
-                </span>
+                </motion.span>
               )}
             </div>
             <span className="text-sm font-semibold text-black hidden sm:block">0 DH</span>
@@ -125,59 +129,69 @@ export default function Navbar() {
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed inset-y-0 left-0 w-[80%] max-w-sm bg-white z-[120] flex flex-col md:hidden overflow-y-auto"
+              transition={{ type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed inset-y-0 left-0 w-[85%] max-w-[360px] bg-white z-[120] flex flex-col md:hidden overflow-y-auto safe-bottom"
             >
-              <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <div className="pl-4">
-                  <Image src="/logo-removebg-preview.png" alt="Collectif Design" width={300} height={100} className="object-contain h-16 w-auto transform scale-[1.6] origin-left" />
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <div className="pl-2">
+                  <Image src="/logo-removebg-preview.png" alt="Collectif Design" width={300} height={100} className="object-contain h-12 w-auto transform scale-[1.4] origin-left" />
                 </div>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-500 hover:text-black">
-                  <X size={28} />
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-400 hover:text-black active:scale-95 transition-all cursor-pointer">
+                  <X size={24} />
                 </button>
               </div>
 
               {/* Mobile Search */}
-              <div className="p-4 border-b border-gray-100 relative">
+              <div className="px-5 py-4 border-b border-gray-50 relative">
                 <input 
                   type="text"
-                  placeholder="Rechercher..."
+                  placeholder="Rechercher un produit..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-sm py-3 px-4 text-sm focus:outline-none focus:border-gray-400 font-sans"
+                  className="w-full bg-[#f5f5f3] border-0 rounded-lg py-3.5 px-4 text-[14px] focus:outline-none focus:ring-1 focus:ring-gray-300 font-sans placeholder:text-gray-400"
                 />
-                <button className="absolute right-7 top-1/2 -translate-y-1/2 text-gray-400">
+                <button className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer">
                   <Search size={18} strokeWidth={1.5} />
                 </button>
               </div>
 
-              <nav className="flex-1 py-4">
-                <ul className="flex flex-col text-sm font-bold tracking-widest uppercase">
-                  {navigation.map((item) => (
-                    <li key={item.name}>
+              <nav className="flex-1 py-2 overflow-y-auto">
+                <ul className="flex flex-col">
+                  {navigation.map((item, idx) => (
+                    <motion.li 
+                      key={item.name}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 * idx, duration: 0.3 }}
+                    >
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`block py-4 px-6 border-b border-gray-50 ${
-                          item.highlight ? 'text-[#0f8742]' : 'text-black'
+                        className={`flex items-center justify-between py-4 px-6 text-[13px] font-semibold tracking-[0.15em] uppercase active:bg-gray-50 transition-colors cursor-pointer ${
+                          item.highlight ? 'text-[#0f8742]' : 'text-gray-900'
                         }`}
                       >
                         {item.name}
+                        <ChevronRight size={14} className="text-gray-300" />
                       </Link>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </nav>
 
-              <div className="p-6 bg-gray-50 flex items-center justify-around text-black border-t border-gray-200">
-                <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1">
-                  <User size={20} strokeWidth={1.5} />
-                  <span className="text-[10px] uppercase font-bold tracking-widest">Compte</span>
+              <div className="px-5 py-5 bg-[#fafaf8] flex items-center justify-around text-black border-t border-gray-100">
+                <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
+                  <User size={20} strokeWidth={1.3} />
+                  <span className="text-[9px] uppercase font-semibold tracking-[0.2em] text-gray-500">Compte</span>
                 </Link>
-                <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1">
-                  <Heart size={20} strokeWidth={1.5} />
-                  <span className="text-[10px] uppercase font-bold tracking-widest">Favoris</span>
+                <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
+                  <Heart size={20} strokeWidth={1.3} />
+                  <span className="text-[9px] uppercase font-semibold tracking-[0.2em] text-gray-500">Favoris</span>
                 </Link>
+                <button onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(true); }} className="flex flex-col items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
+                  <ShoppingBag size={20} strokeWidth={1.3} />
+                  <span className="text-[9px] uppercase font-semibold tracking-[0.2em] text-gray-500">Panier</span>
+                </button>
               </div>
             </motion.div>
           </>

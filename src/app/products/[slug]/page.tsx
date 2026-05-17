@@ -157,7 +157,7 @@ export default function ProductPage() {
       <Navbar />
 
       {/* ─── Spacer for fixed navbar ─── */}
-      <div className="pt-[100px] md:pt-[128px]" />
+      <div className="pt-16 md:pt-[128px]" />
 
       {/* ─── Breadcrumb ─── */}
       <div className="max-w-[1440px] mx-auto px-5 md:px-12 lg:px-20">

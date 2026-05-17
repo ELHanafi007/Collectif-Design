@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <main className="relative bg-white overflow-hidden font-sans">
       <Navbar />
-      {/* Spacer for fixed Navbar (height ~ 130px depending on top/bottom bars) */}
-      <div className="pt-[128px]"></div> 
+      {/* Spacer for fixed Navbar */}
+      <div className="pt-16 md:pt-[128px]"></div> 
       <Hero />
       <TrendingSection />
       <OffersSection />
