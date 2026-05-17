@@ -111,11 +111,19 @@ export default function TrendingSection() {
           className="w-full lg:w-1/2 relative min-h-[60vh] md:min-h-[500px] lg:min-h-screen overflow-hidden group"
         >
           <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.8 }} className="w-full h-full relative">
+            {/* Desktop Image */}
             <Image
               src="/salon.jpeg" // Big living room image
               alt="Living Room Setup"
               fill
-              className="object-cover"
+              className="object-cover hidden md:block"
+            />
+            {/* Mobile Image */}
+            <Image
+              src="/mobile-trending-hero.png" // Mobile tailored trending image
+              alt="Living Room Setup Mobile"
+              fill
+              className="object-cover block md:hidden"
             />
           </motion.div>
         </motion.div>
