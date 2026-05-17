@@ -9,6 +9,8 @@ import { Product } from '@/lib/products';
 import { ChevronRight, ChevronUp, MessageCircle } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import TrendingSection from '@/components/sections/TrendingSection';
 
 export default function ProductPage() {
   const { slug } = useParams();
@@ -253,6 +255,49 @@ export default function ProductPage() {
           </div>
         </div>
       </div>
+
+      {/* Technical Specifications */}
+      <section className="border-t border-gray-100 bg-gray-50/50 py-20 mt-12">
+        <div className="container-wide mx-auto px-4 md:px-8">
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-xl md:text-2xl font-light uppercase tracking-widest text-center mb-12">
+              Spécifications <span className="font-medium italic">Techniques</span>
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Catégorie</span>
+                <span className="text-sm font-medium">{product.category || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Dimensions</span>
+                <span className="text-sm font-medium">{product.dimensions || 'Sur mesure'}</span>
+              </div>
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Matériaux</span>
+                <span className="text-sm font-medium">{product.material || 'Premium Mix'}</span>
+              </div>
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Garantie</span>
+                <span className="text-sm font-medium">{product.warranty || '2 Ans'}</span>
+              </div>
+              <div className="flex justify-between items-center py-4 border-b border-gray-200 md:col-span-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-gray-400">Délai de Livraison</span>
+                <span className="text-sm font-medium">{product.deliveryTime || '10 à 15 jours ouvrables'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Products */}
+      <div className="pt-20 pb-10 text-center">
+        <h3 className="text-xl md:text-2xl font-light uppercase tracking-widest">
+          Vous aimerez <span className="font-medium italic">aussi</span>
+        </h3>
+      </div>
+      <TrendingSection />
+      
     </main>
   );
 }
