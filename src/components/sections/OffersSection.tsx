@@ -8,36 +8,36 @@ import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 
 const products = [
   {
-    id: 1,
-    name: 'Cairo, Salon en L',
-    category: "Salons d'angle",
+    id: "f953905e-f0b4-47c1-a437-87b305f2c361",
+    name: 'Canapé Marindra',
+    category: "Canapés",
     oldPrice: '24 570 DH',
     newPrice: '14 500 DH',
     discount: '-41%',
     image: '/salon.jpeg'
   },
   {
-    id: 2,
-    name: 'Orvalo PM, Salon en L',
-    category: "Salons d'angle",
+    id: "0f158494-c7b4-4c16-8bc4-b349a6db8a4a",
+    name: 'Canapé Kiotori',
+    category: "Canapés",
     oldPrice: '30 100 DH',
     newPrice: '19 850 DH',
     discount: '-34%',
     image: '/salon.jpeg'
   },
   {
-    id: 3,
-    name: 'Bering, Salon en U',
-    category: "Salons en U",
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    name: 'Palermo, Ensemble',
+    category: "Jardin",
     oldPrice: '45 000 DH',
     newPrice: '35 500 DH',
     discount: '-21%',
     image: '/table a manger.jpeg'
   },
   {
-    id: 4,
-    name: 'Hugo, Salon en L',
-    category: "Salons d'angle",
+    id: "c42d940b-c74a-4029-84b0-6acdb0a7265a",
+    name: 'Desserte Mario',
+    category: "Dessertes",
     oldPrice: '25 740 DH',
     newPrice: '19 500 DH',
     discount: '-24%',
@@ -151,7 +151,7 @@ export default function OffersSection() {
                         <ShoppingCart size={18} />
                       </button>
 
-                      <Link href={`/products/cairo-salon`}>
+                      <Link href={`/products/${product.id}`}>
                         <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.5 }} className="w-full h-full relative cursor-pointer">
                           <Image
                             src={product.image}

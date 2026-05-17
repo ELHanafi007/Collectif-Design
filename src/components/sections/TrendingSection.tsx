@@ -8,57 +8,57 @@ import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 
 const products = [
   {
-    id: 1,
-    name: 'Hugo, Salon en L',
-    category: "Salons d'angle",
-    oldPrice: '25 740 DH',
-    newPrice: '19 500 DH',
-    discount: '-24%',
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    name: 'Palermo, Ensemble Extérieur 3+1+1+TB',
+    category: "Jardin",
+    oldPrice: '51 870 DH',
+    newPrice: '39 900 DH',
+    discount: '-23%',
     image: '/salon.jpeg'
   },
   {
-    id: 2,
-    name: 'Tempio, Table basse',
-    category: 'Tables basses',
-    oldPrice: '9 440 DH',
-    newPrice: '6 990 DH',
-    discount: '-26%',
+    id: "c42d940b-c74a-4029-84b0-6acdb0a7265a",
+    name: 'Desserte Mario',
+    category: 'Dessertes',
+    oldPrice: '1 800 DH',
+    newPrice: '1 400 DH',
+    discount: '-22%',
     image: '/table a manger.jpeg'
   },
   {
-    id: 3,
-    name: 'Floreno, Table de salle à manger',
-    category: 'Tables de salle à manger',
-    oldPrice: '20 200 DH',
-    newPrice: '15 200 DH',
-    discount: '-25%',
+    id: "ffd3cb40-9070-4542-9b08-75c74ddef02d",
+    name: 'Table basse ATLAS',
+    category: 'Tables basses',
+    oldPrice: '4 500 DH',
+    newPrice: '3 800 DH',
+    discount: '-15%',
     image: '/tablesdechevet.jpeg'
   },
   {
-    id: 4,
-    name: 'Bering, Salon en U',
-    category: 'Salons en U',
-    oldPrice: '63 090 DH',
-    newPrice: '41 800 DH',
-    discount: '-34%',
+    id: "f953905e-f0b4-47c1-a437-87b305f2c361",
+    name: 'Canapé Marindra',
+    category: 'Canapés',
+    oldPrice: '18 000 DH',
+    newPrice: '14 500 DH',
+    discount: '-19%',
     image: '/salon.jpeg'
   },
   {
-    id: 5,
-    name: 'Kaya, Fauteuil',
-    category: 'Fauteuils',
+    id: "4117d534-f5dd-4eae-ad73-92192e26eee8",
+    name: 'Table à manger PALOMA',
+    category: 'Tables à manger',
     oldPrice: '11 000 DH',
-    newPrice: '5 500 DH',
-    discount: '-50%',
+    newPrice: '8 500 DH',
+    discount: '-22%',
     image: '/salon.jpeg'
   },
   {
-    id: 6,
-    name: 'Alba, Fauteuil',
-    category: 'Fauteuils',
-    oldPrice: '6 350 DH',
-    newPrice: '3 850 DH',
-    discount: '-39%',
+    id: "709c25eb-6537-458e-90f4-b7d6c92127a6",
+    name: 'Table de chevet Salia',
+    category: 'Chambres',
+    oldPrice: '2 350 DH',
+    newPrice: '1 850 DH',
+    discount: '-21%',
     image: '/table a manger.jpeg'
   }
 ];
@@ -187,7 +187,7 @@ export default function TrendingSection() {
                         <ShoppingCart size={18} />
                       </button>
 
-                      <Link href={`/products/hugo-salon`}>
+                      <Link href={`/products/${product.id}`}>
                         <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.5 }} className="w-full h-full relative cursor-pointer">
                           <Image
                             src={product.image}

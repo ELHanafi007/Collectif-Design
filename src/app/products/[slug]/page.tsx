@@ -67,136 +67,189 @@ export default function ProductPage() {
   return (
     <main className="min-h-screen bg-white font-sans text-black">
       <Navbar />
-      <div className="pt-[128px]"></div>
+      <div className="pt-[100px] md:pt-[128px]"></div>
       
-      <div className="container-wide mx-auto px-4 md:px-8 py-8">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-8">
+      <div className="container-wide mx-auto px-4 md:px-8 py-4 md:py-12">
+        {/* Breadcrumb - Refined */}
+        <nav className="flex items-center gap-2 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400 mb-8 md:mb-12">
           <Link href="/" className="hover:text-black transition-colors">Accueil</Link>
-          <span>/</span>
+          <ChevronRight size={10} className="text-gray-300" />
           <Link href={`/categories/${product.category?.toLowerCase()}`} className="hover:text-black transition-colors">{product.category}</Link>
-          <span>/</span>
-          <span className="text-black">{product.name}</span>
+          <ChevronRight size={10} className="text-gray-300" />
+          <span className="text-black truncate max-w-[150px] md:max-w-none">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
-          {/* Left: Gallery */}
-          <div className="space-y-4">
-            <div className="relative aspect-[4/3] md:aspect-square bg-white border border-gray-100 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-24">
+          {/* Left: Gallery (Col 1-7) */}
+          <div className="lg:col-span-7 space-y-6">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative aspect-[4/3] md:aspect-[1.2/1] bg-[#f9f9f9] overflow-hidden group"
+            >
               <Image
                 src={images[activeImage]}
                 alt={product.name}
                 fill
-                className="object-contain"
+                className="object-contain p-4 md:p-12 transition-transform duration-700 group-hover:scale-105"
+                priority
               />
-            </div>
+              
+              {/* Badge */}
+              <div className="absolute top-6 left-6 flex flex-col gap-2">
+                <span className="bg-[#d11124] text-white text-[10px] font-bold px-3 py-1 tracking-widest uppercase shadow-xl">
+                  Promotion -{discount}%
+                </span>
+                {product.isNew && (
+                  <span className="bg-black text-white text-[10px] font-bold px-3 py-1 tracking-widest uppercase shadow-xl">
+                    Nouveauté
+                  </span>
+                )}
+              </div>
+            </motion.div>
             
-            {/* Thumbnails */}
+            {/* Thumbnails - Horizontal Scroll on Mobile, Grid on Desktop */}
             {images.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2">
+              <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
                 {images.map((img, i) => (
-                  <button 
+                  <motion.button 
+                    whileTap={{ scale: 0.95 }}
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`relative w-24 aspect-[4/3] border ${
-                      activeImage === i ? 'border-black' : 'border-gray-100 hover:border-gray-300'
+                    className={`relative flex-shrink-0 w-20 md:w-28 aspect-square transition-all duration-300 ${
+                      activeImage === i ? 'ring-1 ring-black p-1' : 'opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" />
-                  </button>
+                    <div className="w-full h-full bg-[#f9f9f9] relative">
+                      <Image src={img} alt="" fill className="object-contain p-2" />
+                    </div>
+                  </motion.button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Right: Product Details */}
-          <div className="flex flex-col pt-4">
-            <div className="mb-6 flex justify-end w-full max-w-md">
-              <span className="bg-black text-white text-[10px] font-bold px-2 py-1">
-                -{discount}%
-              </span>
-            </div>
+          {/* Right: Product Details (Col 8-12) */}
+          <div className="lg:col-span-5 flex flex-col">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="mb-4">
+                <span className="text-[11px] font-bold uppercase tracking-[0.4em] text-[#d11124]">
+                  {product.category}
+                </span>
+              </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-wide mb-6">
-              {product.name}
-            </h1>
+              <h1 className="text-4xl md:text-5xl font-light tracking-tight leading-[1.1] mb-6">
+                {product.name}
+              </h1>
 
-            <div className="flex items-center gap-3 mb-8">
-              <span className="text-xl line-through text-gray-400 font-light">
-                {Number(oldPrice).toLocaleString('fr-FR')} DH
-              </span>
-              <span className="text-2xl font-bold text-[#d11124]">
-                {Number(product.price).toLocaleString('fr-FR')} DH
-              </span>
-            </div>
+              <div className="flex items-baseline gap-4 mb-10 pb-8 border-b border-gray-100">
+                <span className="text-3xl font-medium tracking-tight">
+                  {Number(product.price).toLocaleString('fr-FR')} <span className="text-lg">DH</span>
+                </span>
+                <span className="text-xl line-through text-gray-300 font-light italic">
+                  {Number(oldPrice).toLocaleString('fr-FR')} DH
+                </span>
+              </div>
 
-            <div className="w-full max-w-md space-y-4 mb-8">
-              {/* WhatsApp Button */}
-              <button className="w-full bg-[#1bc53e] hover:bg-[#16a333] transition-colors text-white p-3 flex items-center gap-3 rounded-sm">
-                <MessageCircle size={28} />
-                <div className="flex flex-col items-start leading-tight">
-                  <span className="text-[10px] font-medium">Collectif Design Online</span>
-                  <span className="text-sm font-bold">Commander via WhatsApp</span>
-                </div>
-              </button>
+              {/* Purchase Section */}
+              <div className="space-y-6 mb-12">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Quantity Selector */}
+                  <div className="flex items-center border border-gray-200 h-[56px] w-full sm:w-auto">
+                    <button 
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-14 h-full flex items-center justify-center hover:bg-gray-50 transition-colors text-lg"
+                    >
+                      -
+                    </button>
+                    <div className="w-14 h-full flex items-center justify-center font-medium border-x border-gray-200">
+                      {quantity}
+                    </div>
+                    <button 
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-14 h-full flex items-center justify-center hover:bg-gray-50 transition-colors text-lg"
+                    >
+                      +
+                    </button>
+                  </div>
 
-              {/* Add to Cart Group */}
-              <div className="flex gap-4">
-                <div className="flex items-center bg-[#2a2a2a] text-white">
+                  {/* Add to Cart */}
                   <button 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-4 py-3 hover:bg-black transition-colors"
+                    onClick={() => { for (let i = 0; i < quantity; i++) addToCart(product); }}
+                    className="flex-1 bg-[#2a2a2a] hover:bg-black text-white h-[56px] font-bold text-[11px] uppercase tracking-[0.3em] transition-all duration-300 shadow-lg shadow-black/5"
                   >
-                    -
-                  </button>
-                  <span className="px-4 py-3 border-x border-gray-600 font-medium">
-                    {quantity}
-                  </span>
-                  <button 
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-3 hover:bg-black transition-colors"
-                  >
-                    +
+                    AJOUTER AU PANIER
                   </button>
                 </div>
-                <button 
-                  onClick={() => { for (let i = 0; i < quantity; i++) addToCart(product); }}
-                  className="flex-1 bg-[#2a2a2a] hover:bg-black transition-colors text-white font-bold text-xs uppercase tracking-widest"
-                >
-                  AJOUTER AU PANIER
+
+                {/* WhatsApp Premium Integration */}
+                <button className="w-full bg-[#25d366] hover:bg-[#128c7e] text-white p-4 flex items-center justify-center gap-4 transition-all duration-300 group rounded-sm">
+                  <MessageCircle size={22} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em]">COMMANDER VIA WHATSAPP</span>
                 </button>
               </div>
-            </div>
 
-            <div className="text-xs font-semibold mb-8">
-              Catégorie : <span className="font-light text-gray-500">{product.category}</span>
-            </div>
-
-            {/* Description Accordion */}
-            <div className="w-full max-w-md border border-gray-100">
-              <button 
-                onClick={() => setIsDescOpen(!isDescOpen)}
-                className="w-full flex items-center justify-between p-4 bg-gray-50/50 hover:bg-gray-50"
-              >
-                <span className="font-bold text-xs tracking-wide">Description</span>
-                <ChevronUp size={16} className={`transition-transform ${!isDescOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {isDescOpen && (
-                <div className="p-4 pt-0 text-sm font-light text-gray-600 leading-relaxed border-t border-gray-100">
-                  <br />
-                  <p className="font-bold mb-2 text-black">Confort généreux et style contemporain</p>
-                  <p className="mb-4">
-                    {product.description || `Le pouf ${product.name} est conçu pour offrir une expérience d'assise agréable et polyvalente. Son garnissage associe des mousses HR35 et HR30, enrichies par la technologie Magic 4 et une souplesse maîtrisée, garantissant un accueil confortable et durable. Revêtu d'une toile texturée traitée antitaches, il allie esthétique et praticité, tout en conservant un aspect soigné au fil du temps.`}
-                  </p>
-                  
-                  <p className="font-bold mb-2 text-black">Base solide et idées d'intégration</p>
-                  <p>
-                    Reposant sur une structure en bois massif avec un socle en hêtre massif teinté noyer, le pouf se distingue par sa robustesse et son allure chaleureuse. Pour le sublimer, placez-le à proximité d'un canapé ou d'un fauteuil afin de créer un espace détente harmonieux.
-                  </p>
+              {/* Product Info Accordion */}
+              <div className="border-t border-gray-100">
+                <div className="py-6">
+                  <button 
+                    onClick={() => setIsDescOpen(!isDescOpen)}
+                    className="w-full flex items-center justify-between group"
+                  >
+                    <span className="font-bold text-[11px] uppercase tracking-[0.3em]">DESCRIPTION DU PRODUIT</span>
+                    <div className={`transition-transform duration-500 ${!isDescOpen ? 'rotate-180' : ''}`}>
+                      <ChevronUp size={16} />
+                    </div>
+                  </button>
+                  <motion.div 
+                    initial={false}
+                    animate={{ height: isDescOpen ? "auto" : 0, opacity: isDescOpen ? 1 : 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-6 text-[15px] font-light text-gray-500 leading-relaxed space-y-4">
+                      <p className="font-medium text-black italic">Excellence et durabilité pour votre espace</p>
+                      <p>
+                        {product.description || `La collection ${product.name} incarne une alliance parfaite entre modernité et durabilité. Conçue pour résister aux éléments tout en conservant une esthétique minimaliste et luxueuse, elle s'intègre harmonieusement dans les intérieurs comme les extérieurs les plus exigeants.`}
+                      </p>
+                      <ul className="space-y-2 pt-4">
+                        <li className="flex items-center gap-3">
+                          <div className="w-1 h-1 bg-black rounded-full" />
+                          <span className="text-[13px] uppercase tracking-wider text-black font-medium">Structure:</span> 
+                          <span className="text-[13px]">Aluminium haute densité & Bois de hêtre massif</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <div className="w-1 h-1 bg-black rounded-full" />
+                          <span className="text-[13px] uppercase tracking-wider text-black font-medium">Textile:</span> 
+                          <span className="text-[13px]">Revêtement antitaches déperlant</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <div className="w-1 h-1 bg-black rounded-full" />
+                          <span className="text-[13px] uppercase tracking-wider text-black font-medium">Garantie:</span> 
+                          <span className="text-[13px]">2 ans de sérénité absolue</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </motion.div>
                 </div>
-              )}
-            </div>
+              </div>
 
+              {/* Brand Promise Labels */}
+              <div className="grid grid-cols-2 gap-4 pt-12 border-t border-gray-100 mt-12">
+                <div className="flex flex-col gap-2">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Livraison</span>
+                  <span className="text-[11px] font-medium">Sur tout le Maroc</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Paiement</span>
+                  <span className="text-[11px] font-medium">À la livraison sécurisé</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
