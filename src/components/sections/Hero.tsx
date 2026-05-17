@@ -20,11 +20,20 @@ export default function Hero() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="w-full h-full relative"
           >
+            {/* Desktop Image */}
             <Image
               src="/salon.jpeg" 
               alt="Salon Interior"
               fill
-              className="object-cover"
+              className="object-cover hidden md:block"
+              priority
+            />
+            {/* Mobile Image */}
+            <Image
+              src="/hero-mobile-left.png" 
+              alt="Salon Interior Mobile"
+              fill
+              className="object-cover block md:hidden"
               priority
             />
           </motion.div>
@@ -80,11 +89,20 @@ export default function Hero() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="w-full h-full relative"
           >
+            {/* Desktop Image */}
             <Image
               src="/hero-main.jpg" 
               alt="Luxury Furniture"
               fill
-              className="object-cover"
+              className="object-cover hidden md:block"
+              priority
+            />
+            {/* Mobile Image */}
+            <Image
+              src="/hero-mobile-right.png" 
+              alt="Luxury Furniture Mobile"
+              fill
+              className="object-cover block md:hidden"
               priority
             />
           </motion.div>
