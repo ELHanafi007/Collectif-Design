@@ -124,7 +124,30 @@ export default function CartDrawer() {
                     </div>
                   </div>
                   
-                  <button className="group relative w-full flex items-center justify-center gap-8 overflow-hidden rounded-full border border-border bg-foreground px-12 py-7 transition-all active:scale-95">
+                  <button 
+                    onClick={() => {
+                      if (cart.length === 0) return;
+                      
+                      let message = `*Bonjour Collectif Design,*\n\n`;
+                      message += `Je souhaite finaliser ma sélection et obtenir un devis pour les pièces de prestige suivantes :\n\n`;
+                      
+                      cart.forEach((item, index) => {
+                        message += `*${index + 1}. ${item.name}*\n`;
+                        message += `• Catégorie : ${item.category || 'Mobilier'}\n`;
+                        message += `• Quantité : ${item.quantity}\n`;
+                        message += `• Prix estimé : ${Number(item.price).toLocaleString('fr-FR')} MAD\n`;
+                        message += `• Matériaux : ${item.material || 'Standard premium'}\n\n`;
+                      });
+                      
+                      message += `*Total Global Estimé : ${cartTotal.toLocaleString('fr-FR')} MAD*\n\n`;
+                      message += `Pouvez-vous me confirmer les délais de fabrication artisanale et les modalités de livraison ?\n\n`;
+                      message += `Merci de votre accompagnement d'exception.`;
+                      
+                      const whatsappUrl = `https://wa.me/212600000000?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                    className="group relative w-full flex items-center justify-center gap-8 overflow-hidden rounded-full border border-border bg-foreground px-12 py-7 transition-all active:scale-95 cursor-pointer"
+                  >
                     <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.6em] text-background">
                       Finaliser la Sélection
                     </span>

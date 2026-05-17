@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { Search, User, Heart, ShoppingBag, X } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { AnimatePresence, motion } from 'framer-motion';
+import { supabase } from '@/lib/supabaseClient';
+import { Product } from '@/lib/products';
 
 const navigation = [
   { name: 'PACKS PROMO', href: '/categories/packs-promo', highlight: true, image: '/hero.jpeg' },
@@ -25,10 +27,43 @@ const easeExpo = [0.16, 1, 0.3, 1] as const;
 export default function Navbar() {
   const { setIsCartOpen, cart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeMenuImage, setActiveMenuImage] = useState('/salon.jpeg');
   const [localTime, setLocalTime] = useState('');
+
+  // Live real-time search query from Supabase
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const delayDebounce = setTimeout(async () => {
+      try {
+        setIsSearching(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .ilike('name', `%${searchQuery}%`)
+          .limit(4);
+        
+        if (!error && data) {
+          setSearchResults(data);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (err) {
+        console.error("Search error:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -393,20 +428,62 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {/* Instant luxury suggestion categories */}
+              {/* Dynamic Suggestions & Interactive Results */}
               <div className="text-white/80">
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 mb-4">Suggestions Populaires</p>
-                <div className="flex flex-wrap gap-3">
-                  {['Salons', 'Canapés en Velours', 'Tables de Repas', 'Promotions'].map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => setSearchQuery(tag)}
-                      className="px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-medium tracking-wide transition-all cursor-pointer"
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
+                {searchQuery.trim() === '' ? (
+                  <>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 mb-4">Suggestions Populaires</p>
+                    <div className="flex flex-wrap gap-3">
+                      {['Salons', 'Canapés', 'Tables basses', 'Console'].map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={() => setSearchQuery(tag)}
+                          className="px-5 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-medium tracking-wide transition-all cursor-pointer"
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 mb-4">
+                      {isSearching ? 'Recherche en cours...' : `Résultats (${searchResults.length})`}
+                    </p>
+
+                    {isSearching ? (
+                      <div className="py-12 flex justify-center">
+                        <div className="w-8 h-8 border border-white/20 border-t-white rounded-full animate-spin" />
+                      </div>
+                    ) : searchResults.length > 0 ? (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in">
+                        {searchResults.map((product) => (
+                          <Link
+                            key={product.id}
+                            href={`/products/${product.id}`}
+                            onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                            className="group block bg-white/5 border border-white/10 p-3 hover:bg-white/10 transition-all duration-300 rounded-lg"
+                          >
+                            <div className="relative aspect-[4/3] w-full mb-3 overflow-hidden rounded bg-black/10">
+                              <Image 
+                                src={product.image} 
+                                alt={product.name} 
+                                fill 
+                                className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                              />
+                            </div>
+                            <h4 className="text-xs font-medium text-white/90 group-hover:text-white truncate">{product.name}</h4>
+                            <p className="text-[10px] text-gray-400 mt-1">{Number(product.price).toLocaleString('fr-FR')} MAD</p>
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-12 text-center text-white/40 italic text-sm">
+                        Aucune pièce d&apos;exception ne correspond à votre recherche.
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
