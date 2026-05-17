@@ -77,9 +77,9 @@ export default function Navbar() {
               <Image 
                 src="/logo-removebg-preview.png" 
                 alt="Collectif Design" 
-                width={450} 
-                height={150} 
-                className="h-[120px] md:h-[210px] w-auto object-contain transition-transform duration-500 hover:scale-105" 
+                width={400} 
+                height={130} 
+                className="h-[104px] md:h-[180px] w-auto object-contain transition-transform duration-500 hover:scale-105" 
                 priority
               />
             </Link>
