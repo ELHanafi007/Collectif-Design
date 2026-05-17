@@ -1,46 +1,66 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, User, Heart, ShoppingBag, X, ChevronRight } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, X } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const navigation = [
-  { name: 'PACKS PROMO', href: '/packs-promo', highlight: true },
-  { name: 'SALONS', href: '/categories/salons' },
-  { name: 'CANAPÉS', href: '/categories/canapes' },
-  { name: 'CHAMBRE', href: '/categories/chambre' },
-  { name: 'TABLES', href: '/categories/tables' },
-  { name: 'CHAISES', href: '/categories/chaises' },
-  { name: 'JARDIN', href: '/categories/jardin' },
-  { name: 'MEUBLES', href: '/categories/meubles' },
-  { name: 'DÉCO', href: '/categories/deco' }
+  { name: 'PACKS PROMO', href: '/packs-promo', highlight: true, image: '/hero.jpeg' },
+  { name: 'SALONS', href: '/categories/salons', image: '/salon.jpeg' },
+  { name: 'CANAPÉS', href: '/categories/canapes', image: '/salon.jpeg' },
+  { name: 'CHAMBRE', href: '/categories/chambre', image: '/tablesdechevet.jpeg' },
+  { name: 'TABLES', href: '/categories/tables', image: '/table a manger.jpeg' },
+  { name: 'CHAISES', href: '/categories/chaises', image: '/salon.jpeg' },
+  { name: 'JARDIN', href: '/categories/jardin', image: '/salon.jpeg' },
+  { name: 'MEUBLES', href: '/categories/meubles', image: '/hero.jpeg' },
+  { name: 'DÉCO', href: '/categories/deco', image: '/decoration.jpeg' }
 ];
 
 /* ─── Easing ─── */
-const ease = [0.22, 1, 0.36, 1] as const;
+const easeExpo = [0.16, 1, 0.3, 1] as const;
 
 export default function Navbar() {
   const { setIsCartOpen, cart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
+  const [activeMenuImage, setActiveMenuImage] = useState('/salon.jpeg');
+  const [localTime, setLocalTime] = useState('');
+
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  // Digital luxury clock inside menu
+  useEffect(() => {
+    const updateTime = () => {
+      const date = new Date();
+      const options: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone: 'Africa/Casablanca'
+      };
+      setLocalTime(date.toLocaleTimeString('fr-FR', options) + ' GMT+1 (CASABLANCA)');
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 w-full z-[100]">
       {/* ─── Main Premium Bar ─── */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-gray-100">
+      <div className="bg-white/95 backdrop-blur-md border-b border-gray-100 relative z-[105]">
         <div className="container-wide mx-auto px-5 md:px-12 flex items-center justify-between h-[84px] md:h-[116px]">
           
           {/* LEFT: Masterpiece Menu Trigger */}
           <div className="flex items-center gap-4 flex-1 md:flex-none">
             <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="group relative flex items-center justify-center w-12 h-12 rounded-full cursor-pointer focus:outline-none"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="group relative flex items-center justify-center w-12 h-12 rounded-full cursor-pointer focus:outline-none z-[130]"
               aria-label="Toggle Menu"
             >
               {/* Animated Outer Circle */}
@@ -50,29 +70,32 @@ export default function Navbar() {
               {/* Asymmetric Morphing Lines */}
               <div className="relative w-5 h-3 flex flex-col justify-between items-center">
                 <motion.span
-                  animate={isMobileMenuOpen ? { rotate: 45, y: 5.5 } : { rotate: 0, y: 0 }}
-                  transition={{ duration: 0.4, ease }}
-                  className="w-5 h-[1.5px] bg-black block origin-center"
+                  animate={isMobileMenuOpen ? { rotate: 45, y: 5.5, backgroundColor: '#ffffff' } : { rotate: 0, y: 0, backgroundColor: '#000000' }}
+                  transition={{ duration: 0.4, ease: easeExpo }}
+                  className="w-5 h-[1.5px] block origin-center"
                 />
                 <motion.span
                   animate={isMobileMenuOpen ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, ease }}
+                  transition={{ duration: 0.3, ease: easeExpo }}
                   className="w-5 h-[1.5px] bg-black block"
                 />
                 <motion.span
-                  animate={isMobileMenuOpen ? { rotate: -45, y: -5.5, width: "20px" } : { rotate: 0, y: 0, width: "13px" }}
-                  transition={{ duration: 0.4, ease }}
-                  className="h-[1.5px] bg-black block origin-center self-end group-hover:w-5 transition-[width] duration-300"
+                  animate={isMobileMenuOpen ? { rotate: -45, y: -5.5, width: "20px", backgroundColor: '#ffffff' } : { rotate: 0, y: 0, width: "13px", backgroundColor: '#000000' }}
+                  transition={{ duration: 0.4, ease: easeExpo }}
+                  className="h-[1.5px] block origin-center self-end group-hover:w-5 transition-[width] duration-300"
                 />
               </div>
             </button>
-            <span className="hidden lg:inline-block text-[10px] font-semibold uppercase tracking-[0.25em] text-gray-500 group-hover:text-black transition-colors cursor-pointer select-none" onClick={() => setIsMobileMenuOpen(true)}>
-              Menu
+            <span 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`hidden lg:inline-block text-[10px] font-bold uppercase tracking-[0.25em] cursor-pointer select-none transition-colors duration-500 ${isMobileMenuOpen ? 'text-white/60 hover:text-white z-[130]' : 'text-gray-500 hover:text-black'}`}
+            >
+              {isMobileMenuOpen ? 'Fermer' : 'Menu'}
             </span>
           </div>
 
           {/* CENTER: Grand Logo (Overlapping Masterpiece) */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[101]">
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-[106]">
             <Link href="/" className="relative block">
               <Image 
                 src="/logo-removebg-preview.png" 
@@ -86,7 +109,7 @@ export default function Navbar() {
           </div>
 
           {/* RIGHT: Actions */}
-          <div className="flex items-center gap-2 md:gap-4 text-gray-700 flex-1 md:flex-none justify-end">
+          <div className="flex items-center gap-2 md:gap-4 text-gray-700 flex-1 md:flex-none justify-end relative z-[105]">
             {/* Elegant Search Trigger */}
             <button 
               onClick={() => setIsSearchOpen(true)}
@@ -135,7 +158,7 @@ export default function Navbar() {
       </div>
 
       {/* ─── Bottom Navigation Bar (Desktop Only) ─── */}
-      <nav className="w-full bg-[#1C1917] text-white hidden md:block">
+      <nav className="w-full bg-[#1C1917] text-white hidden md:block relative z-[104]">
         <div className="container-wide mx-auto px-4 md:px-8">
           <ul className="flex items-center justify-center text-[10px] font-semibold tracking-[0.2em] uppercase">
             {navigation.map((item) => (
@@ -154,84 +177,131 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ─── Drawer Menu (Desktop & Mobile Panel) ─── */}
+      {/* ─── Grand Masterpiece Full-Screen Curtain Overlay Menu ─── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/40 z-[110]"
-              onClick={() => setIsMobileMenuOpen(false)}
+            {/* Curtain Panel 1 (Gold Accent Panel) */}
+            <motion.div
+              initial={{ y: '-100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '-100%' }}
+              transition={{ duration: 0.6, ease: easeExpo }}
+              className="fixed inset-0 bg-[#CA8A04] z-[110]"
             />
 
-            {/* Drawer */}
-            <motion.div 
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.35, ease }}
-              className="fixed inset-y-0 left-0 w-[85%] max-w-[380px] bg-white z-[120] flex flex-col shadow-2xl"
+            {/* Curtain Panel 2 (Dark Charcoal Main Panel) */}
+            <motion.div
+              initial={{ y: '-100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '-100%' }}
+              transition={{ duration: 0.7, delay: 0.05, ease: easeExpo }}
+              className="fixed inset-0 bg-[#1C1917] text-white z-[115] flex flex-col justify-between overflow-hidden"
             >
-              {/* Drawer Header */}
-              <div className="flex items-center justify-between px-6 h-[84px] md:h-[116px] border-b border-gray-100 flex-shrink-0">
-                <Image 
-                  src="/logo-removebg-preview.png" 
-                  alt="Collectif Design" 
-                  width={240} 
-                  height={80} 
-                  className="h-[52px] w-auto object-contain transform scale-110" 
-                />
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  className="w-11 h-11 rounded-full flex items-center justify-center text-gray-400 hover:text-black hover:bg-gray-50 cursor-pointer active:scale-95 transition-all"
-                  aria-label="Fermer"
-                >
-                  <X size={20} />
-                </button>
+              {/* Background Subtle Lines */}
+              <div className="absolute inset-0 grid grid-cols-4 opacity-5 pointer-events-none">
+                <div className="border-r border-white h-full" />
+                <div className="border-r border-white h-full" />
+                <div className="border-r border-white h-full" />
+                <div className="h-full" />
               </div>
 
-              {/* Navigation Links */}
-              <nav className="flex-1 overflow-y-auto py-4 px-2">
-                {navigation.map((item, idx) => (
-                  <motion.div 
-                    key={item.name}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.04 * idx, duration: 0.3, ease }}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center justify-between py-4 px-6 text-[13px] font-semibold tracking-[0.15em] uppercase cursor-pointer hover:bg-gray-50/50 rounded-lg active:bg-gray-50 transition-colors ${
-                        item.highlight ? 'text-[#0f8742]' : 'text-gray-800'
-                      }`}
+              {/* Top Padding spacer to not clash with header bar */}
+              <div className="h-[84px] md:h-[116px] flex-shrink-0" />
+
+              {/* Main Menu Grid */}
+              <div className="flex-1 container-wide mx-auto px-6 md:px-12 py-10 flex items-center justify-between relative z-10">
+                {/* Editorial Link List (Left Side) */}
+                <div className="flex flex-col space-y-4 md:space-y-6 max-w-2xl">
+                  {navigation.map((item, idx) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 + idx * 0.04, ease: easeExpo }}
+                      onMouseEnter={() => setActiveMenuImage(item.image)}
                     >
-                      {item.name}
-                      <ChevronRight size={14} className="text-gray-300" />
-                    </Link>
-                  </motion.div>
-                ))}
-              </nav>
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`group relative flex items-baseline gap-4 font-serif text-3xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-wide hover:italic cursor-pointer select-none transition-all duration-300 ${
+                          item.highlight ? 'text-[#CA8A04]' : 'text-white/80 hover:text-white'
+                        }`}
+                      >
+                        {/* Number Index */}
+                        <span className="text-[10px] md:text-xs font-sans tracking-widest text-[#CA8A04] opacity-50 group-hover:opacity-100 transition-opacity">
+                          0{idx + 1}
+                        </span>
+                        
+                        {/* Label */}
+                        <span className="relative">
+                          {item.name}
+                          
+                          {/* Animated underline */}
+                          <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-500 ease-out" />
+                        </span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
 
-              {/* Bottom Actions */}
-              <div className="flex-shrink-0 border-t border-gray-100 bg-gray-50/80 px-6 py-5 flex items-center justify-around">
-                <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
-                  <User size={19} strokeWidth={1.3} className="text-gray-600 hover:text-black" />
-                  <span className="text-[9px] uppercase font-semibold tracking-[0.15em] text-gray-500">Compte</span>
-                </Link>
-                <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
-                  <Heart size={19} strokeWidth={1.3} className="text-gray-600 hover:text-black" />
-                  <span className="text-[9px] uppercase font-semibold tracking-[0.15em] text-gray-500">Favoris</span>
-                </Link>
-                <button onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(true); }} className="flex flex-col items-center gap-1.5 cursor-pointer active:scale-95 transition-transform">
-                  <ShoppingBag size={19} strokeWidth={1.3} className="text-gray-600 hover:text-black" />
-                  <span className="text-[9px] uppercase font-semibold tracking-[0.15em] text-gray-500">Panier</span>
-                </button>
+                {/* Dynamic Cinematic Preview Frame (Right Side - Desktop Only) */}
+                <div className="hidden lg:block w-[400px] xl:w-[500px] h-[55vh] relative rounded-lg overflow-hidden border border-white/10 group shadow-2xl mr-12">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeMenuImage}
+                      initial={{ opacity: 0, scale: 1.08, filter: 'blur(5px)' }}
+                      animate={{ opacity: 0.7, scale: 1, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, scale: 0.95, filter: 'blur(5px)' }}
+                      transition={{ duration: 0.5, ease: 'easeOut' }}
+                      className="absolute inset-0"
+                    >
+                      <Image
+                        src={activeMenuImage}
+                        alt="Preview Category"
+                        fill
+                        className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <span className="text-[9px] uppercase tracking-[0.4em] text-[#CA8A04] font-bold block mb-1">
+                      COLLECTIF STUDIO
+                    </span>
+                    <h4 className="font-serif text-lg italic text-white/90">
+                      Mobilier haut de gamme de fabrication artisanale.
+                    </h4>
+                  </div>
+                </div>
               </div>
+
+              {/* Bottom Footer Info Section */}
+              <div className="border-t border-white/10 bg-black/30 py-6 md:py-8 flex-shrink-0 relative z-10">
+                <div className="container-wide mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                  {/* Local Digital Clock */}
+                  <div className="text-center md:text-left space-y-1">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/40">DISPONIBILITÉ SHOWROOM</p>
+                    <p className="text-xs font-mono text-white/70 tracking-wide">{localTime}</p>
+                  </div>
+
+                  {/* High-end Boutique Metadata */}
+                  <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-[10px] font-semibold tracking-widest text-white/50 uppercase">
+                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Boutique</span>
+                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Inspiration</span>
+                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Atelier</span>
+                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Contact</span>
+                  </div>
+
+                  {/* Social links */}
+                  <div className="flex items-center gap-6 text-[10px] font-bold tracking-widest text-[#CA8A04]">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
+                    <span className="text-white/20">|</span>
+                    <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WHATSAPP</a>
+                  </div>
+                </div>
+              </div>
+
             </motion.div>
           </>
         )}
