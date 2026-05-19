@@ -9,17 +9,16 @@ import { useTheme } from '@/components/providers/ThemeProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/lib/supabaseClient';
 import { Product, PRODUCTS } from '@/lib/products';
+import { CATEGORIES } from '@/lib/categories';
 
 const navigation = [
   { name: 'PACKS PROMO', href: '/categories/packs-promo', highlight: true, image: '/hero.jpeg' },
-  { name: 'SALONS', href: '/categories/salons', image: '/salon.jpeg' },
-  { name: 'CANAPÉS', href: '/categories/canapes', image: '/salon.jpeg' },
-  { name: 'CHAMBRE', href: '/categories/chambre', image: '/tablesdechevet.jpeg' },
-  { name: 'TABLES', href: '/categories/tables', image: '/table a manger.jpeg' },
-  { name: 'CHAISES', href: '/categories/chaises', image: '/salon.jpeg' },
-  { name: 'JARDIN', href: '/categories/jardin', image: '/salon.jpeg' },
-  { name: 'MEUBLES', href: '/categories/meubles', image: '/hero.jpeg' },
-  { name: 'DÉCO', href: '/categories/deco', image: '/decoration.jpeg' }
+  ...CATEGORIES.map(c => ({
+    name: c.name.toUpperCase(),
+    href: `/categories/${c.slug}`,
+    image: c.image || '/hero.jpeg',
+    highlight: false
+  }))
 ];
 
 /* ─── Easing ─── */
@@ -47,29 +46,32 @@ export default function Navbar() {
       try {
         setIsSearching(true);
         
-        // Search local static products first
-        const localMatches = PRODUCTS.filter(p => 
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.sub_category.toLowerCase().includes(searchQuery.toLowerCase())
-        ).slice(0, 4);
-
-        if (localMatches.length > 0) {
-          setSearchResults(localMatches);
-          setIsSearching(false);
-          return;
+        // Try searching Supabase first
+        let supabaseResults: Product[] = [];
+        try {
+          const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .or(`name.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`)
+            .limit(4);
+          
+          if (!error && data && data.length > 0) {
+            supabaseResults = data;
+          }
+        } catch (dbErr) {
+          console.error("Database search failed:", dbErr);
         }
 
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .ilike('name', `%${searchQuery}%`)
-          .limit(4);
-        
-        if (!error && data) {
-          setSearchResults(data);
+        if (supabaseResults.length > 0) {
+          setSearchResults(supabaseResults);
         } else {
-          setSearchResults([]);
+          // Fallback to searching local static products
+          const localMatches = PRODUCTS.filter(p => 
+            p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.sub_category.toLowerCase().includes(searchQuery.toLowerCase())
+          ).slice(0, 4);
+          setSearchResults(localMatches);
         }
       } catch (err) {
         console.error("Search error:", err);

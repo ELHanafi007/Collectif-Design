@@ -42,21 +42,21 @@ export default function ShopPage() {
       try {
         setLoading(true);
         
-        // Try local PRODUCTS static array first
-        if (PRODUCTS.length > 0) {
-          setProducts(PRODUCTS);
-          return;
-        }
-
         const { data, error } = await supabase
           .from('products')
           .select('*')
           .order('created_at', { ascending: false });
         
         if (error) throw error;
-        setProducts(data || []);
+        
+        if (data && data.length > 0) {
+          setProducts(data);
+        } else {
+          setProducts(PRODUCTS);
+        }
       } catch (err) {
-        console.error("Error fetching products:", err);
+        console.error("Error fetching products, using local fallback:", err);
+        setProducts(PRODUCTS);
       } finally {
         setLoading(false);
       }

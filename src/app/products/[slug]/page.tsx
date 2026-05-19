@@ -144,11 +144,19 @@ export default function ProductPage() {
         setLoading(true);
         const slugStr = slug as string;
         
-        // Intercept local static products
-        const localProd = PRODUCTS.find(p => p.id === slugStr);
-        if (localProd) {
-          setProduct(localProd);
-          return;
+        // Try Supabase first
+        try {
+          const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('id', slug)
+            .single();
+          if (!error && data) {
+            setProduct(data);
+            return;
+          }
+        } catch (dbErr) {
+          console.warn("Supabase fetch error, trying static fallback:", dbErr);
         }
 
         // Intercept mock promo packs
@@ -157,13 +165,12 @@ export default function ProductPage() {
           return;
         }
 
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('id', slug)
-          .single();
-        if (error) throw error;
-        setProduct(data);
+        // Intercept local static products
+        const localProd = PRODUCTS.find(p => p.id === slugStr);
+        if (localProd) {
+          setProduct(localProd);
+          return;
+        }
       } catch (err) {
         console.error("Error fetching product:", err);
       } finally {

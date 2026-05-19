@@ -58,7 +58,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background lg:pl-64 pb-24 lg:pb-0 font-inter text-foreground antialiased selection:bg-accent selection:text-background">
+    <div className="dark min-h-screen bg-[#0E0F0F] text-[#F5F1EB] lg:pl-64 pb-24 lg:pb-0 font-sans antialiased selection:bg-[#CA8A04] selection:text-black">
       <AdminNav />
       <main className="p-8 md:p-16 max-w-7xl mx-auto">
         {children}

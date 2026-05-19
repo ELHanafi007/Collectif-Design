@@ -99,28 +99,36 @@ export default function CategoryPage() {
 
         const mappedCategories = slugToDbCategory[slugStr] || [slugStr];
 
-        // Check local static products first
-        const localMatched = PRODUCTS.filter(p => 
-          mappedCategories.some(c => 
-            c.toLowerCase() === p.category.toLowerCase() || 
-            c.toLowerCase() === p.sub_category.toLowerCase()
-          )
-        );
-
-        if (localMatched.length > 0) {
-          setProducts(localMatched);
-          return;
-        }
-
+        // Fetch from Supabase first
         const { data, error } = await supabase
           .from('products')
           .select('*')
           .in('category', mappedCategories);
         
         if (error) throw error;
-        setProducts(data || []);
+
+        if (data && data.length > 0) {
+          setProducts(data);
+        } else {
+          // Fallback to local static products
+          const localMatched = PRODUCTS.filter(p => 
+            mappedCategories.some(c => 
+              c.toLowerCase() === p.category.toLowerCase() || 
+              c.toLowerCase() === p.sub_category.toLowerCase()
+            )
+          );
+          setProducts(localMatched);
+        }
       } catch (err) {
-        console.error("Error fetching category products:", err);
+        console.error("Error fetching category products, using local fallback:", err);
+        const mappedCategories = slugToDbCategory[slugStr] || [slugStr];
+        const localMatched = PRODUCTS.filter(p => 
+          mappedCategories.some(c => 
+            c.toLowerCase() === p.category.toLowerCase() || 
+            c.toLowerCase() === p.sub_category.toLowerCase()
+          )
+        );
+        setProducts(localMatched);
       } finally {
         setLoading(false);
       }
