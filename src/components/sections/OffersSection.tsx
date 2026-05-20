@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,6 +48,7 @@ const products = [
 export default function OffersSection() {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
 
   // Responsive items per page
   useEffect(() => {
@@ -74,6 +75,16 @@ export default function OffersSection() {
 
   const prevSlide = () => {
     setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const scrollMobile = (direction: 'left' | 'right') => {
+    const container = mobileScrollRef.current;
+    if (!container) return;
+    const scrollAmount = container.clientWidth * 0.85;
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
   };
 
   const visibleProducts = products.slice(
@@ -106,55 +117,58 @@ export default function OffersSection() {
 
         {/* Navigation Arrows */}
         <div className="flex items-center gap-3 mb-8">
-          <button onClick={prevSlide} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-surface active:scale-95 transition-all">
+          <button onClick={() => scrollMobile('left')} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-surface active:scale-95 transition-all cursor-pointer">
             <ChevronLeft size={18} strokeWidth={1.5} />
           </button>
-          <button onClick={nextSlide} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-surface active:scale-95 transition-all">
+          <button onClick={() => scrollMobile('right')} className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-surface active:scale-95 transition-all cursor-pointer">
             <ChevronRight size={18} strokeWidth={1.5} />
           </button>
         </div>
 
         {/* Slider */}
-        <div className="w-full relative">
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={currentPage}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="w-full"
+        <div 
+          ref={mobileScrollRef}
+          className="flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-4 -mx-5 px-5 scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {products.map((product) => (
+            <Link 
+              key={product.id}
+              href={`/products/${product.id}`}
+              className="w-[82vw] shrink-0 snap-start flex flex-col group cursor-pointer"
             >
-               {visibleProducts.map((product) => (
-                 <div key={product.id} className="w-full flex flex-col group">
-                   <div className="relative w-full aspect-[4/5] bg-surface mb-4">
-                     <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover mix-blend-multiply dark:mix-blend-normal"
-                     />
-                     {/* Overlay Actions (Heart & Plus) */}
-                     <div className="absolute top-4 right-4 flex flex-col gap-3">
-                       <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-transform">
-                         <Heart size={18} strokeWidth={1.5} />
-                       </button>
-                       <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-transform">
-                         <Plus size={20} strokeWidth={1.5} />
-                       </button>
-                     </div>
-                   </div>
-                   <div className="text-center">
-                     <h3 className="text-[13px] font-bold font-serif uppercase tracking-widest text-foreground">{product.name}</h3>
-                     <div className="flex items-center justify-center gap-3 mt-2">
-                       <p className="text-[11px] font-bold text-muted line-through">{product.oldPrice}</p>
-                       <p className="text-[13px] font-bold text-[#d11124]">{product.newPrice}</p>
-                     </div>
-                   </div>
-                 </div>
-               ))}
-            </motion.div>
-          </AnimatePresence>
+              <div className="relative w-full aspect-[4/5] bg-surface mb-4">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover mix-blend-multiply dark:mix-blend-normal"
+                />
+                {/* Overlay Actions (Heart & Plus) */}
+                <div 
+                  className="absolute top-4 right-4 flex flex-col gap-3 z-10"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }}
+                >
+                  <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+                    <Heart size={18} strokeWidth={1.5} />
+                  </button>
+                  <button className="w-11 h-11 bg-white rounded-full flex items-center justify-center text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+                    <Plus size={20} strokeWidth={1.5} />
+                  </button>
+                </div>
+              </div>
+              <div className="text-center">
+                <h3 className="text-[13px] font-bold font-serif uppercase tracking-widest text-foreground line-clamp-1">{product.name}</h3>
+                <div className="flex items-center justify-center gap-3 mt-2">
+                  <p className="text-[11px] font-bold text-muted line-through">{product.oldPrice}</p>
+                  <p className="text-[13px] font-bold text-[#d11124]">{product.newPrice}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
 
