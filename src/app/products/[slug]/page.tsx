@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { Product, PRODUCTS } from '@/lib/products';
 import { ChevronRight, ChevronDown, MessageCircle, Truck, ShieldCheck, Package, Heart, Share2, Minus, Plus } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
+import { CONTACT_INFO } from '@/data/contact';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import TrendingSection from '@/components/sections/TrendingSection';
@@ -452,7 +453,7 @@ export default function ProductPage() {
                 onClick={() => {
                   if (!product) return;
                   const message = `*Bonjour Collectif Design,*\n\nJe souhaite commander la pièce de prestige suivante :\n\n• *Nom* : ${product.name}\n• *Prix* : ${Number(product.price).toLocaleString('fr-FR')} MAD\n• *Catégorie* : ${product.category}\n• *Lien* : ${window.location.href}\n\nMerci de m'accompagner pour finaliser ma commande d'exception.`;
-                  const whatsappUrl = `https://wa.me/212661085736?text=${encodeURIComponent(message)}`;
+                  const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
                   window.open(whatsappUrl, '_blank');
                 }}
                 className="w-full h-14 min-h-[56px] rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-3 transition-all duration-500 shadow-md shadow-emerald-600/10 hover:shadow-emerald-600/20 active:scale-97 cursor-pointer shrink-0 font-bold text-[10px] uppercase tracking-[0.25em] group"

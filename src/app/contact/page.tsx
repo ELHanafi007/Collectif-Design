@@ -3,6 +3,7 @@
 import Navbar from '@/components/layout/Navbar';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { CONTACT_INFO } from '@/data/contact';
 
 export default function ContactPage() {
   return (
@@ -39,10 +40,10 @@ export default function ContactPage() {
               
               <div className="space-y-8">
                 {[
-                  { icon: MapPin, label: 'Adresse', value: '123 Rue de l\'Artisanat,\nQuartier Gauthier, Casablanca' },
-                  { icon: Phone, label: 'Téléphone', value: '+212 5 22 00 00 00' },
-                  { icon: Mail, label: 'Email', value: 'contact@collectif.design' },
-                  { icon: Clock, label: 'Horaires', value: 'Lun — Ven: 09:00 - 19:00\nSam: 10:00 - 15:00' },
+                  { icon: MapPin, label: 'Adresse', value: CONTACT_INFO.address },
+                  { icon: Phone, label: 'Téléphone', value: CONTACT_INFO.phoneNumber },
+                  { icon: Mail, label: 'Email', value: CONTACT_INFO.email },
+                  { icon: Clock, label: 'Horaires', value: CONTACT_INFO.openingHours },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
                     <div className="h-10 w-10 rounded-full border border-border flex items-center justify-center shrink-0">

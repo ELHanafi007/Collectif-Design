@@ -15,6 +15,7 @@ import PageTransition from "@/components/providers/PageTransition";
 import { CartProvider } from "@/components/providers/CartProvider";
 import CartDrawer from "@/components/layout/CartDrawer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import WhatsAppFloatingButton from "@/components/ui/WhatsAppFloatingButton";
 
 export const metadata: Metadata = {
   title: "Collectif Design | Studio-Grade Furniture & Interiors",
@@ -39,6 +40,7 @@ export default function RootLayout({
               <Footer />
             </SmoothScroll>
             <CartDrawer />
+            <WhatsAppFloatingButton />
           </CartProvider>
         </ThemeProvider>
       </body>

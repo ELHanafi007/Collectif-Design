@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowUpRight, Globe, Mail, Share2 } from 'lucide-react';
+import { CONTACT_INFO } from '@/data/contact';
 
 const footerLinks = {
   shop: [
@@ -46,9 +47,9 @@ export default function Footer() {
               <Link href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
                 <Share2 size={16} strokeWidth={1.5} />
               </Link>
-              <Link href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
+              <a href={`mailto:${CONTACT_INFO.email}`} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
                 <Mail size={16} strokeWidth={1.5} />
-              </Link>
+              </a>
               <Link href="#" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
                 <Globe size={16} strokeWidth={1.5} />
               </Link>

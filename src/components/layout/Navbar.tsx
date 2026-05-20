@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, User, Heart, ShoppingBag, X, Sun, Moon } from 'lucide-react';
+import { Search, Heart, ShoppingBag, X, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
 import { useTheme } from '@/components/providers/ThemeProvider';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/lib/supabaseClient';
 import { Product, PRODUCTS } from '@/lib/products';
 import { CATEGORIES } from '@/lib/categories';
+import { CONTACT_INFO } from '@/data/contact';
 
 const navigation = [
   { name: 'PACKS PROMO', href: '/categories/packs-promo', highlight: true, image: '/hero.jpeg' },
@@ -120,9 +121,16 @@ export default function Navbar() {
         minute: '2-digit',
         second: '2-digit',
         hour12: false,
-        timeZone: 'Africa/Casablanca'
+        timeZone: CONTACT_INFO.timezone
       };
-      setLocalTime(date.toLocaleTimeString('fr-FR', options) + ' GMT+1 (CASABLANCA)');
+      const formatter = new Intl.DateTimeFormat('fr-FR', {
+        ...options,
+        timeZoneName: 'short'
+      });
+      const timeParts = formatter.formatToParts(date);
+      const timeStr = date.toLocaleTimeString('fr-FR', options);
+      const tzName = timeParts.find(p => p.type === 'timeZoneName')?.value || 'GMT+1';
+      setLocalTime(`${timeStr} ${tzName} (${CONTACT_INFO.city.toUpperCase()})`);
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
@@ -238,18 +246,7 @@ export default function Navbar() {
               <Search size={20} strokeWidth={1.5} />
             </button>
 
-            {/* Account */}
-            <Link 
-              href="/admin" 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`hidden md:flex items-center justify-center w-11 h-11 rounded-full transition-colors cursor-pointer ${
-                isMobileMenuOpen 
-                  ? 'text-white/60 hover:text-white hover:bg-white/10' 
-                  : 'text-foreground/75 hover:text-foreground hover:bg-foreground/5'
-              }`}
-            >
-              <User size={20} strokeWidth={1.5} />
-            </Link>
+
 
             {/* Wishlist */}
             <Link 
@@ -431,7 +428,7 @@ export default function Navbar() {
                   <div className="flex items-center gap-6 text-[10px] font-bold tracking-widest text-[#CA8A04]">
                     <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
                     <span className="text-white/20">|</span>
-                    <a href="https://wa.me/212661085736" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WHATSAPP</a>
+                    <a href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WHATSAPP</a>
                   </div>
                 </div>
               </div>
