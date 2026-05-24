@@ -1,5 +1,15 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabaseClient';
+
+type CheckoutItem = {
+  name?: string;
+  category?: string;
+  material?: string;
+  price?: string | number;
+  image?: string;
+  quantity?: number;
+};
 
 // Rate limiting map (in production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -78,30 +88,52 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Too many items" }, { status: 400 });
     }
 
-    const itemsHtml = items.map((item: any) => {
+    // Save order to Supabase
+    const { error: dbError } = await supabase
+      .from('orders')
+      .insert([
+        {
+          name: sanitizedName,
+          phone: sanitizedPhone,
+          city: sanitizedCity,
+          address: sanitizedAddress,
+          total_price: Number(totalPrice),
+          items: items
+        }
+      ]);
+
+    if (dbError) {
+      console.error('Failed to save order to Supabase:', dbError);
+      return NextResponse.json({ 
+        error: `Erreur de base de données: ${dbError.message}. Veuillez vous assurer que la table 'orders' a été créée dans Supabase.` 
+      }, { status: 500 });
+    }
+
+    const itemsHtml = (items as CheckoutItem[]).map((item) => {
       const itemName = sanitizeHtml(item.name || 'Unknown');
       const itemCategory = sanitizeHtml(item.category || 'N/A');
       const itemMaterial = sanitizeHtml(item.material || 'N/A');
-      const itemPrice = sanitizeHtml(item.price || '0');
+      const itemPrice = sanitizeHtml(String(item.price || '0'));
       const itemImage = sanitizeHtml(item.image || '');
+      const itemQuantity = sanitizeHtml(String(item.quantity || 1));
       
       return `
         <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
           <img src="${itemImage}" alt="${itemName}" style="width: 100px; height: 120px; object-fit: cover; margin-bottom: 10px;" />
           <h3 style="margin: 0; font-family: serif;">${itemName}</h3>
-          <p style="margin: 5px 0; color: #666;">Catégorie: ${itemCategory} | Matériau: ${itemMaterial}</p>
+          <p style="margin: 5px 0; color: #666;">Catégorie: ${itemCategory} | Matériau: ${itemMaterial} | Quantité: ${itemQuantity}</p>
           <p style="margin: 5px 0; font-weight: bold;">${itemPrice} MAD</p>
         </div>
       `;
     }).join('');
 
     const { data, error } = await resend.emails.send({
-      from: 'Diamontaris Meubles <onboarding@resend.dev>',
+      from: 'Collectif Design <onboarding@resend.dev>',
       to: [process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'me.kaoukabi@gmail.com'],
       subject: `Nouvelle Commande - ${sanitizedName} (${sanitizedCity})`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-          <h1 style="color: #B8860B; font-family: serif; text-align: center;">DIAMONTARIS MEUBLES</h1>
+          <h1 style="color: #B8860B; font-family: serif; text-align: center;">COLLECTIF DESIGN</h1>
           <p style="text-align: center; text-transform: uppercase; letter-spacing: 2px; font-size: 12px;">Demande de devis et livraison</p>
 
           <div style="background: #f9f9f9; padding: 30px; margin: 30px 0; border: 1px solid #eee;">
@@ -120,7 +152,7 @@ export async function POST(request: Request) {
           </div>
 
           <p style="font-size: 12px; color: #999; margin-top: 50px; text-align: center;">
-            Ce message a été généré par la conciergerie Diamontaris Meubles Rabat.
+            Ce message a été généré par la conciergerie Collectif Design.
           </p>
         </div>
       `,

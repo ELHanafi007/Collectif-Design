@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import { Jost, Bodoni_Moda } from "next/font/google";
 import "./globals.css";
-
-const jost = Jost({ subsets: ["latin"], variable: "--font-sans" });
-const bodoni = Bodoni_Moda({ 
-  subsets: ["latin"], 
-  variable: "--font-serif" 
-});
 
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import SmoothScroll from "@/components/providers/SmoothScroll";
@@ -18,8 +11,8 @@ import ScrollProgress from "@/components/ui/ScrollProgress";
 import WhatsAppFloatingButton from "@/components/ui/WhatsAppFloatingButton";
 
 export const metadata: Metadata = {
-  title: "Collectif Design | Studio-Grade Furniture & Interiors",
-  description: "Exquisite furniture and interior design solutions. Reimagined with a studio-grade experience.",
+  title: "Collectif Design | Mobilier & Design d'Intérieur au Maroc",
+  description: "Mobilier premium, packs salon et chambre, accompagnement design et livraison au Maroc par Collectif Design.",
 };
 
 export default function RootLayout({
@@ -28,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jost.variable} ${bodoni.variable}`}>
+    <html lang="fr">
       <body className="antialiased">
         <ThemeProvider>
           <CartProvider>

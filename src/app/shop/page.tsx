@@ -18,6 +18,7 @@ export default function ShopPage() {
   const [selectedSubCategory, setSelectedSubCategory] = useState("Tous");
   const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState("featured");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
@@ -78,7 +79,7 @@ export default function ShopPage() {
   );
 
   const filteredProducts = useMemo(() => {
-    return products.filter(p => {
+    const filtered = products.filter(p => {
       const categoryMatch = selectedCategory === "Tous" || p.category === selectedCategory;
       const subCategoryMatch = selectedSubCategory === "Tous" || p.sub_category === selectedSubCategory;
       const priceValue = parseInt(p.price.toString().replace(".", "").replace(/\s/g, ""));
@@ -86,7 +87,20 @@ export default function ShopPage() {
       
       return categoryMatch && subCategoryMatch && priceMatch;
     });
-  }, [products, selectedCategory, selectedSubCategory, maxPrice]);
+
+    return [...filtered].sort((a, b) => {
+      const priceA = Number(String(a.price).replace(/[^0-9.-]+/g, ""));
+      const priceB = Number(String(b.price).replace(/[^0-9.-]+/g, ""));
+      const discountA = Number(a.discount || 0);
+      const discountB = Number(b.discount || 0);
+
+      if (sortBy === "price-asc") return priceA - priceB;
+      if (sortBy === "price-desc") return priceB - priceA;
+      if (sortBy === "discount") return discountB - discountA;
+      if (sortBy === "name") return a.name.localeCompare(b.name, 'fr');
+      return 0;
+    });
+  }, [products, selectedCategory, selectedSubCategory, maxPrice, sortBy]);
 
   return (
     <main className="min-h-screen bg-background">
@@ -105,7 +119,7 @@ export default function ShopPage() {
               La Collection
             </span>
             <h1 className="text-6xl md:text-8xl tracking-tightest">
-              L'Atelier <span className="text-muted italic">Collectif</span>
+              L&apos;Atelier <span className="text-muted italic">Collectif</span>
             </h1>
           </motion.div>
 
@@ -191,9 +205,21 @@ export default function ShopPage() {
                 <Filter size={12} /> 
                 Filtres {showFilters && "Actifs"}
               </button>
-              <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest border border-border px-5 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300 cursor-pointer select-none">
-                Trier <ChevronDown size={12} />
-              </button>
+              <label className="relative">
+                <span className="sr-only">Trier les produits</span>
+                <select
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value)}
+                  className="appearance-none bg-background text-foreground text-[10px] font-bold uppercase tracking-widest border border-border pl-5 pr-10 py-3 rounded-full hover:bg-foreground hover:text-background transition-all duration-300 cursor-pointer select-none focus:outline-none focus:border-foreground"
+                >
+                  <option value="featured">Sélection</option>
+                  <option value="price-asc">Prix croissant</option>
+                  <option value="price-desc">Prix décroissant</option>
+                  <option value="discount">Promos</option>
+                  <option value="name">Nom A-Z</option>
+                </select>
+                <ChevronDown size={12} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2" />
+              </label>
             </div>
 
           </div>

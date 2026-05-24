@@ -1,11 +1,41 @@
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { CONTACT_INFO } from '@/data/contact';
 
 export default function ContactPage() {
+  const [status, setStatus] = useState<'idle' | 'sent'>('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: "Consultation Design d'Intérieur",
+    message: '',
+  });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const body = [
+      `Nom: ${formData.name}`,
+      `Email: ${formData.email}`,
+      `Téléphone: ${formData.phone}`,
+      `Objet: ${formData.subject}`,
+      '',
+      formData.message,
+    ].join('\n');
+
+    window.location.href = `mailto:${CONTACT_INFO.email}?subject=${encodeURIComponent(`Demande de rendez-vous - ${formData.subject}`)}&body=${encodeURIComponent(body)}`;
+    setStatus('sent');
+  };
+
+  const updateField = (field: keyof typeof formData, value: string) => {
+    setFormData((current) => ({ ...current, [field]: value }));
+  };
+
   return (
     <main className="bg-background min-h-screen">
       <Navbar />
@@ -59,42 +89,62 @@ export default function ContactPage() {
             </div>
 
             {/* Form */}
-            <div className="lg:col-span-8 bg-surface rounded-2xl p-8 md:p-12">
+            <div className="lg:col-span-8 bg-surface rounded-lg p-6 md:p-12">
               <h3 className="text-xl font-serif mb-8">Demander un Rendez-vous</h3>
               
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Nom Complet</label>
+                    <label htmlFor="contact-name" className="text-[9px] font-bold uppercase tracking-widest text-muted">Nom Complet</label>
                     <input 
+                      id="contact-name"
                       type="text" 
                       placeholder="Votre nom"
+                      value={formData.name}
+                      onChange={(event) => updateField('name', event.target.value)}
+                      required
+                      autoComplete="name"
                       className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Email</label>
+                    <label htmlFor="contact-email" className="text-[9px] font-bold uppercase tracking-widest text-muted">Email</label>
                     <input 
+                      id="contact-email"
                       type="email" 
                       placeholder="votre@email.com"
+                      value={formData.email}
+                      onChange={(event) => updateField('email', event.target.value)}
+                      required
+                      autoComplete="email"
                       className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Téléphone</label>
+                  <label htmlFor="contact-phone" className="text-[9px] font-bold uppercase tracking-widest text-muted">Téléphone</label>
                   <input 
+                    id="contact-phone"
                     type="tel" 
                     placeholder="+212 6 00 00 00 00"
+                    value={formData.phone}
+                    onChange={(event) => updateField('phone', event.target.value)}
+                    required
+                    autoComplete="tel"
                     className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Objet</label>
-                  <select className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light appearance-none">
-                    <option>Consultation Design d'Intérieur</option>
+                  <label htmlFor="contact-subject" className="text-[9px] font-bold uppercase tracking-widest text-muted">Objet</label>
+                  <select
+                    id="contact-subject"
+                    value={formData.subject}
+                    onChange={(event) => updateField('subject', event.target.value)}
+                    className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light"
+                  >
+                    <option>Consultation Design d&apos;Intérieur</option>
                     <option>Demande de Mobilier Sur Mesure</option>
                     <option>Visite du Showroom</option>
                     <option>Autre</option>
@@ -102,17 +152,26 @@ export default function ContactPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-muted">Message</label>
+                  <label htmlFor="contact-message" className="text-[9px] font-bold uppercase tracking-widest text-muted">Message</label>
                   <textarea 
+                    id="contact-message"
                     rows={5}
                     placeholder="Parlez-nous de votre projet..."
+                    value={formData.message}
+                    onChange={(event) => updateField('message', event.target.value)}
+                    required
                     className="w-full bg-background border border-border rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:border-foreground transition-all font-light resize-none"
                   />
                 </div>
 
-                <button className="w-full bg-foreground text-background py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all active:scale-[0.99]">
+                <button className="w-full bg-foreground text-background py-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] sm:tracking-widest hover:opacity-90 transition-all active:scale-[0.99]">
                   Envoyer la Demande
                 </button>
+                {status === 'sent' && (
+                  <p className="text-xs leading-6 text-muted">
+                    Votre application e-mail va s’ouvrir avec la demande préparée. Vous pourrez l’envoyer après vérification.
+                  </p>
+                )}
               </form>
             </div>
           </div>

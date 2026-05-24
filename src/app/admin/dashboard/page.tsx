@@ -13,18 +13,40 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabaseClient";
 
+interface Order {
+  id: string;
+  name: string;
+  phone: string;
+  city: string;
+  address: string;
+  total_price: number;
+  items: any[];
+  status: string;
+  created_at: string;
+}
+
 // Helper components for stats
-function DashboardStats({ products, categories }: { products: Product[], categories: Category[] }) {
+function DashboardStats({ 
+  products, 
+  categories, 
+  orders 
+}: { 
+  products: Product[], 
+  categories: Category[], 
+  orders: Order[] 
+}) {
   const totalProducts = products.length;
   const totalCategories = categories.length;
+  const activeOrders = orders.filter(o => o.status === 'pending' || o.status === 'contacted').length;
 
   const stats = [
     { name: "Total Produits", value: totalProducts, icon: Package, desc: "Créations publiées au catalogue" },
     { name: "Total Catégories", value: totalCategories, icon: Layers, desc: "Collections de prestige enregistrées" },
+    { name: "Commandes Actives", value: activeOrders, icon: Tag, desc: "Sélections clients en cours de traitement" },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {stats.map((stat, idx) => (
         <motion.div
           key={stat.name}
@@ -56,16 +78,20 @@ function DashboardContent() {
   const searchParams = useSearchParams();
   
   // Tab state powered by searchParams
-  const activeTab = searchParams.get("tab") === "categories" ? "categories" : "products";
+  const tabParam = searchParams.get("tab");
+  const activeTab = tabParam === "categories" ? "categories" : tabParam === "orders" ? "orders" : "products";
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(true);
 
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("all");
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState("all");
 
   // Modals
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -128,10 +154,58 @@ function DashboardContent() {
     }
   }, []);
 
+  const fetchOrders = useCallback(async () => {
+    try {
+      setLoadingOrders(true);
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setOrders(data || []);
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+    } finally {
+      setLoadingOrders(false);
+    }
+  }, []);
+
+  const handleUpdateOrderStatus = async (id: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: newStatus })
+        .eq("id", id);
+
+      if (error) throw error;
+      setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
+    } catch (err: any) {
+      alert("Erreur lors de la mise à jour du statut: " + err.message);
+    }
+  };
+
+  const handleOrderDelete = async (id: string) => {
+    if (confirm("Voulez-vous supprimer définitivement cette commande ?")) {
+      try {
+        const { error } = await supabase
+          .from("orders")
+          .delete()
+          .eq("id", id);
+
+        if (error) throw error;
+        setOrders(prev => prev.filter(o => o.id !== id));
+      } catch (err: any) {
+        alert("Erreur lors de la suppression: " + err.message);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, [fetchProducts, fetchCategories]);
+    fetchOrders();
+  }, [fetchProducts, fetchCategories, fetchOrders]);
 
   // Set initial product form state on edit
   useEffect(() => {
@@ -479,9 +553,19 @@ function DashboardContent() {
     c.slug.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleTabChange = (tab: "products" | "categories") => {
+  const filteredOrders = orders.filter(o => {
+    const matchesSearch = o.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          o.phone.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          o.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          o.address.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = selectedStatusFilter === "all" || o.status === selectedStatusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleTabChange = (tab: "products" | "categories" | "orders") => {
     setSearchQuery("");
     setSelectedCategoryFilter("all");
+    setSelectedStatusFilter("all");
     router.push(`/admin/dashboard?tab=${tab}`);
   };
 
@@ -502,7 +586,7 @@ function DashboardContent() {
         </div>
         
         <div className="flex gap-4">
-          {activeTab === "products" ? (
+          {activeTab === "products" && (
             <button 
               onClick={() => { setEditingProduct(null); setIsProductModalOpen(true); }}
               className="group relative flex items-center gap-4 overflow-hidden rounded-full border border-[#CA8A04]/25 bg-[#CA8A04]/10 hover:border-[#CA8A04] px-6 py-3.5 transition-all text-[#CA8A04] hover:text-[#0E0F0F] duration-500 cursor-pointer"
@@ -511,7 +595,8 @@ function DashboardContent() {
               <span className="relative z-10 text-[9px] font-bold uppercase tracking-[0.4em]">Nouvelle Pièce</span>
               <div className="absolute inset-0 bg-[#CA8A04] translate-y-full group-hover:translate-y-0 transition-transform duration-500 -z-10" />
             </button>
-          ) : (
+          )}
+          {activeTab === "categories" && (
             <button 
               onClick={() => { setEditingCategory(null); setIsCategoryModalOpen(true); }}
               className="group relative flex items-center gap-4 overflow-hidden rounded-full border border-[#CA8A04]/25 bg-[#CA8A04]/10 hover:border-[#CA8A04] px-6 py-3.5 transition-all text-[#CA8A04] hover:text-[#0E0F0F] duration-500 cursor-pointer"
@@ -525,7 +610,7 @@ function DashboardContent() {
       </header>
 
       {/* Stats Area (Simplified - Only Products and Categories) */}
-      <DashboardStats products={products} categories={categories} />
+      <DashboardStats products={products} categories={categories} orders={orders} />
 
       {/* Tabs Menu */}
       <div className="flex justify-between items-center border-b border-[#2C2A29]">
@@ -554,6 +639,18 @@ function DashboardContent() {
               <motion.div layoutId="dashboardTabLine" className="absolute bottom-0 left-0 h-[2px] w-full bg-[#CA8A04]" />
             )}
           </button>
+          <button 
+            onClick={() => handleTabChange("orders")}
+            className={cn(
+              "relative pb-4 text-[10px] font-bold uppercase tracking-[0.4em] transition-colors duration-500 cursor-pointer",
+              activeTab === "orders" ? "text-[#F5F1EB]" : "text-[#F5F1EB]/30 hover:text-[#F5F1EB]"
+            )}
+          >
+            Commandes Clients
+            {activeTab === "orders" && (
+              <motion.div layoutId="dashboardTabLine" className="absolute bottom-0 left-0 h-[2px] w-full bg-[#CA8A04]" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -562,7 +659,7 @@ function DashboardContent() {
         <div className="relative flex-1 group">
           <input 
             type="text" 
-            placeholder={activeTab === "products" ? "Rechercher une création (nom, matériau, catégorie)..." : "Rechercher une collection..."}
+            placeholder={activeTab === "products" ? "Rechercher une création (nom, matériau, catégorie)..." : activeTab === "orders" ? "Rechercher une commande (nom, téléphone, ville)..." : "Rechercher une collection..."}
             className="w-full bg-[#151717]/40 border-b border-[#2C2A29] py-4 px-10 outline-none focus:border-[#CA8A04]/60 transition-all duration-500 text-xs tracking-wider font-light placeholder:text-[#a8a29e]/20 text-[#F5F1EB]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -588,6 +685,23 @@ function DashboardContent() {
               ))}
             </select>
             <Layers size={14} className="text-[#a8a29e]/30 mr-2 pointer-events-none" />
+          </div>
+        )}
+
+        {activeTab === "orders" && (
+          <div className="w-full md:w-56 border-b border-[#2C2A29] bg-transparent flex items-center">
+            <select
+              value={selectedStatusFilter}
+              onChange={(e) => setSelectedStatusFilter(e.target.value)}
+              className="w-full bg-transparent py-4 text-xs tracking-wider outline-none text-[#a8a29e] border-none cursor-pointer appearance-none px-2"
+            >
+              <option value="all" className="bg-[#121414] text-[#F5F1EB]">Tous les statuts</option>
+              <option value="pending" className="bg-[#121414] text-[#F5F1EB]">En attente (Non contactée)</option>
+              <option value="contacted" className="bg-[#121414] text-[#F5F1EB]">Contactée</option>
+              <option value="completed" className="bg-[#121414] text-[#F5F1EB]">Terminée</option>
+              <option value="cancelled" className="bg-[#121414] text-[#F5F1EB]">Annulée</option>
+            </select>
+            <Tag size={14} className="text-[#a8a29e]/30 mr-2 pointer-events-none" />
           </div>
         )}
       </div>
@@ -771,6 +885,137 @@ function DashboardContent() {
                 <div className="py-24 border border-dashed border-[#2C2A29] rounded-sm text-center">
                   <Layers className="mx-auto text-[#a8a29e]/10 mb-4" size={32} />
                   <p className="text-xs uppercase tracking-widest text-[#a8a29e]/30">Aucune collection ne correspond à votre recherche.</p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Orders List */}
+          {activeTab === "orders" && (
+            <motion.div
+              key="orders-tab"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-6"
+            >
+              {loadingOrders ? (
+                <div className="py-32 flex flex-col items-center justify-center gap-6">
+                  <div className="h-12 w-[1px] bg-[#2C2A29] relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[#CA8A04] animate-pulse" />
+                  </div>
+                  <p className="text-[8px] uppercase tracking-[0.8em] text-[#a8a29e]/30 animate-pulse">Chargement des commandes...</p>
+                </div>
+              ) : filteredOrders.length > 0 ? (
+                <div className="space-y-6">
+                  {filteredOrders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="group bg-[#151717]/40 border border-[#2C2A29] hover:border-[#CA8A04]/20 p-6 md:p-8 transition-all duration-500 rounded-sm flex flex-col md:flex-row gap-8 justify-between relative"
+                    >
+                      {/* Left: Customer Info */}
+                      <div className="md:w-1/3 space-y-4">
+                        <div>
+                          <span className="text-[8px] font-mono tracking-widest text-[#a8a29e]/40 block mb-1">
+                            COMMANDE #{order.id.slice(0, 8).toUpperCase()}
+                          </span>
+                          <h3 className="text-xl font-serif font-medium text-[#F5F1EB]">{order.name}</h3>
+                          <span className="text-[9px] text-[#a8a29e]/40 font-mono">
+                            Reçue le {new Date(order.created_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })}
+                          </span>
+                        </div>
+
+                        <div className="space-y-2 border-t border-[#2C2A29]/30 pt-4 text-xs font-light text-[#a8a29e]">
+                          <p>
+                            <span className="font-bold uppercase tracking-wider text-[9px] text-[#F5F1EB]/60 block mb-0.5">Tél :</span>
+                            <a href={`tel:${order.phone}`} className="hover:text-[#CA8A04] font-mono transition-colors">{order.phone}</a>
+                          </p>
+                          <p>
+                            <span className="font-bold uppercase tracking-wider text-[9px] text-[#F5F1EB]/60 block mb-0.5">Ville :</span>
+                            <span className="text-[#F5F1EB]">{order.city}</span>
+                          </p>
+                          <p>
+                            <span className="font-bold uppercase tracking-wider text-[9px] text-[#F5F1EB]/60 block mb-0.5">Adresse de Livraison :</span>
+                            <span className="italic block leading-relaxed">{order.address}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Middle: Items List */}
+                      <div className="flex-1 space-y-4 border-t md:border-t-0 md:border-l border-[#2C2A29]/30 pt-6 md:pt-0 md:pl-8">
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-[#CA8A04]">
+                          Détails de la Sélection ({order.items?.length || 0} {order.items?.length > 1 ? 'articles' : 'article'})
+                        </span>
+                        <div className="space-y-4 divide-y divide-[#2C2A29]/10">
+                          {order.items && order.items.map((item: any, index: number) => (
+                            <div key={index} className="flex gap-4 pt-4 first:pt-0 items-center justify-between">
+                              <div className="flex gap-4 items-center min-w-0">
+                                <div className="w-12 h-16 bg-[#0E0F0F] border border-[#2C2A29] overflow-hidden shrink-0">
+                                  <img 
+                                    src={item.image || "/hero.jpeg"} 
+                                    alt={item.name} 
+                                    className="w-full h-full object-cover grayscale" 
+                                    onError={(e) => { (e.target as HTMLImageElement).src = "/hero.jpeg"; }}
+                                  />
+                                </div>
+                                <div className="min-w-0">
+                                  <h4 className="text-sm font-medium text-[#F5F1EB] truncate lowercase tracking-tight">{item.name}</h4>
+                                  <p className="text-[8px] uppercase tracking-widest text-[#a8a29e]/50 truncate">{item.category} {item.material ? `| ${item.material}` : ''}</p>
+                                  <p className="text-[10px] text-[#a8a29e]/40 font-mono mt-0.5">Qté: {item.quantity}</p>
+                                </div>
+                              </div>
+                              <span className="text-xs font-mono font-medium text-[#F5F1EB] shrink-0">
+                                {Number(item.price).toLocaleString()} MAD
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex justify-between items-baseline border-t border-[#2C2A29]/30 pt-4 mt-6">
+                          <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#a8a29e]">Estimation Totale</span>
+                          <span className="text-xl font-serif text-[#CA8A04] font-medium">{Number(order.total_price).toLocaleString()} MAD</span>
+                        </div>
+                      </div>
+
+                      {/* Right: Status Update & Actions */}
+                      <div className="md:w-52 flex flex-col justify-between items-stretch border-t md:border-t-0 md:border-l border-[#2C2A29]/30 pt-6 md:pt-0 md:pl-8 gap-6 shrink-0">
+                        <div className="space-y-3">
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#a8a29e]/40 block">Statut du dossier</span>
+                          <select
+                            value={order.status}
+                            onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
+                            className={cn(
+                              "w-full bg-[#0E0F0F] border border-[#2C2A29] rounded-sm py-3 px-3 outline-none text-xs font-medium tracking-wide transition-all cursor-pointer",
+                              order.status === 'pending' && "text-[#CA8A04] border-[#CA8A04]/20 focus:border-[#CA8A04]",
+                              order.status === 'contacted' && "text-blue-400 border-blue-400/20 focus:border-blue-400",
+                              order.status === 'completed' && "text-green-400 border-green-400/20 focus:border-green-400",
+                              order.status === 'cancelled' && "text-red-400 border-red-400/20 focus:border-red-400"
+                            )}
+                          >
+                            <option value="pending">En attente (Non contactée)</option>
+                            <option value="contacted">Contactée</option>
+                            <option value="completed">Terminée</option>
+                            <option value="cancelled">Annulée</option>
+                          </select>
+                        </div>
+
+                        <button 
+                          onClick={() => handleOrderDelete(order.id)}
+                          className="w-full flex items-center justify-center gap-2 border border-[#2C2A29] hover:border-red-500/40 text-[#a8a29e]/60 hover:text-red-400 py-3 rounded-sm transition-all duration-300 cursor-pointer text-[10px] font-bold uppercase tracking-wider"
+                          title="Supprimer la commande définitivement"
+                        >
+                          <Trash size={12} />
+                          Supprimer le Dossier
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-24 border border-dashed border-[#2C2A29] rounded-sm text-center">
+                  <Tag className="mx-auto text-[#a8a29e]/10 mb-4" size={32} />
+                  <p className="text-xs uppercase tracking-widest text-[#a8a29e]/30">Aucun dossier client trouvé.</p>
                 </div>
               )}
             </motion.div>
