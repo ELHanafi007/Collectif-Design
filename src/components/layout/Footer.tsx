@@ -89,16 +89,26 @@ export default function Footer() {
             <p className="text-sm text-muted font-light leading-relaxed">
               Inscrivez-vous pour recevoir des inspirations exclusives et être informé de nos nouvelles collections.
             </p>
-            <div className="flex gap-2">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+                const message = `Bonjour Collectif Design, je souhaite m'inscrire à votre journal avec l'adresse : ${email}`;
+                window.open(`https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+              }}
+              className="flex gap-2"
+            >
               <input 
+                name="email"
                 type="email" 
+                required
                 placeholder="Votre adresse email"
                 className="flex-1 bg-surface border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-foreground transition-all font-light"
               />
-              <button className="bg-foreground text-background px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all">
+              <button type="submit" className="bg-foreground text-background px-6 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all">
                 Ok
               </button>
-            </div>
+            </form>
           </div>
         </div>
 

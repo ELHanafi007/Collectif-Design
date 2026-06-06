@@ -296,7 +296,7 @@ export default function ShopPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 gap-x-6 md:gap-x-10 gap-y-16">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 md:gap-x-10 gap-y-16">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} {...product} />
                 ))}

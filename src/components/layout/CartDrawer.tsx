@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowLeft, Check, Loader2, AlertCircle } from 'lucide-react';
 import { useCart } from '@/components/providers/CartProvider';
+import { CONTACT_INFO } from '@/data/contact';
 
 export default function CartDrawer() {
   const { isCartOpen, setIsCartOpen, cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
@@ -132,6 +133,24 @@ export default function CartDrawer() {
       }
       
       setStatus('success');
+
+      // WhatsApp Integration
+      const whatsappNumber = CONTACT_INFO.whatsappNumber;
+      const itemsList = cart.map(item => `- ${item.name} (${item.quantity}x) : ${item.price} MAD`).join('\n');
+      const message = `*Nouvelle Commande - Collectif Design*\n\n` +
+        `*Client:* ${formData.name}\n` +
+        `*Tél:* ${formData.phone}\n` +
+        `*Ville:* ${formData.city}\n` +
+        `*Adresse:* ${formData.address}\n\n` +
+        `*Articles:*\n${itemsList}\n\n` +
+        `*Total Estimé: ${cartTotal} MAD*`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+      
+      // Open WhatsApp in a new tab
+      window.open(whatsappUrl, '_blank');
+
       clearCart();
     } catch (err: unknown) {
       console.error('Checkout error:', err);

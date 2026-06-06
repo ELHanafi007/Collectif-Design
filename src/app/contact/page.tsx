@@ -19,16 +19,20 @@ export default function ContactPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const body = [
-      `Nom: ${formData.name}`,
-      `Email: ${formData.email}`,
-      `Téléphone: ${formData.phone}`,
-      `Objet: ${formData.subject}`,
-      '',
+    const message = [
+      `*Demande de rendez-vous - Collectif Design*`,
+      ``,
+      `*Nom:* ${formData.name}`,
+      `*Email:* ${formData.email}`,
+      `*Téléphone:* ${formData.phone}`,
+      `*Objet:* ${formData.subject}`,
+      ``,
+      `*Message:*`,
       formData.message,
     ].join('\n');
 
-    window.location.href = `mailto:${CONTACT_INFO.email}?subject=${encodeURIComponent(`Demande de rendez-vous - ${formData.subject}`)}&body=${encodeURIComponent(body)}`;
+    const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
     setStatus('sent');
   };
 
@@ -169,7 +173,7 @@ export default function ContactPage() {
                 </button>
                 {status === 'sent' && (
                   <p className="text-xs leading-6 text-muted">
-                    Votre application e-mail va s’ouvrir avec la demande préparée. Vous pourrez l’envoyer après vérification.
+                    Votre application WhatsApp va s’ouvrir avec la demande préparée. Vous pourrez l’envoyer après vérification.
                   </p>
                 )}
               </form>
