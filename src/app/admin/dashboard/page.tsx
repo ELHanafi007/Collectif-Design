@@ -99,6 +99,18 @@ function DashboardContent() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
+  // Scroll lock when modals are open
+  useEffect(() => {
+    if (isProductModalOpen || isCategoryModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isProductModalOpen, isCategoryModalOpen]);
+
   // Product Form states
   const [productImages, setProductImages] = useState<string[]>([]);
   const [productImageFiles, setProductImageFiles] = useState<File[]>([]);
@@ -1038,8 +1050,9 @@ function DashboardContent() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 30, opacity: 0 }}
-              className="relative w-full max-w-4xl bg-[#121414] border border-[#2C2A29] h-[85vh] overflow-hidden flex flex-col rounded-sm shadow-2xl"
-            >
+              className="relative w-full max-w-4xl bg-[#121414] border border-[#2C2A29] max-h-[90vh] h-full md:h-[85vh] overflow-hidden flex flex-col rounded-sm shadow-2xl"
+              >
+
               {/* Modal Header */}
               <div className="px-8 py-6 border-b border-[#2C2A29] flex justify-between items-center shrink-0">
                 <div className="flex items-center gap-4">
@@ -1054,7 +1067,8 @@ function DashboardContent() {
               </div>
 
               {/* Form Content */}
-              <form className="flex-1 overflow-y-auto p-8 space-y-12" onSubmit={handleProductSubmit}>
+              <form className="flex-1 overflow-y-auto min-h-0 p-8 space-y-12" onSubmit={handleProductSubmit}>
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                   
                   {/* Left Column: Images */}
@@ -1269,8 +1283,9 @@ function DashboardContent() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 30, opacity: 0 }}
-              className="relative w-full max-w-2xl bg-[#121414] border border-[#2C2A29] h-[80vh] overflow-hidden flex flex-col rounded-sm shadow-2xl"
-            >
+              className="relative w-full max-w-2xl bg-[#121414] border border-[#2C2A29] max-h-[90vh] h-full md:h-[80vh] overflow-hidden flex flex-col rounded-sm shadow-2xl"
+              >
+
               {/* Modal Header */}
               <div className="px-8 py-6 border-b border-[#2C2A29] flex justify-between items-center shrink-0">
                 <div className="flex items-center gap-4">
@@ -1285,8 +1300,7 @@ function DashboardContent() {
               </div>
 
               {/* Form Content */}
-              <form className="flex-1 overflow-y-auto p-8 space-y-10" onSubmit={handleCategorySubmit}>
-                
+              <form className="flex-1 overflow-y-auto min-h-0 p-8 space-y-10" onSubmit={handleCategorySubmit}>
                 {/* Visual Identity */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 text-[#CA8A04] border-b border-[#2C2A29]/30 pb-2">
