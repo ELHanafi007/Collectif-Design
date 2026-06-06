@@ -6,7 +6,7 @@ import { MessageCircle, X } from 'lucide-react';
 import { CONTACT_INFO } from '@/data/contact';
 import { useCart } from '@/components/providers/CartProvider';
 
-export default function WhatsAppFloatingButton() {
+export default function WhatsAppFloatingButton({ productName }: { productName?: string }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const { isCartOpen } = useCart();
@@ -20,7 +20,9 @@ export default function WhatsAppFloatingButton() {
   }, []);
 
   const handleClick = () => {
-    const message = `Bonjour Collectif Design, je souhaiterais obtenir des informations sur votre mobilier sur mesure.`;
+    const message = productName 
+      ? `Bonjour Collectif Design, je souhaiterais obtenir des informations sur la pièce "${productName}".`
+      : `Bonjour Collectif Design, je souhaiterais obtenir des informations sur votre mobilier sur mesure.`;
     const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

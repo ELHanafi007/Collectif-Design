@@ -13,6 +13,8 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import TrendingSection from '@/components/sections/TrendingSection';
 
+import WhatsAppFloatingButton from '@/components/ui/WhatsAppFloatingButton';
+
 /* ─── Easing ─── */
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -577,6 +579,9 @@ export default function ProductPage() {
         </div>
         <TrendingSection />
       </section>
+
+      {/* Dynamic WhatsApp Button for this specific product */}
+      <WhatsAppFloatingButton productName={product.name} />
     </main>
   );
 }
