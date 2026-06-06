@@ -1,10 +1,10 @@
 export const CONTACT_INFO = {
   // WhatsApp number used for wa.me links (digits only, no spaces or plus)
-  whatsappNumber: '21261085736',
+  whatsappNumber: '212661085736',
   // Formatted WhatsApp number for display
-  whatsappFormatted: '+212 6 10 85 73 6',
+  whatsappFormatted: '+212 6 61 08 57 36',
   // Main showroom landline or mobile phone number
-  phoneNumber: '+212 6 10 85 73 6',
+  phoneNumber: '+212 6 61 08 57 36',
   // General support or info email
   email: 'contact@collectif.design',
   // Physical address of the showroom
