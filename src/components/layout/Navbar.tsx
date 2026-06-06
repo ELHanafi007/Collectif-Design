@@ -340,6 +340,8 @@ export default function Navbar() {
               {/* Top Padding spacer to not clash with header bar */}
               <div className="h-[84px] md:h-[116px] flex-shrink-0" />
 
+              {/* Main Menu Grid Wrapper */}
+              <div className="flex-1 container-wide mx-auto px-6 md:px-12 py-10 flex flex-col lg:flex-row items-center justify-between relative z-10 overflow-hidden">
                 {/* Dynamic Cinematic Preview Frame (Background for Mobile, Side Frame for Desktop) */}
                 <div className="absolute inset-0 lg:relative lg:block lg:w-[400px] xl:lg:w-[500px] lg:h-[55vh] lg:rounded-lg lg:overflow-hidden lg:border lg:border-white/10 lg:group lg:shadow-2xl lg:mr-12 lg:flex-shrink-0">
                   <AnimatePresence mode="wait">
