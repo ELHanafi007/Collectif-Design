@@ -478,13 +478,13 @@ export default function CartDrawer() {
                           {status === 'loading' ? (
                             <>
                               <Loader2 size={14} className="animate-spin" />
-                              Transmission en cours...
+                              Ouverture de WhatsApp...
                             </>
                           ) : (
-                            'Transmettre la Sélection'
+                            'Commander via WhatsApp'
                           )}
                         </span>
-                        <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-expo" />
+                        <div className="absolute inset-0 bg-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-expo" />
                       </button>
                     </div>
                   ) : (
@@ -493,9 +493,9 @@ export default function CartDrawer() {
                       className="group relative w-full flex items-center justify-center gap-4 overflow-hidden rounded-full border border-border bg-foreground px-6 sm:px-12 py-6 sm:py-7 transition-all active:scale-95 cursor-pointer"
                     >
                       <span className="relative z-10 text-[10px] font-bold uppercase tracking-[0.25em] sm:tracking-[0.6em] text-background">
-                        Procéder au Devis par E-mail
+                        Procéder au Devis par WhatsApp
                       </span>
-                      <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-expo" />
+                      <div className="absolute inset-0 bg-emerald-600 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-expo" />
                     </button>
                   )}
                 </div>
