@@ -21,8 +21,8 @@ export default function WhatsAppFloatingButton({ productName }: { productName?: 
 
   const handleClick = () => {
     const message = productName 
-      ? `Bonjour Collectif Design, je souhaiterais obtenir des informations sur la pièce "${productName}".`
-      : `Bonjour Collectif Design, je souhaiterais obtenir des informations sur votre mobilier sur mesure.`;
+      ? `*Bonjour Collectif Design,*\n\nJe souhaiterais obtenir des informations sur la pièce de prestige suivante :\n\n• *Nom* : ${productName}\n• *Lien* : ${window.location.href}\n\nMerci de me recontacter pour m'apporter plus de précisions.`
+      : `*Bonjour Collectif Design,*\n\nJe souhaiterais obtenir des informations sur votre mobilier sur mesure et vos services d'aménagement d'intérieur.\n\nMerci de me recontacter pour discuter de mon projet.`;
     const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
