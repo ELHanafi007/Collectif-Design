@@ -340,10 +340,40 @@ export default function Navbar() {
               {/* Top Padding spacer to not clash with header bar */}
               <div className="h-[84px] md:h-[116px] flex-shrink-0" />
 
-              {/* Main Menu Grid */}
-              <div className="flex-1 container-wide mx-auto px-6 md:px-12 py-10 flex items-center justify-between relative z-10 overflow-y-auto">
-                {/* Editorial Link List (Left Side) */}
-                <div className="flex flex-col space-y-4 md:space-y-6 max-w-2xl w-full py-8">
+                {/* Dynamic Cinematic Preview Frame (Background for Mobile, Side Frame for Desktop) */}
+                <div className="absolute inset-0 lg:relative lg:block lg:w-[400px] xl:lg:w-[500px] lg:h-[55vh] lg:rounded-lg lg:overflow-hidden lg:border lg:border-white/10 lg:group lg:shadow-2xl lg:mr-12 lg:flex-shrink-0">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeMenuImage}
+                      initial={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+                      animate={{ opacity: 0.4, scale: 1, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
+                      transition={{ duration: 0.8, ease: easeExpo }}
+                      className="absolute inset-0"
+                    >
+                      <Image
+                        src={activeMenuImage}
+                        alt="Preview Category"
+                        fill
+                        className="object-cover transition-transform duration-1000"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+                  
+                  {/* Desktop-only Gradient & Info */}
+                  <div className="hidden lg:block absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="hidden lg:block absolute bottom-6 left-6 right-6">
+                    <span className="text-[9px] uppercase tracking-[0.4em] text-[#CA8A04] font-bold block mb-1">
+                      COLLECTIF STUDIO
+                    </span>
+                    <h4 className="font-serif text-lg italic text-white/90">
+                      Mobilier haut de gamme de fabrication artisanale.
+                    </h4>
+                  </div>
+                </div>
+
+                {/* Editorial Link List (Now with scrolling and touch support) */}
+                <div className="relative z-10 flex flex-col space-y-4 md:space-y-6 max-w-2xl w-full py-20 overflow-y-auto no-scrollbar">
                   {navigation.map((item, idx) => (
                     <motion.div
                       key={item.name}
@@ -351,11 +381,12 @@ export default function Navbar() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: 0.2 + idx * 0.04, ease: easeExpo }}
                       onMouseEnter={() => setActiveMenuImage(item.image)}
+                      onTouchStart={() => setActiveMenuImage(item.image)}
                     >
                       <Link
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`group relative flex items-baseline gap-4 font-serif text-3xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-wide hover:italic cursor-pointer select-none transition-all duration-300 ${
+                        className={`group relative flex items-baseline gap-4 font-serif text-4xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-wide hover:italic cursor-pointer select-none transition-all duration-300 ${
                           item.highlight ? 'text-[#CA8A04]' : 'text-white/80 hover:text-white'
                         }`}
                       >
@@ -374,36 +405,6 @@ export default function Navbar() {
                       </Link>
                     </motion.div>
                   ))}
-                </div>
-
-                {/* Dynamic Cinematic Preview Frame (Right Side - Desktop Only) */}
-                <div className="hidden lg:block w-[400px] xl:w-[500px] h-[55vh] relative rounded-lg overflow-hidden border border-white/10 group shadow-2xl mr-12 flex-shrink-0">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeMenuImage}
-                      initial={{ opacity: 0, scale: 1.08, filter: 'blur(5px)' }}
-                      animate={{ opacity: 0.7, scale: 1, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, scale: 0.95, filter: 'blur(5px)' }}
-                      transition={{ duration: 0.5, ease: 'easeOut' }}
-                      className="absolute inset-0"
-                    >
-                      <Image
-                        src={activeMenuImage}
-                        alt="Preview Category"
-                        fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <span className="text-[9px] uppercase tracking-[0.4em] text-[#CA8A04] font-bold block mb-1">
-                      COLLECTIF STUDIO
-                    </span>
-                    <h4 className="font-serif text-lg italic text-white/90">
-                      Mobilier haut de gamme de fabrication artisanale.
-                    </h4>
-                  </div>
                 </div>
               </div>
 
