@@ -73,7 +73,7 @@ export default function FeaturedCollection() {
             <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted">
               Sélection du Moment
             </span>
-            <h2 className="text-5xl md:text-6xl tracking-tightest">
+            <h2 className="text-5xl md:text-6xl tracking-tightest font-serif">
               Nos Best-Sellers
             </h2>
           </div>

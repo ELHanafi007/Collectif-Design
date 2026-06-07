@@ -7,9 +7,10 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
+  --color-gold: #C5A27D;
   
-  --font-serif: "Didot", "Bodoni 72", "Bodoni MT", Georgia, serif;
-  --font-sans: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-cormorant), serif;
+  --font-sans: var(--font-inter), sans-serif;
   
   --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -17,21 +18,21 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #0c0a09;
-  --surface: #fdfcfb;
-  --border: #e7e5e4;
-  --accent: #1c1917;
-  --muted: #78716c;
+  --background: #FBF9F7;
+  --foreground: #1C1C1A;
+  --surface: #FFFFFF;
+  --border: #E6DED7;
+  --accent: #C5A27D;
+  --muted: #7D746C;
 }
 
 .dark {
-  --background: #1C1917;
-  --foreground: #fafaf9;
-  --surface: #262220;
-  --border: #3E3835;
-  --accent: #fafaf9;
-  --muted: #a8a29e;
+  --background: #121414;
+  --foreground: #F5F1EB;
+  --surface: #1B1A18;
+  --border: #2B2A28;
+  --accent: #C5A27D;
+  --muted: #A79E96;
 }
 
 @layer base {

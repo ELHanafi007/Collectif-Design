@@ -288,7 +288,7 @@ export default function Navbar() {
       </div>
 
       {/* ─── Bottom Navigation Bar (Desktop Only) ─── */}
-      <nav className="w-full bg-[#1C1917] text-white hidden md:block relative z-[104]">
+      <nav className="w-full bg-[#121414] text-white hidden md:block relative z-[104]">
         <div className="container-wide mx-auto px-4 md:px-8">
           <ul className="flex items-center justify-center text-[10px] font-semibold tracking-[0.2em] uppercase">
             {navigation.map((item) => (
@@ -296,7 +296,7 @@ export default function Navbar() {
                 <Link
                   href={item.href}
                   className={`block py-4 px-6 hover:bg-white/10 transition-colors cursor-pointer ${
-                    item.highlight ? 'bg-[#0f8742] hover:bg-[#0d7338]' : ''
+                    item.highlight ? 'bg-accent hover:bg-accent/90' : ''
                   }`}
                 >
                   {item.name}
@@ -317,7 +317,7 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: '-100%' }}
               transition={{ duration: 0.6, ease: easeExpo }}
-              className="fixed inset-0 bg-[#CA8A04] z-[110]"
+              className="fixed inset-0 bg-accent z-[110]"
             />
 
             {/* Curtain Panel 2 (Dark Charcoal Main Panel) */}
@@ -327,7 +327,7 @@ export default function Navbar() {
               animate={{ y: 0 }}
               exit={{ y: '-100%' }}
               transition={{ duration: 0.7, delay: 0.05, ease: easeExpo }}
-              className="fixed inset-0 bg-[#1C1917] text-white z-[115] flex flex-col justify-between overflow-hidden"
+              className="fixed inset-0 bg-[#121414] text-white z-[115] flex flex-col justify-between overflow-hidden"
             >
               {/* Background Subtle Lines */}
               <div className="absolute inset-0 grid grid-cols-4 opacity-5 pointer-events-none">
@@ -365,7 +365,7 @@ export default function Navbar() {
                   {/* Desktop-only Gradient & Info */}
                   <div className="hidden lg:block absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="hidden lg:block absolute bottom-6 left-6 right-6">
-                    <span className="text-[9px] uppercase tracking-[0.4em] text-[#CA8A04] font-bold block mb-1">
+                    <span className="text-[9px] uppercase tracking-[0.4em] text-accent font-bold block mb-1">
                       COLLECTIF STUDIO
                     </span>
                     <h4 className="font-serif text-lg italic text-white/90">
@@ -389,11 +389,11 @@ export default function Navbar() {
                         href={item.href}
                         onClick={() => setIsMobileMenuOpen(false)}
                         className={`group relative flex items-baseline gap-4 font-serif text-4xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-wide hover:italic cursor-pointer select-none transition-all duration-300 ${
-                          item.highlight ? 'text-[#CA8A04]' : 'text-white/80 hover:text-white'
+                          item.highlight ? 'text-accent' : 'text-white/80 hover:text-white'
                         }`}
                       >
                         {/* Number Index */}
-                        <span className="text-[10px] md:text-xs font-sans tracking-widest text-[#CA8A04] opacity-50 group-hover:opacity-100 transition-opacity">
+                        <span className="text-[10px] md:text-xs font-sans tracking-widest text-accent opacity-50 group-hover:opacity-100 transition-opacity">
                           0{idx + 1}
                         </span>
                         
@@ -402,7 +402,7 @@ export default function Navbar() {
                           {item.name}
                           
                           {/* Animated underline */}
-                          <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-500 ease-out" />
+                          <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-white group-hover:w-full transition-all duration-500 ease-out" />
                         </span>
                       </Link>
                     </motion.div>
@@ -421,14 +421,14 @@ export default function Navbar() {
 
                   {/* High-end Boutique Metadata */}
                   <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-[10px] font-semibold tracking-widest text-white/50 uppercase">
-                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Boutique</span>
-                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Inspiration</span>
-                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Atelier</span>
-                    <span className="hover:text-[#CA8A04] transition-colors cursor-pointer">Contact</span>
+                    <span className="hover:text-accent transition-colors cursor-pointer">Boutique</span>
+                    <span className="hover:text-accent transition-colors cursor-pointer">Inspiration</span>
+                    <span className="hover:text-accent transition-colors cursor-pointer">Atelier</span>
+                    <span className="hover:text-accent transition-colors cursor-pointer">Contact</span>
                   </div>
 
                   {/* Social links */}
-                  <div className="flex items-center gap-6 text-[10px] font-bold tracking-widest text-[#CA8A04]">
+                  <div className="flex items-center gap-6 text-[10px] font-bold tracking-widest text-accent">
                     <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
                     <span className="text-white/20">|</span>
                     <a href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WHATSAPP</a>

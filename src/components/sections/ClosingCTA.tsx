@@ -19,8 +19,8 @@ export default function ClosingCTA() {
             <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-background/40">
               Prêt à Transformer Votre Intérieur ?
             </span>
-            <h2 className="text-5xl md:text-7xl tracking-tightest leading-tight">
-              Visitez Notre <span className="italic text-background/60">Showroom</span>
+            <h2 className="text-5xl md:text-7xl tracking-tightest leading-tight font-serif">
+              Visitez Notre <span className="italic text-accent">Showroom</span>
             </h2>
             <p className="max-w-xl mx-auto text-base font-light text-background/40 leading-relaxed">
               Venez toucher, sentir et vivre nos créations. Nos conseillers vous accompagnent 

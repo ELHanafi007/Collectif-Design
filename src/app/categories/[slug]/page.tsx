@@ -37,7 +37,7 @@ const mockPromoPacks: Product[] = [
     id: "pack-chambre-exclusive",
     name: "Pack Chambre Exclusive",
     price: "25000",
-    oldPrice: "32000",
+    old_price: "32000",
     discount: 22,
     image: "/tablesdechevet.jpeg",
     category: "Packs Promo",
@@ -45,13 +45,13 @@ const mockPromoPacks: Product[] = [
     material: "Bois chêne massif, Velours italien premium",
     description: "Le Pack Chambre Exclusive est composé de : 1x Lit King Size, 2x Tables de Chevet assorties, 1x Commode 6 tiroirs et 1x Miroir Mural. Conçu pour apporter élégance et confort absolu à votre suite parentale.",
     dimensions: "Lit: L200 x H140 x P210 cm",
-    inStock: true
+    in_stock: true
   },
   {
     id: "pack-salon-exclusive",
     name: "Pack Salon Exclusive",
     price: "18500",
-    oldPrice: "24000",
+    old_price: "24000",
     discount: 23,
     image: "/salon.jpeg",
     category: "Packs Promo",
@@ -59,13 +59,13 @@ const mockPromoPacks: Product[] = [
     material: "Tissu bouclé premium, Structure acier doré",
     description: "Le Pack Salon Exclusive comprend : 1x Canapé 3 Places grand confort, 1x Table Basse ATLAS, 1x Meuble TV suspendu et 2x Tables d'Appoint Sonata. Un équilibre parfait entre modernité marocaine et finitions d'atelier.",
     dimensions: "Canapé: L230 x P95 x H80 cm",
-    inStock: true
+    in_stock: true
   },
   {
     id: "pack-salle-a-manger-exclusive",
     name: "Pack Salle à Manger",
     price: "15000",
-    oldPrice: "19500",
+    old_price: "19500",
     discount: 23,
     image: "/table a manger.jpeg",
     category: "Packs Promo",
@@ -73,7 +73,7 @@ const mockPromoPacks: Product[] = [
     material: "Marbre naturel blanc Calacatta, Chêne teinté",
     description: "Le Pack Salle à Manger comprend : 1x Table à Manger 6 Places avec plateau en marbre, 6x Chaises design ergonomiques et 1x Buffet de rangement PYRAMIDES. Idéal pour des dîners prestigieux.",
     dimensions: "Table: L200 x P100 x H75 cm",
-    inStock: true
+    in_stock: true
   }
 ];
 

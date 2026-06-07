@@ -25,7 +25,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[10px] uppercase tracking-[0.4em] mb-4 text-white/80"
+            className="text-[10px] uppercase tracking-[0.4em] mb-4 text-white/80 font-bold"
           >
             Exclusivité Collectif
           </motion.span>
@@ -33,9 +33,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-4xl font-light tracking-wider leading-tight mb-8 text-white drop-shadow-md"
+            className="text-4xl font-light tracking-wider leading-tight mb-8 text-white drop-shadow-md font-serif"
           >
-            DESIGN <br /> <span className="font-medium italic">INTEMPOREL</span>
+            DESIGN <br /> <span className="font-medium italic text-accent">INTEMPOREL</span>
           </motion.h2>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -54,7 +54,7 @@ export default function Hero() {
 
       {/* 💻 2. DESKTOP DESIGN (Classic 3-Column Layout) */}
       <div className="hidden md:flex w-full flex-row min-h-[600px] lg:min-h-[700px]">
-        {/* Left Side - Blue Sofa */}
+        {/* Left Side - Luxury Interior */}
         <motion.div 
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -76,45 +76,41 @@ export default function Hero() {
           </motion.div>
         </motion.div>
         
-        {/* Middle - Blue Banner */}
+        {/* Middle - Brand Editorial Section */}
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="w-1/3 bg-[#2458a6] flex flex-col items-center justify-center text-center p-12 text-white relative overflow-hidden"
+          className="w-1/3 bg-background flex flex-col items-center justify-center text-center p-12 text-foreground relative overflow-hidden border-x border-border"
         >
           <div className="relative z-10">
             <motion.span 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-xs uppercase tracking-[0.4em] mb-4 block opacity-70"
+              className="text-[10px] uppercase tracking-[0.4em] mb-4 block text-accent font-bold"
             >
               Exclusivité Collectif
             </motion.span>
-            <h2 className="text-4xl lg:text-5xl font-light tracking-wider leading-tight mb-8">
-              DESIGN <br /> <span className="font-medium italic">INTEMPOREL</span>
+            <h2 className="text-4xl lg:text-5xl font-light tracking-wider leading-tight mb-8 font-serif">
+              DESIGN <br /> <span className="font-medium italic text-accent">INTEMPOREL</span>
             </h2>
             <Link 
               href="/shop"
-              className="inline-block border border-white px-8 py-3 text-xs uppercase tracking-[0.25em] hover:bg-white hover:text-[#2458a6] transition-all duration-300 active:scale-95 cursor-pointer"
+              className="btn-premium group"
             >
-              Découvrir
+              <span>Découvrir</span>
             </Link>
           </div>
-          {/* Animated background glow */}
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.2, 1],
-              rotate: [0, 90, 0],
-              opacity: [0.3, 0.5, 0.3]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-gradient-to-tr from-white/10 to-transparent rounded-full blur-3xl pointer-events-none"
-          />
+          
+          {/* Subtle Grain/Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
+          
+          {/* Brand Luxury Accent (Gold Line) */}
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-accent/40" />
         </motion.div>
 
-        {/* Right Side - Table */}
+        {/* Right Side - Furniture Detail */}
         <motion.div 
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}

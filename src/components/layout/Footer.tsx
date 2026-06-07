@@ -37,20 +37,20 @@ export default function Footer() {
           <div className="lg:col-span-4 space-y-8">
             <Link href="/" className="inline-block">
               <span className="text-3xl font-serif tracking-tightest uppercase">
-                Collectif<span className="text-muted italic lowercase font-light">.design</span>
+                Collectif<span className="text-accent italic lowercase font-light">.design</span>
               </span>
             </Link>
             <p className="text-muted text-sm leading-relaxed max-w-xs font-light">
               L&apos;excellence du mobilier sur mesure. Chaque pièce est une narration, chaque espace une expérience.
             </p>
             <div className="flex gap-4">
-              <a href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all" aria-label="Partager sur WhatsApp">
+              <a href={`https://wa.me/${CONTACT_INFO.whatsappNumber}`} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all cursor-pointer" aria-label="Partager sur WhatsApp">
                 <Share2 size={16} strokeWidth={1.5} />
               </a>
-              <a href={`mailto:${CONTACT_INFO.email}`} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all">
+              <a href={`mailto:${CONTACT_INFO.email}`} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all cursor-pointer">
                 <Mail size={16} strokeWidth={1.5} />
               </a>
-              <Link href="/about" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all" aria-label="Découvrir Collectif Design">
+              <Link href="/about" className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all cursor-pointer" aria-label="Découvrir Collectif Design">
                 <Globe size={16} strokeWidth={1.5} />
               </Link>
             </div>
