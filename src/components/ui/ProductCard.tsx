@@ -7,7 +7,7 @@ import Image from 'next/image';
 export default function ProductCard(product: Product) {
   // Mock discount if it doesn't exist, to match the vibe
   const discount = product.discount || '24';
-  const oldPrice = product.oldPrice || (Number(product.price) * 1.25).toFixed(0);
+  const oldPriceValue = product.old_price || product.oldPrice || (Number(product.price) * 1.25).toFixed(0);
 
   return (
     <div className="group relative border border-border p-4 bg-surface flex flex-col hover:shadow-lg transition-shadow h-full">
@@ -35,7 +35,7 @@ export default function ProductCard(product: Product) {
           </p>
           <div className="flex items-center justify-center gap-2 text-xs">
             <span className="line-through text-muted">
-              {Number(oldPrice).toLocaleString('fr-FR')} DH
+              {Number(oldPriceValue).toLocaleString('fr-FR')} DH
             </span>
             <span className="font-bold text-[#d11124] text-sm">
               {Number(product.price).toLocaleString('fr-FR')} DH

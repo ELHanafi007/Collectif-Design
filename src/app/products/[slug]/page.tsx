@@ -223,7 +223,7 @@ export default function ProductPage() {
 
   const images = product.images && product.images.length > 0 ? product.images : [product.image];
   const discount = product.discount || 24;
-  const oldPrice = product.oldPrice || (Number(product.price) * 1.25).toFixed(0);
+  const oldPriceValue = product.old_price || product.oldPrice || (Number(product.price) * 1.25).toFixed(0);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -396,7 +396,7 @@ export default function ProductPage() {
                 <span className="text-[16px] ml-1 font-normal text-gray-400">DH</span>
               </span>
               <span className="text-[16px] line-through text-gray-300 font-light">
-                {Number(oldPrice).toLocaleString('fr-FR')} DH
+                {Number(oldPriceValue).toLocaleString('fr-FR')} DH
               </span>
             </motion.div>
 

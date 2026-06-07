@@ -367,7 +367,7 @@ function DashboardContent() {
         image: finalUrls[0],
         images: finalUrls,
         description: String(formData.get("description") || ""),
-        inStock: true
+        in_stock: true
       };
 
       if (editingProduct) {
